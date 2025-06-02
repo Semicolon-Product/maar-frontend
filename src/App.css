@@ -1,0 +1,22 @@
+@media (max-width: 425px) {
+  .modalLabel {
+    font-size: 13px;
+    margin-top: 5px;
+    font-weight: 500;
+  }
+  .modalContainer {
+    padding: 5px;
+  }
+  .modalInput {
+    border-radius: 3px;
+    padding: 3px;
+    font-size: 14px;
+  }
+}
+.mainHeading{
+  font-size: 1.5em;
+}
+.formHeading{
+  font-size: 1em;
+  font-weight: bold;
+}
