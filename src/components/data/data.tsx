@@ -268,3 +268,46 @@ export const students = [
   { name: "Ramesh Verma", rollNo: "23CS060", points: 68, verified: false },
 ];
 
+export const moocs =[{
+  "moocs": {
+    "max": 40,
+    "moocs12Weeks": 10,
+    "moocs8Weeks": 3,
+    "moocs4Weeks": 3,
+    "moocs2Weeks": 6
+  }
+}]
+
+export const activity=[{
+  "moocs12Weeks": "20",
+  "moocs8Weeks": "15",
+  "moocs4Weeks": "10",
+  "moocs2Weeks": "5",
+  "techFestOrganizer": "5",
+  "techFestParticipant": "3",
+  "ruralReporting": "5",
+  "treePlantation": "1",
+  "reliefFundCollection": "5",
+  "reliefWorkTeam": "20",
+  "participationInArts": "10",
+  "publication": "10",
+  "researchPublication": "15",
+  "innovativeProjects": "30",
+  "bloodDonation": "8",
+  "bloodDonationCampOrganization": "10",
+  "sportsPersonal": "10",
+  "sportsCollege": "5",
+  "sportsUniversity": "10",
+  "sportsDistrict": "12",
+  "sportsState": "15",
+  "sportsNationalInternational": "20",
+  "professionalSocietyActivities": "10",
+  "industryVisit": "10",
+  "communityService": "10",
+  "entrepreneurshipOrganize": "10",
+  "entrepreneurshipParticipate": "5",
+  "entrepreneurshipVideo": "10",
+  "entrepreneurshipBusinessPlan": "10",
+  "entrepreneurshipWorkForStartup": "20"
+}
+]
