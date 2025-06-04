@@ -110,7 +110,7 @@ const navigate = useNavigate();
                                             <input type="password" id="password" className="border rounded-md px-3 py-2" required value={studentData.password}
                                                 onChange={handleChange} />
                                         </div>
-                                        <button type="submit" className="bg-gray-800 text-white py-2 rounded-md cursor-pointer">Login</button>
+                                        <button type="submit" className="bg-gray-800 text-white py-2 rounded-md cursor-pointer" onClick={()=>{navigate("/student");}}>Login</button>
                                     </div>)}
                                 {role === "teacher" && (
                                     <div className=' flex flex-col gap-6'>
@@ -127,7 +127,7 @@ const navigate = useNavigate();
                                             </div>
                                             <input type="password" id="password" className="border rounded-md px-3 py-2" required />
                                         </div>
-                                        <button type="submit" className="bg-black text-white py-2 rounded-md cursor-pointer">Login</button>
+                                        <button type="submit" className="bg-black text-white py-2 rounded-md cursor-pointer" onClick={()=>{navigate("/teacher");}}>Login</button>
                                     </div>)}
                                 {role === "superadmin" && !superadminLogin && (
                                     <div className=' flex flex-col gap-2'>

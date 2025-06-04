@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"; //
 import { Button } from "@/components/ui/button";
 import InputWithLabel from '@/components/InputWithLabel';
 import AllPoints from '@/components/AllPoints';
+import NewAllPoint from '@/components/NewAllPoint';
 interface SidebarContentProps {
     selectedYear: string;
     setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
@@ -50,7 +51,7 @@ const StudentDetails = () => {
                     </Button>
                 </div>
 
-                <div className="p-0"><p>You are in {selectedYear} year</p>
+                <div className="p-0">{/* <p>You are in {selectedYear} year</p> */}
 
                  {selectedYear==="first" && <div>
 
@@ -60,7 +61,8 @@ const StudentDetails = () => {
                 {selectedYear==="first" &&<div className="p-6 space-y-8 overflow-y-auto">
                         
 
-                       <AllPoints/>
+                     {/*   <AllPoints/> */}
+                     <NewAllPoint/>
                         
                     </div> }
 
