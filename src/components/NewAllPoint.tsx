@@ -4,7 +4,6 @@ import {
   type StudentActivityFormData,
 } from "./types/superadminType";
 import { maxPointsPerActivity } from "@/maxPointsConfig";
-import { moocs } from "./data/data";
 import { activity } from "./data/data";
 const NewAllPoint = () => {
   const [totalPoint, setTotalPoint] = useState(0);
@@ -147,24 +146,26 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].moocs12Weeks)}</td>
-              <td className="border border-black text-center" rowSpan={4}>
-                {moocs[0].moocs.max}
+              <td className="border border-black text-center">
+                {Number(activity[0].moocs12Weeks?.points)}
               </td>
               <td className="border border-black text-center" rowSpan={4}>
-                {moocs[0].moocs.max -
-                  (moocs[0].moocs.moocs12Weeks +
-                  moocs[0].moocs.moocs8Weeks +
-                  moocs[0].moocs.moocs4Weeks +
-                  moocs[0].moocs.moocs2Weeks)}{/*remain point*/}
+                {activity[0].max}
               </td>
               <td className="border border-black text-center" rowSpan={4}>
-                {moocs[0].moocs.moocs12Weeks +
-                  moocs[0].moocs.moocs8Weeks +
-                  moocs[0].moocs.moocs4Weeks +
-                  moocs[0].moocs.moocs2Weeks}
+                {Number(activity[0].max) -
+                  (Number(activity[0].moocs12Weeks?.alreadyAcquired) +
+                    Number(activity[0].moocs8Weeks?.alreadyAcquired) +
+                    Number(activity[0].moocs4Weeks?.alreadyAcquired) +
+                    Number(activity[0].moocs2Weeks?.alreadyAcquired))}
+                {/*remain point*/}
+              </td>
+              <td className="border border-black text-center" rowSpan={4}>
+                {Number(activity[0].moocs12Weeks?.alreadyAcquired) +
+                  Number(activity[0].moocs8Weeks?.alreadyAcquired) +
+                  Number(activity[0].moocs4Weeks?.alreadyAcquired) +
+                  Number(activity[0].moocs2Weeks?.alreadyAcquired)}
               </td>{" "}
-
             </tr>
             <tr>
               <td className="border border-black px-2 py-1">
@@ -176,7 +177,7 @@ const NewAllPoint = () => {
                   value={formData.moocs8Weeks}
                 >
                   <option value="0">-- Select --</option>
-                  <option value="15">{Number(activity[0].moocs8Weeks)}</option>
+                  <option value="15">15</option>
                   <option value="30">30</option>
                 </select>
                 <input
@@ -187,7 +188,9 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">15</td>
+              <td className="border border-black text-center">
+                {Number(activity[0].moocs8Weeks?.points)}
+              </td>
             </tr>
             <tr>
               <td className="border border-black px-2 py-1">
@@ -199,7 +202,7 @@ const NewAllPoint = () => {
                   value={formData.moocs4Weeks}
                 >
                   <option value="0">-- Select --</option>
-                  <option value="10">{Number(activity[0].moocs4Weeks)}</option>
+                  <option value="10">10</option>
                   <option value="20">20</option>
                 </select>
                 <input
@@ -210,7 +213,9 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">10</td>
+              <td className="border border-black text-center">
+                {Number(activity[0].moocs4Weeks?.points)}
+              </td>
               {/* <td className="border border-black text-center">{getRemainingPoints('moocs4Weeks')}</td> Remaining Points */}
             </tr>
             <tr>
@@ -240,7 +245,9 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].moocs2Weeks)}</td>
+              <td className="border border-black text-center">
+                {Number(activity[0].moocs2Weeks?.points)}
+              </td>
             </tr>
 
             {/* Tech Fest/Fest/Teachers Day/Fresher’s Welcome */}
@@ -260,8 +267,31 @@ const NewAllPoint = () => {
                   value={formData.techFestOrganizer}
                 >
                   <option value="0">-- Select --</option>
-                  <option value="5">5</option>
-                  <option value="10">10</option>
+
+                  {[5, 10].map((value) => {
+                    const isDisabled =
+                      Number(activity[1].techFestOrganizer?.points) >
+                      Number(activity[1].max) -
+                        (Number(
+                          activity[1].techFestOrganizer?.alreadyAcquired
+                        ) +
+                          Number(formData.techFestOrganizer));
+
+                    return (
+                      <option
+                        key={value}
+                        value={value}
+                        disabled={isDisabled}
+                        className={
+                          isDisabled
+                            ? "cursor-not-allowed bg-gray-200 text-gray-400"
+                            : ""
+                        }
+                      >
+                        {value}
+                      </option>
+                    );
+                  })}
                 </select>
                 <input
                   id="techFestOrganizerFile"
@@ -271,9 +301,17 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].techFestOrganizer)}</td>
-              <td className="border border-black text-center">10</td>
-              <td className="border border-black text-center">10</td>
+              <td className="border border-black text-center">
+                {Number(activity[1].techFestOrganizer?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[1].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[1].max) -
+                  (Number(activity[1].techFestOrganizer?.alreadyAcquired) +
+                    Number(formData.techFestOrganizer))}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("techFestOrganizer")}
               </td>
@@ -299,9 +337,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].techFestParticipant)}</td>
-              <td className="border border-black text-center">6</td>
-              <td className="border border-black text-center">6</td>
+              <td className="border border-black text-center">
+                {Number(activity[2].techFestParticipant?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[2].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[2].max) -
+                  Number(activity[2].techFestParticipant?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("techFestParticipant")}
               </td>{" "}
@@ -330,9 +375,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].ruralReporting)}</td>
-              <td className="border border-black text-center">10</td>
-              <td className="border border-black text-center">10</td>
+              <td className="border border-black text-center">
+                {Number(activity[3].ruralReporting?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[3].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[3].max) -
+                  Number(activity[3].ruralReporting?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("ruralReporting")}
               </td>{" "}
@@ -369,9 +421,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].treePlantation)}</td>
-              <td className="border border-black text-center">10</td>
-              <td className="border border-black text-center">10</td>
+              <td className="border border-black text-center">
+                {Number(activity[4].treePlantation?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[4].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[4].max) -
+                  Number(activity[4].treePlantation?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("treePlantation")}
               </td>{" "}
@@ -413,12 +472,15 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].reliefFundCollection)}</td>
-              <td className="border border-black text-center" rowSpan={2}>
-                40
+              <td className="border border-black text-center">
+                {Number(activity[5].reliefFundCollection?.points)}
               </td>
               <td className="border border-black text-center" rowSpan={2}>
-                40
+                {activity[5].max}
+              </td>
+              <td className="border border-black text-center" rowSpan={2}>
+                {Number(activity[5].max) -
+                  Number(activity[5].reliefFundCollection?.alreadyAcquired)}
               </td>
               <td className="border border-black text-center" rowSpan={2}>
                 {getRemainingPoints("reliefFundCollection")}
@@ -446,7 +508,9 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].reliefWorkTeam)}</td>
+              <td className="border border-black text-center">
+                {Number(activity[5].reliefWorkTeam?.points)}
+              </td>
               {/* <td className="border border-black text-center">{getRemainingPoints('reliefWorkTeam')}</td> Remaining Points */}
             </tr>
 
@@ -475,9 +539,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].participationInArts)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[6].participationInArts?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[6].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[6].max) -
+                  Number(activity[6].participationInArts?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("participationInArts")}
               </td>{" "}
@@ -506,9 +577,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].publication)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[7].publication?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[7].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[7].max) -
+                  Number(activity[7].publication?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("publication")}
               </td>{" "}
@@ -537,9 +615,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].researchPublication)}</td>
-              <td className="border border-black text-center">30</td>
-              <td className="border border-black text-center">30</td>
+              <td className="border border-black text-center">
+                {Number(activity[8].researchPublication?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[8].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[8].max) -
+                  Number(activity[8].researchPublication?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("researchPublication")}
               </td>{" "}
@@ -568,9 +653,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].innovativeProjects)}</td>
-              <td className="border border-black text-center">60</td>
-              <td className="border border-black text-center">60</td>
+              <td className="border border-black text-center">
+                {Number(activity[9].innovativeProjects?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[9].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[9].max) -
+                  Number(activity[9].innovativeProjects?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("innovativeProjects")}
               </td>{" "}
@@ -599,9 +691,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].bloodDonation)}</td>
-              <td className="border border-black text-center">16</td>
-              <td className="border border-black text-center">16</td>
+              <td className="border border-black text-center">
+                {Number(activity[10].bloodDonation?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[10].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[10].max) -
+                  Number(activity[10].bloodDonation?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("bloodDonation")}
               </td>{" "}
@@ -628,9 +727,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].bloodDonationCampOrganization)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[11].bloodDonationCampOrganization?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[11].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[11].max) -
+                  Number(
+                    activity[11].bloodDonationCampOrganization?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("bloodDonationCampOrganization")}
               </td>{" "}
@@ -665,9 +773,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].sportsPersonal)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[12].sportsPersonal?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[12].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[12].max) -
+                  Number(activity[12].sportsPersonal?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("sportsPersonal")}
               </td>{" "}
@@ -694,9 +809,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].sportsCollege)}</td>
-              <td className="border border-black text-center">10</td>
-              <td className="border border-black text-center">10</td>
+              <td className="border border-black text-center">
+                {Number(activity[13].sportsCollege?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[13].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[13].max) -
+                  Number(activity[13].sportsCollege?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("sportsCollege")}
               </td>{" "}
@@ -723,9 +845,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].sportsUniversity)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[14].sportsUniversity?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[14].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[14].max) -
+                  Number(activity[14].sportsUniversity?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("sportsUniversity")}
               </td>{" "}
@@ -752,9 +881,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].sportsDistrict)}</td>
-              <td className="border border-black text-center">24</td>
-              <td className="border border-black text-center">24</td>
+              <td className="border border-black text-center">
+                {Number(activity[15].sportsDistrict?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[15].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[15].max) -
+                  Number(activity[15].sportsDistrict?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("sportsDistrict")}
               </td>{" "}
@@ -781,9 +917,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].sportsState)}</td>
-              <td className="border border-black text-center">30</td>
-              <td className="border border-black text-center">30</td>
+              <td className="border border-black text-center">
+                {Number(activity[16].sportsState?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[16].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[16].max) -
+                  Number(activity[16].sportsState?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("sportsState")}
               </td>{" "}
@@ -810,9 +953,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].sportsNationalInternational)}</td>
-              <td className="border border-black text-center">40</td>
-              <td className="border border-black text-center">40</td>
+              <td className="border border-black text-center">
+                {Number(activity[17].sportsNationalInternational?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[17].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[17].max) -
+                  Number(
+                    activity[17].sportsNationalInternational?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("sportsNationalInternational")}
               </td>{" "}
@@ -841,9 +993,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].professionalSocietyActivities)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[18].professionalSocietyActivities?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[18].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[18].max) -
+                  Number(
+                    activity[18].professionalSocietyActivities?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("professionalSocietyActivities")}
               </td>{" "}
@@ -873,9 +1034,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].industryVisit)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[19].industryVisit?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[19].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[19].max) -
+                  Number(activity[19].industryVisit?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("industryVisit")}
               </td>{" "}
@@ -906,9 +1074,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].communityService)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[20].communityService?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[20].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[20].max) -
+                  Number(activity[20].communityService?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("communityService")}
               </td>{" "}
@@ -943,9 +1118,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].entrepreneurshipOrganize)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[21].entrepreneurshipOrganize?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[21].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[21].max) -
+                  Number(
+                    activity[21].entrepreneurshipOrganize?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("entrepreneurshipOrganize")}
               </td>{" "}
@@ -972,9 +1156,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].entrepreneurshipParticipate)}</td>
-              <td className="border border-black text-center">10</td>
-              <td className="border border-black text-center">10</td>
+              <td className="border border-black text-center">
+                {Number(activity[22].entrepreneurshipParticipate?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[22].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[22].max) -
+                  Number(
+                    activity[22].entrepreneurshipParticipate?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("entrepreneurshipParticipate")}
               </td>{" "}
@@ -1001,9 +1194,16 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].entrepreneurshipVideo)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[23].entrepreneurshipVideo?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[23].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[23].max) -
+                  Number(activity[23].entrepreneurshipVideo?.alreadyAcquired)}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("entrepreneurshipVideo")}
               </td>{" "}
@@ -1030,9 +1230,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].entrepreneurshipBusinessPlan)}</td>
-              <td className="border border-black text-center">20</td>
-              <td className="border border-black text-center">20</td>
+              <td className="border border-black text-center">
+                {Number(activity[24].entrepreneurshipBusinessPlan?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[24].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[24].max) -
+                  Number(
+                    activity[24].entrepreneurshipBusinessPlan?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("entrepreneurshipBusinessPlan")}
               </td>{" "}
@@ -1059,9 +1268,18 @@ const NewAllPoint = () => {
                   onChange={handleChange}
                 />
               </td>
-              <td className="border border-black text-center">{Number(activity[0].entrepreneurshipWorkForStartup)}</td>
-              <td className="border border-black text-center">40</td>
-              <td className="border border-black text-center">40</td>
+              <td className="border border-black text-center">
+                {Number(activity[25].entrepreneurshipWorkForStartup?.points)}
+              </td>
+              <td className="border border-black text-center">
+                {activity[25].max}
+              </td>
+              <td className="border border-black text-center">
+                {Number(activity[25].max) -
+                  Number(
+                    activity[25].entrepreneurshipWorkForStartup?.alreadyAcquired
+                  )}
+              </td>
               <td className="border border-black text-center">
                 {getRemainingPoints("entrepreneurshipWorkForStartup")}
               </td>{" "}

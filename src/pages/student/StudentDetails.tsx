@@ -58,7 +58,7 @@ const StudentDetails = () => {
                  </div>}
 
 
-                {selectedYear==="first" &&<div className="p-6 space-y-8 overflow-y-auto">
+                {selectedYear==="first" &&<div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
                         
 
                      {/*   <AllPoints/> */}

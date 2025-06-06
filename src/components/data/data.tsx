@@ -268,46 +268,115 @@ export const students = [
   { name: "Ramesh Verma", rollNo: "23CS060", points: 68, verified: false },
 ];
 
-export const moocs =[{
-  "moocs": {
-    "max": 40,
-    "moocs12Weeks": 10,
-    "moocs8Weeks": 3,
-    "moocs4Weeks": 3,
-    "moocs2Weeks": 6
-  }
-}]
 
-export const activity=[{
-  "moocs12Weeks": "20",
-  "moocs8Weeks": "15",
-  "moocs4Weeks": "10",
-  "moocs2Weeks": "5",
-  "techFestOrganizer": "5",
-  "techFestParticipant": "3",
-  "ruralReporting": "5",
-  "treePlantation": "1",
-  "reliefFundCollection": "5",
-  "reliefWorkTeam": "20",
-  "participationInArts": "10",
-  "publication": "10",
-  "researchPublication": "15",
-  "innovativeProjects": "30",
-  "bloodDonation": "8",
-  "bloodDonationCampOrganization": "10",
-  "sportsPersonal": "10",
-  "sportsCollege": "5",
-  "sportsUniversity": "10",
-  "sportsDistrict": "12",
-  "sportsState": "15",
-  "sportsNationalInternational": "20",
-  "professionalSocietyActivities": "10",
-  "industryVisit": "10",
-  "communityService": "10",
-  "entrepreneurshipOrganize": "10",
-  "entrepreneurshipParticipate": "5",
-  "entrepreneurshipVideo": "10",
-  "entrepreneurshipBusinessPlan": "10",
-  "entrepreneurshipWorkForStartup": "20"
-}
+export const activity=[
+  {
+    "max": "40",
+    "moocs12Weeks": { "points": 20, "alreadyAcquired": 0 },
+    "moocs8Weeks": { "points": 15, "alreadyAcquired": 0 },
+    "moocs4Weeks": { "points": 10, "alreadyAcquired": 0 },
+    "moocs2Weeks": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "techFestOrganizer": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "6",
+    "techFestParticipant": { "points": 3, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "ruralReporting": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "treePlantation": { "points": 1, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "40",
+    "reliefFundCollection": { "points": 5, "alreadyAcquired": 0 },
+    "reliefWorkTeam": { "points": 20, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "participationInArts": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "publication": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "30",
+    "researchPublication": { "points": 15, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "60",
+    "innovativeProjects": { "points": 30, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "16",
+    "bloodDonation": { "points": 8, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "bloodDonationCampOrganization": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "sportsPersonal": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "sportsCollege": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "sportsUniversity": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "24",
+    "sportsDistrict": { "points": 12, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "30",
+    "sportsState": { "points": 15, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "40",
+    "sportsNationalInternational": { "points": 20, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "professionalSocietyActivities": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "industryVisit": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "communityService": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "entrepreneurshipOrganize": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "entrepreneurshipParticipate": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "entrepreneurshipVideo": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "entrepreneurshipBusinessPlan": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "40",
+    "entrepreneurshipWorkForStartup": { "points": 20, "alreadyAcquired": 0 }
+  }
 ]
+
