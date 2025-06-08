@@ -1,3 +1,5 @@
+import type { YearlyActivityList } from "../types/superadminType";
+
 export const teachers = [
   { name: "Dr. Rajeev", department: "CSE", userId: "T001", password: "pass123" },
   { name: "Ms. Ananya", department: "ECE", userId: "T002", password: "123456" },
@@ -380,3 +382,427 @@ export const activity=[
   }
 ]
 
+
+export const firstYear = [
+  {
+    name: "MOOCS",
+    max: 40,
+    remain: 40,
+    already_acquired: 0,
+    subpoints: [
+      { name: "10 weeks", point_per_activity: 20 },
+      { name: "8 weeks", point_per_activity: 15 },
+      { name: "4 weeks", point_per_activity: 10 },
+      { name: "2 weeks", point_per_activity: 5 }
+    ]
+  },
+  {
+    name: "Tech Fest",
+    subpoints: [
+      {
+        name: "Organizer",
+        point_per_activity: 5,
+        max: 10,
+        remain: 10,
+        already_acquired: 0
+      },
+      {
+        name: "Participant",
+        point_per_activity: 3,
+        max: 6,
+        remain: 6,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Rural Reporting",
+    point_per_activity: 5,
+    max: 10,
+    remain: 10,
+    already_acquired: 0
+  },
+  {
+    name: "Tree Plantation",
+    point_per_activity: 1,
+    max: 10,
+    remain: 10,
+    already_acquired: 0
+  },
+  {
+    name: "Relief & Charitable Activities",
+    max: 40,
+    remain: 40,
+    already_acquired: 0,
+    subpoints: [
+      {
+        name: "Collection of Fund",
+        point_per_activity: 5
+      },
+      {
+        name: "Relief Work Team",
+        point_per_activity: 20
+      }
+    ]
+  },
+  {
+    name: "Participation in Debate",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Publication",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Research Publication",
+    point_per_activity: 15,
+    max: 30,
+    remain: 30,
+    already_acquired: 0
+  },
+  {
+    name: "Innovation Project",
+    point_per_activity: 30,
+    max: 60,
+    remain: 60,
+    already_acquired: 0
+  },
+  {
+    name: "Blood Donation",
+    subpoints: [
+      {
+        name: "Donate Blood",
+        point_per_activity: 8,
+        max: 16,
+        remain: 16,
+        already_acquired: 0
+      },
+      {
+        name: "Organize Blood Donation Camp",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Sports",
+    subpoints: [
+      {
+        name: "Personal",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "College",
+        point_per_activity: 5,
+        max: 10,
+        remain: 10,
+        already_acquired: 0
+      },
+      {
+        name: "University",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "District",
+        point_per_activity: 12,
+        max: 24,
+        remain: 24,
+        already_acquired: 0
+      },
+      {
+        name: "Other",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "National",
+        point_per_activity: 20,
+        max: 40,
+        remain: 40,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Relevant Industry Visit & Report",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Community Service & Allied Activities",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Self-Entrepreneurship",
+    subpoints: [
+      {
+        name: "Organise Entrepreneurship Programmes",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "Take Part in Entrepreneurship",
+        point_per_activity: 5,
+        max: 10,
+        remain: 10,
+        already_acquired: 0
+      },
+      {
+        name: "Film Making",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "Submit Business Plan",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "Work for Start-up",
+        point_per_activity: 20,
+        max: 40,
+        remain: 40,
+        already_acquired: 0
+      }
+    ]
+  }
+];
+
+export const secondYear = [
+  {
+    name: "MOOCS",
+    max: 40,
+    remain: 0,
+    already_acquired: 0,
+    subpoints: [
+      { name: "10 weeks", point_per_activity: 20 },
+      { name: "8 weeks", point_per_activity: 15 },
+      { name: "4 weeks", point_per_activity: 10 },
+      { name: "2 weeks", point_per_activity: 5 }
+    ]
+  },
+  {
+    name: "Tech Fest",
+    subpoints: [
+      {
+        name: "Organizer",
+        point_per_activity: 5,
+        max: 10,
+        remain: 0,
+        already_acquired: 10
+      },
+      {
+        name: "Participant",
+        point_per_activity: 3,
+        max: 6,
+        remain: 0,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Rural Reporting",
+    point_per_activity: 5,
+    max: 10,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Tree Plantation",
+    point_per_activity: 1,
+    max: 10,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Relief & Charitable Activities",
+    max: 40,
+    remain: 0,
+    already_acquired: 0,
+    subpoints: [
+      {
+        name: "Collection of Fund",
+        point_per_activity: 5
+      },
+      {
+        name: "Relief Work Team",
+        point_per_activity: 20
+      }
+    ]
+  },
+  {
+    name: "Participation in Debate",
+    point_per_activity: 10,
+    max: 20,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Publication",
+    point_per_activity: 10,
+    max: 20,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Research Publication",
+    point_per_activity: 15,
+    max: 30,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Innovation Project",
+    point_per_activity: 30,
+    max: 60,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Blood Donation",
+    subpoints: [
+      {
+        name: "Donate Blood",
+        point_per_activity: 8,
+        max: 16,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "Organize Blood Donation Camp",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Sports",
+    subpoints: [
+      {
+        name: "Personal",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "College",
+        point_per_activity: 5,
+        max: 10,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "University",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "District",
+        point_per_activity: 12,
+        max: 24,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "Other",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "National",
+        point_per_activity: 20,
+        max: 40,
+        remain: 0,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Relevant Industry Visit & Report",
+    point_per_activity: 10,
+    max: 20,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Community Service & Allied Activities",
+    point_per_activity: 10,
+    max: 20,
+    remain: 0,
+    already_acquired: 0
+  },
+  {
+    name: "Self-Entrepreneurship",
+    subpoints: [
+      {
+        name: "Organise Entrepreneurship Programmes",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "Take Part in Entrepreneurship",
+        point_per_activity: 5,
+        max: 10,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "Film Making",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "Submit Business Plan",
+        point_per_activity: 10,
+        max: 20,
+        remain: 0,
+        already_acquired: 0
+      },
+      {
+        name: "Work for Start-up",
+        point_per_activity: 20,
+        max: 40,
+        remain: 0,
+        already_acquired: 0
+      }
+    ]
+  }
+];

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import InputWithLabel from '@/components/InputWithLabel';
 import AllPoints from '@/components/AllPoints';
 import NewAllPoint from '@/components/NewAllPoint';
+import StudentYearlyDetails from '@/components/StudentComponent/StudentYearlyDetails';
+import { firstYear, secondYear } from '@/components/data/data';
 interface SidebarContentProps {
     selectedYear: string;
     setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
@@ -53,21 +55,24 @@ const StudentDetails = () => {
 
                 <div className="p-0">{/* <p>You are in {selectedYear} year</p> */}
 
-                 {selectedYear==="first" && <div>
+                    {selectedYear === "first" && <div>
 
-                 </div>}
-
-
-                {selectedYear==="first" &&<div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                        
-
-                     {/*   <AllPoints/> */}
-                     <NewAllPoint/>
-                        
-                    </div> }
+                    </div>}
 
 
-                    
+                    {selectedYear === "first" &&
+                        <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
+                            <StudentYearlyDetails data={firstYear}/>
+                        </div>
+                    }
+                    {selectedYear === "second" &&
+                        <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
+                            <StudentYearlyDetails data={secondYear}/>
+                        </div>
+                    }
+
+
+
 
 
 

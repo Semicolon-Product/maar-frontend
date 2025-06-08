@@ -7,127 +7,147 @@ export interface Teacher {
   password: string;
 }
 export interface StudentActivityFormData {
-  moocs12Weeks: string;
+  moocs12Weeks: number;
   moocs12WeeksFile: File | null;
-  moocs8Weeks: string;
+  moocs8Weeks: number;
   moocs8WeeksFile: File | null;
-  moocs4Weeks: string;
+  moocs4Weeks: number;
   moocs4WeeksFile: File | null;
-  moocs2Weeks: string;
+  moocs2Weeks: number;
   moocs2WeeksFile: File | null;
-  techFestOrganizer: string;
+  techFestOrganizer: number;
   techFestOrganizerFile: File | null;
-  techFestParticipant: string;
+  techFestParticipant: number;
   techFestParticipantFile: File | null;
-  ruralReporting: string;
+  ruralReporting: number;
   ruralReportingFile: File | null;
-  treePlantation: string;
+  treePlantation: number;
   treePlantationFile: File | null;
-  reliefFundCollection: string;
+  reliefFundCollection: number;
   reliefFundCollectionFile: File | null;
-  reliefWorkTeam: string;
+  reliefWorkTeam: number;
   reliefWorkTeamFile: File | null;
-  participationInArts: string;
+  participationInArts: number;
   participationInArtsFile: File | null;
-  publication: string;
+  publication: number;
   publicationFile: File | null;
-  researchPublication: string;
+  researchPublication: number;
   researchPublicationFile: File | null;
-  innovativeProjects: string;
+  innovativeProjects: number;
   innovativeProjectsFile: File | null;
-  bloodDonation: string;
+  bloodDonation: number;
   bloodDonationFile: File | null;
-  bloodDonationCampOrganization: string;
+  bloodDonationCampOrganization: number;
   bloodDonationCampOrganizationFile: File | null;
-  sportsPersonal: string;
+  sportsPersonal: number;
   sportsPersonalFile: File | null;
-  sportsCollege: string;
+  sportsCollege: number;
   sportsCollegeFile: File | null;
-  sportsUniversity: string;
+  sportsUniversity: number;
   sportsUniversityFile: File | null;
-  sportsDistrict: string;
+  sportsDistrict: number;
   sportsDistrictFile: File | null;
-  sportsState: string;
+  sportsState: number;
   sportsStateFile: File | null;
-  sportsNationalInternational: string;
+  sportsNationalInternational: number;
   sportsNationalInternationalFile: File | null;
-  professionalSocietyActivities: string;
+  professionalSocietyActivities: number;
   professionalSocietyActivitiesFile: File | null;
-  industryVisit: string;
+  industryVisit: number;
   industryVisitFile: File | null;
-  communityService: string;
+  communityService: number;
   communityServiceFile: File | null;
-  entrepreneurshipOrganize: string;
+  entrepreneurshipOrganize: number;
   entrepreneurshipOrganizeFile: File | null;
-  entrepreneurshipParticipate: string;
+  entrepreneurshipParticipate: number;
   entrepreneurshipParticipateFile: File | null;
-  entrepreneurshipVideo: string;
+  entrepreneurshipVideo: number;
   entrepreneurshipVideoFile: File | null;
-  entrepreneurshipBusinessPlan: string;
+  entrepreneurshipBusinessPlan: number;
   entrepreneurshipBusinessPlanFile: File | null;
-  entrepreneurshipWorkForStartup: string;
+  entrepreneurshipWorkForStartup: number;
   entrepreneurshipWorkForStartupFile: File | null;
 }
 
 export const initialStudentActivityFormData: StudentActivityFormData = {
-  moocs12Weeks: '',
+  moocs12Weeks: 0,
   moocs12WeeksFile: null,
-  moocs8Weeks: '',
+  moocs8Weeks: 0,
   moocs8WeeksFile: null,
-  moocs4Weeks: '',
+  moocs4Weeks: 0,
   moocs4WeeksFile: null,
-  moocs2Weeks: '',
+  moocs2Weeks: 0,
   moocs2WeeksFile: null,
-  techFestOrganizer: '',
+  techFestOrganizer: 0,
   techFestOrganizerFile: null,
-  techFestParticipant: '',
+  techFestParticipant: 0,
   techFestParticipantFile: null,
-  ruralReporting: '',
+  ruralReporting: 0,
   ruralReportingFile: null,
-  treePlantation: '',
+  treePlantation: 0,
   treePlantationFile: null,
-  reliefFundCollection: '',
+  reliefFundCollection: 0,
   reliefFundCollectionFile: null,
-  reliefWorkTeam: '',
+  reliefWorkTeam: 0,
   reliefWorkTeamFile: null,
-  participationInArts: '',
+  participationInArts: 0,
   participationInArtsFile: null,
-  publication: '',
+  publication: 0,
   publicationFile: null,
-  researchPublication: '',
+  researchPublication: 0,
   researchPublicationFile: null,
-  innovativeProjects: '',
+  innovativeProjects: 0,
   innovativeProjectsFile: null,
-  bloodDonation: '',
+  bloodDonation: 0,
   bloodDonationFile: null,
-  bloodDonationCampOrganization: '',
+  bloodDonationCampOrganization: 0,
   bloodDonationCampOrganizationFile: null,
-  sportsPersonal: '',
+  sportsPersonal: 0,
   sportsPersonalFile: null,
-  sportsCollege: '',
+  sportsCollege: 0,
   sportsCollegeFile: null,
-  sportsUniversity: '',
+  sportsUniversity: 0,
   sportsUniversityFile: null,
-  sportsDistrict: '',
+  sportsDistrict: 0,
   sportsDistrictFile: null,
-  sportsState: '',
+  sportsState: 0,
   sportsStateFile: null,
-  sportsNationalInternational: '',
+  sportsNationalInternational: 0,
   sportsNationalInternationalFile: null,
-  professionalSocietyActivities: '',
+  professionalSocietyActivities: 0,
   professionalSocietyActivitiesFile: null,
-  industryVisit: '',
+  industryVisit: 0,
   industryVisitFile: null,
-  communityService: '',
+  communityService: 0,
   communityServiceFile: null,
-  entrepreneurshipOrganize: '',
+  entrepreneurshipOrganize: 0,
   entrepreneurshipOrganizeFile: null,
-  entrepreneurshipParticipate: '',
+  entrepreneurshipParticipate: 0,
   entrepreneurshipParticipateFile: null,
-  entrepreneurshipVideo: '',
+  entrepreneurshipVideo: 0,
   entrepreneurshipVideoFile: null,
-  entrepreneurshipBusinessPlan: '',
+  entrepreneurshipBusinessPlan: 0,
   entrepreneurshipBusinessPlanFile: null,
-  entrepreneurshipWorkForStartup: '',
+  entrepreneurshipWorkForStartup: 0,
   entrepreneurshipWorkForStartupFile: null,
 };
+
+// Subpoint definition
+export interface Subpoint {
+  name: string;
+  point_per_activity: number;
+  max?: number;
+  remain?: number;
+  already_acquired?: number;
+}
+
+// Main activity definition
+export interface Activity {
+  name: string;
+  point_per_activity?: number;
+  max?: number;
+  remain?: number;
+  already_acquired?: number;
+  subpoints?: Subpoint[];
+}
+export type YearlyActivityList = Activity[];
