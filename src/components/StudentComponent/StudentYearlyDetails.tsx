@@ -285,7 +285,7 @@ const StudentYearlyDetails = ({ data }) => {
                                     type="file"
                                     className="fileInputBox"
                                     name="techFestParticipantFile"
-                                    onChange={handleChange}
+                                 onChange={handleChange}
                                 />
                             </td>
                             <td className="border border-black text-center">
