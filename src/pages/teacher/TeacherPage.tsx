@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {  ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {Box, Modal, Typography,} from "@mui/material";
-import TeacherVerifyTable from "@/components/TeacherVerifyTable";
+import { Box, Modal, Typography, } from "@mui/material";
+import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable";
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 import { teacherPageModalStyle } from "@/components/styles/style";
 
 import { firstYear } from "@/components/data/data";
+import { allStudentDetails } from "@/components/data/data";
+import { X } from "lucide-react";
 
 interface SidebarContentProps {
   selectedSection: string;
@@ -19,10 +21,10 @@ interface SidebarContentProps {
 const TeacherPage = () => {
   const [selectedSection, setSelectedSection] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
- 
 
- 
+
+
+
 
 
 
@@ -31,7 +33,7 @@ const TeacherPage = () => {
   const [openDocsModal, setOpenDocsModal] = useState(false);
   const [docLink, setDocLink] = useState<string | null>(null);
 
- 
+
 
 
   const handleClose = () => {
@@ -77,66 +79,69 @@ const TeacherPage = () => {
 
       {/* Sidebar for Mobile */}
       {isSidebarOpen && (
-        <div className="inset-0 bg-gray-900 text-white w-64 z-50 px-2 pt-2 md:hidden sticky top-0 h-screen overflow-y-auto">
+        <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
+
+          {/* Close icon */}
+          <div className="flex justify-end p-2">
+            <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
+              <X size={24} />
+              
+            </button>
+          </div>
+
+         
           <SidebarContent
             selectedSection={selectedSection}
             setSelectedSection={setSelectedSection}
           />
-          <div className="text-right pr-4">
-            <Button
-              className="mt-4 bg-white text-black"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-              Close
-            </Button>
-          </div>
         </div>
       )}
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Top bar with menu icon */}
-        <div className="flex justify-end p-4 md:hidden">
+        <div className="flex justify-end px-4 pt-4 pb-0  md:hidden ">
+
+
           <Button
-            className="text-black bg-transparent hover:bg-gray-100 "
+            className="text-black bg-transparent hover:bg-gray-100"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <IoReorderThree className="text-xl scale-150" />
           </Button>
         </div>
 
+
         <div className="p-4">
-          <h1 className="text-2xl font-bold">Teacher Dashboard</h1>
-          <p className="mt-2 text-gray-700">
-            You are viewing the <strong>{selectedSection}</strong> section.
-          </p>
+
 
           {/* Render Section Content */}
-          <div className="mt-6">
+          <div className="mt-0">
             {selectedSection === "dashboard" && (
-              <TeacherDetails/>
+              <TeacherDetails />
             )}
 
             {selectedSection === "first" && (
               <div>
                 Your are in first year
-               <TeacherVerifyTable/>
+                <TeacherVerifyTable data={allStudentDetails.firstYear} />
               </div>
             )}
             {selectedSection === "second" && <div>
-                Your are in second year
-               
-              </div>}
+              Your are in second year
+              <TeacherVerifyTable data={allStudentDetails.secondYear} />
+            </div>}
             {selectedSection === "third" && (
               <div>
                 Your are in third year
-               
+                <TeacherVerifyTable data={allStudentDetails.thirdYear} />
               </div>
             )}
             {selectedSection === "four" && <div>
-                Your are in fourth year
-               
-              </div>}
+              Your are in fourth year
+              <TeacherVerifyTable data={allStudentDetails.fourthYear} />
+
+            </div>}
             {selectedSection === "logout" && <p>Logging out...</p>}
           </div>
         </div>
@@ -180,6 +185,9 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         </li>
       ))}
     </ul>
+    <div className="mt-auto text-center text-xs text-gray-400 py-4 border-t border-gray-700">
+      © {new Date().getFullYear()} Semicolon Pvt Ltd
+    </div>
   </>
 );
 

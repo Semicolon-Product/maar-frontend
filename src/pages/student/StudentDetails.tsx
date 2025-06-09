@@ -7,6 +7,7 @@ import AllPoints from '@/components/AllPoints';
 import NewAllPoint from '@/components/NewAllPoint';
 import StudentYearlyDetails from '@/components/StudentComponent/StudentYearlyDetails';
 import { firstYear, secondYear } from '@/components/data/data';
+import { X } from 'lucide-react';
 interface SidebarContentProps {
     selectedYear: string;
     setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
@@ -27,16 +28,15 @@ const StudentDetails = () => {
 
             {/* Sidebar for Mobile */}
             {isSidebarOpen && (
-                <div className=" inset-0 bg-gray-800 text-white w-64 z-50 px-2 pt-2 md:hidden sticky top-0 h-screen overflow-y-auto">
-                    <SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
-                    <div className="text-right pr-4">
-                        <Button
-                            className="mt-4 bg-white text-black"
-                            onClick={() => setIsSidebarOpen(false)}
-                        >
-                            Close
-                        </Button>
+                <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
+                    <div className="flex justify-end p-2">
+                        <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
+                            <X size={24} />
+
+                        </button>
                     </div>
+                    <SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+
                 </div>
             )}
 
@@ -62,12 +62,12 @@ const StudentDetails = () => {
 
                     {selectedYear === "first" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={firstYear}/>
+                            <StudentYearlyDetails data={firstYear} />
                         </div>
                     }
                     {selectedYear === "second" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={secondYear}/>
+                            <StudentYearlyDetails data={secondYear} />
                         </div>
                     }
 
@@ -114,6 +114,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelect
                 </li>
             ))}
         </ul>
+
+        <div className="mt-auto text-center text-xs text-gray-400 py-4 border-t border-gray-700">
+            © {new Date().getFullYear()} Semicolon Pvt Ltd
+        </div>
     </>
 );
 

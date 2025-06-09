@@ -36,7 +36,7 @@ export const students = [
         name: "Python Workshop",
         date: "2025-01-15",
         points: 10,
-        docs: "python_workshop_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "python_workshop_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
         
         
       },
@@ -45,35 +45,35 @@ export const students = [
         name: "AI Bootcamp",
         date: "2025-02-10",
         points: 15,
-        docs: "ai_bootcamp_proof.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "ai_bootcamp_proof.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 3,
         name: "National Hackathon",
         date: "2025-03-05",
         points: 20,
-        docs: "hackathon_certificate.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "hackathon_certificate.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 4,
         name: "Online Course (NPTEL - DBMS)",
         date: "2025-03-25",
         points: 10,
-        docs: "nptel_dbms_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "nptel_dbms_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 5,
         name: "IEEE Paper Presentation",
         date: "2025-04-08",
         points: 25,
-        docs: "ieee_paper.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "ieee_paper.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 6,
         name: "Soft Skills Training",
         date: "2025-05-01",
         points: 5,
-        docs: "soft_skills.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "soft_skills.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       }
     ]
   },
@@ -85,7 +85,7 @@ export const students = [
           name: "Web Development Seminar",
           date: "2025-01-20",
           points: 12,
-          docs: "web_dev_seminar.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          docs: "web_dev_seminar.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
           status: false
         },
         {
@@ -93,7 +93,7 @@ export const students = [
           name: "Cloud Computing Workshop",
           date: "2025-02-12",
           points: 18,
-          docs: "cloud_computing_workshop.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          docs: "cloud_computing_workshop.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
           status: false
         },
         {
@@ -101,7 +101,7 @@ export const students = [
           name: "Cybersecurity Training",
           date: "2025-03-07",
           points: 20,
-          docs: "cybersecurity_training.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          docs: "cybersecurity_training.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
           status: false
         },
         {
@@ -109,7 +109,7 @@ export const students = [
           name: "Machine Learning Webinar",
           date: "2025-03-28",
           points: 10,
-          docs: "ml_webinar_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          docs: "ml_webinar_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
           status: false
         },
         {
@@ -117,7 +117,7 @@ export const students = [
           name: "Startup Ideation Challenge",
           date: "2025-04-12",
           points: 22,
-          docs: "startup_challenge.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          docs: "startup_challenge.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
           status: false
         },
         {
@@ -125,7 +125,7 @@ export const students = [
           name: "Advanced Excel Certification",
           date: "2025-05-03",
           points: 8,
-          docs: "excel_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          docs: "excel_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
           status: false
         }
       ]
@@ -138,42 +138,42 @@ export const students = [
         name: "Python Workshop",
         date: "2025-01-15",
         points: 10,
-        docs: "python_workshop_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=", status: false
+        docs: "python_workshop_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=", status: false
       },
       {
         serialNo: 2,
         name: "AI Bootcamp",
         date: "2025-02-10",
         points: 15,
-        docs: "ai_bootcamp_proof.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "ai_bootcamp_proof.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 3,
         name: "National Hackathon",
         date: "2025-03-05",
         points: 20,
-        docs: "hackathon_certificate.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "hackathon_certificate.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 4,
         name: "Online Course (NPTEL - DBMS)",
         date: "2025-03-25",
         points: 10,
-        docs: "nptel_dbms_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "nptel_dbms_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 5,
         name: "IEEE Paper Presentation",
         date: "2025-04-08",
         points: 25,
-        docs: "ieee_paper.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "ieee_paper.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 6,
         name: "Soft Skills Training",
         date: "2025-05-01",
         points: 5,
-        docs: "soft_skills.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "soft_skills.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       }
     ]
   },
@@ -184,90 +184,47 @@ export const students = [
         name: "Python Workshop",
         date: "2025-01-15",
         points: 10,
-        docs: "python_workshop_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=", status: false
+        docs: "python_workshop_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=", status: false
       },
       {
         serialNo: 2,
         name: "AI Bootcamp",
         date: "2025-02-10",
         points: 15,
-        docs: "ai_bootcamp_proof.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "ai_bootcamp_proof.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 3,
         name: "National Hackathon",
         date: "2025-03-05",
         points: 20,
-        docs: "hackathon_certificate.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "hackathon_certificate.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 4,
         name: "Online Course (NPTEL - DBMS)",
         date: "2025-03-25",
         points: 10,
-        docs: "nptel_dbms_cert.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "nptel_dbms_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 5,
         name: "IEEE Paper Presentation",
         date: "2025-04-08",
         points: 25,
-        docs: "ieee_paper.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "ieee_paper.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       },
       {
         serialNo: 6,
         name: "Soft Skills Training",
         date: "2025-05-01",
         points: 5,
-        docs: "soft_skills.pdf",link:"https://media.istockphoto.com/id/943910534/photo/human-crowd-forming-an-arrow-shape-map-finance-concept.jpg?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        docs: "soft_skills.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
       }
     ]
   },
 
-  { name: "Tarun Arora", rollNo: "23CS017", points: 79, verified: false },
-  { name: "Megha Nair", rollNo: "23CS018", points: 82, verified: false },
-  { name: "Abhishek Rana", rollNo: "23CS019", points: 70, verified: false },
-  { name: "Ritika Bansal", rollNo: "23CS020", points: 95, verified: false },
-  { name: "Nikhil Dubey", rollNo: "23CS021", points: 89, verified: false },
-  { name: "Isha Rawat", rollNo: "23CS022", points: 77, verified: false },
-  { name: "Sandeep Goyal", rollNo: "23CS023", points: 73, verified: false },
-  { name: "Anjali Sharma", rollNo: "23CS024", points: 66, verified: false },
-  { name: "Deepak Negi", rollNo: "23CS025", points: 84, verified: false },
-  { name: "Payal Taneja", rollNo: "23CS026", points: 71, verified: false },
-  { name: "Rahul Chauhan", rollNo: "23CS027", points: 64, verified: false },
-  { name: "Kritika Saxena", rollNo: "23CS028", points: 96, verified: false },
-  { name: "Arun Kumar", rollNo: "23CS029", points: 63, verified: false },
-  { name: "Monika Thakur", rollNo: "23CS030", points: 82, verified: false },
-  { name: "Aditya Singh", rollNo: "23CS031", points: 88, verified: false },
-  { name: "Simran Kaur", rollNo: "23CS032", points: 67, verified: false },
-  { name: "Jatin Grover", rollNo: "23CS033", points: 90, verified: false },
-  { name: "Lavanya Pillai", rollNo: "23CS034", points: 85, verified: false },
-  { name: "Dev Sharma", rollNo: "23CS035", points: 78, verified: false },
-  { name: "Rani Das", rollNo: "23CS036", points: 60, verified: false },
-  { name: "Nitin Kapoor", rollNo: "23CS037", points: 62, verified: false },
-  { name: "Geeta Soni", rollNo: "23CS038", points: 87, verified: false },
-  { name: "Rajeev Singh", rollNo: "23CS039", points: 74, verified: false },
-  { name: "Aishwarya Jain", rollNo: "23CS040", points: 93, verified: false },
-  { name: "Harshit Bansal", rollNo: "23CS041", points: 89, verified: false },
-  { name: "Meena Kumari", rollNo: "23CS042", points: 76, verified: false },
-  { name: "Sourav Joshi", rollNo: "23CS043", points: 91, verified: false },
-  { name: "Bhavna Yadav", rollNo: "23CS044", points: 66, verified: false },
-  { name: "Akshay Rana", rollNo: "23CS045", points: 82, verified: false },
-  { name: "Namrata Paul", rollNo: "23CS046", points: 80, verified: false },
-  { name: "Sahil Bhardwaj", rollNo: "23CS047", points: 75, verified: false },
-  { name: "Reena Sahu", rollNo: "23CS048", points: 92, verified: false },
-  { name: "Yogesh Chhabra", rollNo: "23CS049", points: 69, verified: false },
-  { name: "Tanvi Rawat", rollNo: "23CS050", points: 70, verified: false },
-  { name: "Anurag Tyagi", rollNo: "23CS051", points: 61, verified: false },
-  { name: "Pritam Paul", rollNo: "23CS052", points: 64, verified: false },
-  { name: "Deeksha Sinha", rollNo: "23CS053", points: 77, verified: false },
-  { name: "Raghav Malhotra", rollNo: "23CS054", points: 83, verified: false },
-  { name: "Ishita Kapoor", rollNo: "23CS055", points: 81, verified: false },
-  { name: "Vipul Saxena", rollNo: "23CS056", points: 86, verified: false },
-  { name: "Naina Singh", rollNo: "23CS057", points: 72, verified: false },
-  { name: "Manoj Khanna", rollNo: "23CS058", points: 90, verified: false },
-  { name: "Asmita Ghosh", rollNo: "23CS059", points: 88, verified: false },
-  { name: "Ramesh Verma", rollNo: "23CS060", points: 68, verified: false },
+  
 ];
 
 
@@ -822,3 +779,535 @@ export const secondYear =
     ]
   }
 ];
+
+
+ export const allStudentDetails = {
+  "firstYear": [
+    {
+      "name": "Amit Kumar",
+      "rollNo": "23CS101",
+      "points": 85,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2025-01-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2025-02-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Sara Mehta",
+      "rollNo": "23CS102",
+      "points": 90,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Web Development Seminar",
+          "date": "2025-01-20",
+          "points": 12,
+          "docs": "web_dev_seminar.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cloud Computing Workshop",
+          "date": "2025-02-12",
+          "points": 18,
+          "docs": "cloud_computing_workshop.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Ravi Sharma",
+      "rollNo": "23CS103",
+      "points": 76,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "National Hackathon",
+          "date": "2025-03-05",
+          "points": 20,
+          "docs": "hackathon_certificate.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Soft Skills Training",
+          "date": "2025-05-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Priya Verma",
+      "rollNo": "23CS104",
+      "points": 92,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2025-04-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Online Course (NPTEL - DBMS)",
+          "date": "2025-03-25",
+          "points": 10,
+          "docs": "nptel_dbms_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Karan Singh",
+      "rollNo": "23CS105",
+      "points": 70,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Soft Skills Training",
+          "date": "2025-05-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Machine Learning Webinar",
+          "date": "2025-03-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ],
+  "secondYear": [
+    {
+      "name": "Anita Roy",
+      "rollNo": "22CS201",
+      "points": 88,
+      "verified": true,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Cloud Computing Workshop",
+          "date": "2024-10-15",
+          "points": 18,
+          "docs": "cloud_computing_workshop.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cybersecurity Training",
+          "date": "2024-11-07",
+          "points": 20,
+          "docs": "cybersecurity_training.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Vikram Patel",
+      "rollNo": "22CS202",
+      "points": 80,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Web Development Seminar",
+          "date": "2024-10-20",
+          "points": 12,
+          "docs": "web_dev_seminar.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Startup Ideation Challenge",
+          "date": "2024-11-12",
+          "points": 22,
+          "docs": "startup_challenge.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Deepa Nair",
+      "rollNo": "22CS203",
+      "points": 85,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Machine Learning Webinar",
+          "date": "2024-10-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Advanced Excel Certification",
+          "date": "2024-11-03",
+          "points": 8,
+          "docs": "excel_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Rohit Desai",
+      "rollNo": "22CS204",
+      "points": 78,
+      "verified": true,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2024-10-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2024-11-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Sneha Gupta",
+      "rollNo": "22CS205",
+      "points": 92,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2024-10-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Soft Skills Training",
+          "date": "2024-11-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ],
+  "thirdYear": [
+    {
+      "name": "Manish Sharma",
+      "rollNo": "21CS301",
+      "points": 85,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "AI Bootcamp",
+          "date": "2023-11-15",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cybersecurity Training",
+          "date": "2023-12-07",
+          "points": 20,
+          "docs": "cybersecurity_training.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Neha Singh",
+      "rollNo": "21CS302",
+      "points": 90,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Web Development Seminar",
+          "date": "2023-11-20",
+          "points": 12,
+          "docs": "web_dev_seminar.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Machine Learning Webinar",
+          "date": "2023-12-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Rajesh Kumar",
+      "rollNo": "21CS303",
+      "points": 76,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Startup Ideation Challenge",
+          "date": "2023-11-12",
+          "points": 22,
+          "docs": "startup_challenge.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Advanced Excel Certification",
+          "date": "2023-12-03",
+          "points": 8,
+          "docs": "excel_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Divya Patel",
+      "rollNo": "21CS304",
+      "points": 92,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2023-10-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Soft Skills Training",
+          "date": "2023-11-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Ayesha Khan",
+      "rollNo": "21CS305",
+      "points": 70,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2023-10-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2023-11-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ],
+  "fourthYear": [
+    {
+      "name": "Vikas Sharma",
+      "rollNo": "20CS401",
+      "points": 85,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Soft Skills Training",
+          "date": "2022-05-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Machine Learning Webinar",
+          "date": "2022-03-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Neelam Gupta",
+      "rollNo": "20CS402",
+      "points": 90,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2022-04-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Online Course (NPTEL - DBMS)",
+          "date": "2022-03-25",
+          "points": 10,
+          "docs": "nptel_dbms_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Ramesh Patel",
+      "rollNo": "20CS403",
+      "points": 76,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2022-01-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2022-02-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Sonal Mehta",
+      "rollNo": "20CS404",
+      "points": 92,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Cloud Computing Workshop",
+          "date": "2022-02-15",
+          "points": 18,
+          "docs": "cloud_computing_workshop.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cybersecurity Training",
+          "date": "2022-03-07",
+          "points": 20,
+          "docs": "cybersecurity_training.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Kavita Joshi",
+      "rollNo": "20CS405",
+      "points": 70,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Startup Ideation Challenge",
+          "date": "2022-01-12",
+          "points": 22,
+          "docs": "startup_challenge.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Advanced Excel Certification",
+          "date": "2022-01-03",
+          "points": 8,
+          "docs": "excel_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ]
+}

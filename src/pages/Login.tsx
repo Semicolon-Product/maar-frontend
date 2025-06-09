@@ -49,38 +49,38 @@ const navigate = useNavigate();
                         <div className="grid md:grid-cols-2 ">
 
                             <form onSubmit={handleSubmit} className="pr-4 md:p-4 flex flex-col gap-6  ">
-                                <div className="text-center">
-                                    <div className="flex items-center gap-4 md:gap-2 sm:gap-0">
-                                        <label className="flex items-center ">
+                                <div className="text-center flex justify-center">
+                                    <div className="flex items-center gap-6 md:gap-2 sm:gap-0 ">
+                                        <label className="flex items-center gap-1 ">
                                             <input
                                                 type="radio"
                                                 name="user_role"
                                                 value="student"
                                                 checked={role === "student"}
-                                                className=" w-4 h-4 "
+                                                className=" w-4 h-4 mt-0.5 accent-blue-600 "
                                                 onChange={(e) => setRole(e.target.value)}
                                             />
-                                            <span>Student</span>
+                                            <span >Student</span>
                                         </label>
 
-                                        <label className="flex items-center ">
+                                        <label className="flex items-center gap-1 ">
                                             <input
                                                 type="radio"
                                                 name="user_role"
                                                 value="teacher"
                                                 checked={role === "teacher"}
-                                                className=" w-4 h-4 "
+                                                className=" w-4 h-4 mt-0.5 accent-blue-600"
                                                 onChange={(e) => setRole(e.target.value)}
                                             />
                                             <span>Teacher</span>
                                         </label>
 
-                                        <label className="flex items-center ">
+                                        <label className="flex items-center gap-1">
                                             <input
                                                 type="radio"
                                                 name="user_role"
                                                 value="superadmin"
-                                                className=" w-4 h-4 "
+                                                className=" w-4 h-4 mt-0.5 accent-blue-600"
                                                 checked={role === "superadmin"}
                                                 onChange={(e) => setRole(e.target.value)}
                                             />
@@ -94,7 +94,7 @@ const navigate = useNavigate();
 
                                 {role === "student" && (
                                     <div className=' flex flex-col gap-6'>
-                                        <div className="text-center p-1 bg-gray-200">Student</div>
+                                        <div className="text-center rounded-2xl p-1 bg-gray-200">Student</div>
 
                                         <div className="flex flex-col gap-2">
                                             <label className="text-sm font-medium">University Roll No.</label>
@@ -114,7 +114,7 @@ const navigate = useNavigate();
                                     </div>)}
                                 {role === "teacher" && (
                                     <div className=' flex flex-col gap-6'>
-                                        <div className="text-center p-1 bg-gray-200">Teacher</div>
+                                        <div className="text-center p-1 rounded-2xl bg-gray-200">Teacher</div>
 
                                         <div className="flex flex-col gap-2">
                                             <label className="text-sm font-medium">Email</label>
@@ -131,7 +131,7 @@ const navigate = useNavigate();
                                     </div>)}
                                 {role === "superadmin" && !superadminLogin && (
                                     <div className=' flex flex-col gap-2'>
-                                        <div className="text-center p-1 bg-gray-200">Superadmin</div>
+                                        <div className="text-center p-1 rounded-2xl bg-gray-200">Superadmin</div>
 
                                         <div className="flex flex-col gap-2">
                                             <label className="text-sm font-medium">Email</label>

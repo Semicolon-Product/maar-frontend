@@ -151,3 +151,25 @@ export interface Activity {
   subpoints?: Subpoint[];
 }
 export type YearlyActivityList = Activity[];
+
+export interface individualActivity {
+  serialNo: string;      
+  name: string;          
+  date: string;          
+  points: number;        
+  docs: string;
+  link: string;          
+  status: boolean; 
+}
+
+interface Student {
+  name: string;
+  rollNo: string;
+  points: number;
+  verified: boolean;
+  activities: individualActivity[];
+}
+
+export interface TeacherVerifyTableProps {
+  data: Student[];
+}

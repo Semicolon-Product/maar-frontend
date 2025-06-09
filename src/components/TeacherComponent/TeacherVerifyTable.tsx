@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
-import { toast,  } from "react-toastify";
+import { toast, } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
     Box,
+    Button,
     Collapse,
     IconButton,
-    
+
+    Modal,
+
     Paper,
     Table,
     TableBody,
@@ -16,16 +19,29 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import { superadminStyle } from "@/components/styles/style";
-import { students } from "@/components/data/data";
+import { superadminStyle, teacherPageModalStyle } from "@/components/styles/style";
+//import { students } from "@/components/data/data";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Close from '@mui/icons-material/Close';
+import type { individualActivity, TeacherVerifyTableProps } from "../types/superadminType";
 
-const TeacherVerifyTable = () => {
 
-   
+interface Activity {
+    serialNo: string;
+    name: string;
+    date: string;
+    points: number;
+    docs: string;
+    link: string;
+    status: boolean;
+}
+
+const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
+
+
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [verifiedRows, setVerifiedRows] = useState<{
         [studentIndex: number]: { [activityIndex: number]: boolean };
@@ -53,14 +69,14 @@ const TeacherVerifyTable = () => {
     };
 
     //-----------docs show modal
-   
-    
+
+
 
     const handleSubmit = (studentIndex: number, student: any) => {
         const selected = checkedRows[studentIndex] || {};
 
         const selectedActivities = student.activities.filter(
-             (_: any, idx: number) => selected[idx]
+            (_: any, idx: number) => selected[idx]
         );
         console.log("Selected Activities:", selectedActivities);
 
@@ -86,17 +102,88 @@ const TeacherVerifyTable = () => {
             autoClose: 3000,
         });
     };
+    const [openDocsModal, setOpenDocsModal] = useState(false);
+    const [currentActivity, setCurrentActivity] = useState<Activity | null>(null);
 
-    const handleDocsModal = (link?: string) => {
-        if (link) {
-           
-            
-        }
+
+
+
+
+    const handleClose = () => {
+        setOpenDocsModal(false);
     };
 
-  
+
+    const handleDocsModal = (activity: Activity) => {
+        setCurrentActivity(activity)
+        setOpenDocsModal(!openDocsModal)
+
+    };
+
+
+    const students = data
     return (
         <div>
+            <Modal open={openDocsModal} onClose={handleClose}>
+                <Box sx={teacherPageModalStyle}>
+                    {/* Header */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            backgroundColor: "#2a4054",
+                            padding: "10px 16px",
+
+                        }}
+                    >
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: "#ffffff",
+                                flexGrow: 1,
+                                textAlign: "center",
+                                marginRight: "32px", // For centering due to close icon
+                            }}
+                        >
+                            {`${currentActivity?.serialNo}. ${currentActivity?.name}`}
+
+                        </Typography>
+
+                        <Button
+                            onClick={handleClose}
+                            sx={{
+                                minWidth: "auto",
+                                padding: "4px",
+                                color: "#ffffff",
+                            }}
+                        >
+                            ✕
+                        </Button>
+                    </Box>
+
+                    {/* Body */}
+                    <Box sx={{ padding: "16px" }}>
+                        {currentActivity?.link ? (
+                            <iframe
+                                src={currentActivity.link}
+                                style={{
+                                    width: "100%",
+                                    height: "80vh",
+                                    border: "none",
+                                }}
+                                title="Document"
+                            />
+                        ) : (
+                            <Typography>No document available.</Typography>
+                        )}
+
+                        {/* Footer */}
+
+                    </Box>
+                </Box>
+            </Modal>
+
             <div>
                 <TableContainer component={Paper}>
                     <Table sx={{ fontSize: "18px" }}>
@@ -125,7 +212,7 @@ const TeacherVerifyTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {students.map((student, index) => (
+                            {students.map((student: any, index: any) => (
                                 <React.Fragment key={index}>
                                     <TableRow
                                         sx={{
@@ -155,11 +242,12 @@ const TeacherVerifyTable = () => {
                                         <TableCell
                                             sx={{ ...superadminStyle.cellStyle, py: "4px" }}
                                         >
-                                            {verifiedRows[index] && Object.values(verifiedRows[index]).some(v => v) ? (
+                                            {student.verified ? (
                                                 <CheckCircleIcon sx={{ color: "green", fontSize: "20px" }} />
                                             ) : (
                                                 <CancelIcon sx={{ color: "red", fontSize: "20px" }} />
                                             )}
+
                                         </TableCell>
 
                                         <TableCell
@@ -206,12 +294,12 @@ const TeacherVerifyTable = () => {
                                                                 }}
                                                             >
                                                                 <TableHead
-                                                                    sx={{ backgroundColor: "#f5f5f5" }}
+
                                                                 >
-                                                                    <TableRow>
+                                                                    <TableRow sx={{ backgroundColor: "#00809D", height: "30px" }}>
                                                                         <TableCell
                                                                             sx={{
-                                                                                ...superadminStyle.cellStyle,
+                                                                                ...superadminStyle.headerStyle,
                                                                                 py: "4px",
                                                                             }}
                                                                         >
@@ -219,7 +307,7 @@ const TeacherVerifyTable = () => {
                                                                         </TableCell>
                                                                         <TableCell
                                                                             sx={{
-                                                                                ...superadminStyle.cellStyle,
+                                                                                ...superadminStyle.headerStyle,
                                                                                 py: "4px",
                                                                             }}
                                                                         >
@@ -227,7 +315,7 @@ const TeacherVerifyTable = () => {
                                                                         </TableCell>
                                                                         <TableCell
                                                                             sx={{
-                                                                                ...superadminStyle.cellStyle,
+                                                                                ...superadminStyle.headerStyle,
                                                                                 py: "4px",
                                                                             }}
                                                                         >
@@ -235,7 +323,7 @@ const TeacherVerifyTable = () => {
                                                                         </TableCell>
                                                                         <TableCell
                                                                             sx={{
-                                                                                ...superadminStyle.cellStyle,
+                                                                                ...superadminStyle.headerStyle,
                                                                                 py: "4px",
                                                                             }}
                                                                         >
@@ -243,7 +331,7 @@ const TeacherVerifyTable = () => {
                                                                         </TableCell>
                                                                         <TableCell
                                                                             sx={{
-                                                                                ...superadminStyle.cellStyle,
+                                                                                ...superadminStyle.headerStyle,
                                                                                 py: "4px",
                                                                             }}
                                                                         >
@@ -251,7 +339,7 @@ const TeacherVerifyTable = () => {
                                                                         </TableCell>
                                                                         <TableCell
                                                                             sx={{
-                                                                                ...superadminStyle.cellStyle,
+                                                                                ...superadminStyle.headerStyle,
                                                                                 py: "4px",
                                                                             }}
                                                                         >
@@ -260,8 +348,7 @@ const TeacherVerifyTable = () => {
                                                                     </TableRow>
                                                                 </TableHead>
                                                                 <TableBody>
-                                                                    {student.activities.map(
-                                                                        (activity, idx) => (
+                                                                    {student.activities.map((activity: individualActivity, idx: number) => (
                                                                             <TableRow
                                                                                 key={idx}
                                                                                 sx={{
@@ -273,15 +360,8 @@ const TeacherVerifyTable = () => {
                                                                             >
                                                                                 <TableCell
                                                                                     sx={{
-                                                                                        color:
-                                                                                            submittedStudents[
-                                                                                                index
-                                                                                            ] &&
-                                                                                                checkedRows[index]?.[
-                                                                                                idx
-                                                                                                ]
-                                                                                                ? "green"
-                                                                                                : "inherit",
+                                                                                        ...superadminStyle.cellStyle,
+
                                                                                     }}
                                                                                 >
                                                                                     {activity.serialNo}
@@ -292,7 +372,7 @@ const TeacherVerifyTable = () => {
                                                                                     sx={{
                                                                                         ...superadminStyle.cellStyle,
                                                                                         py: "4px",
-                                                                                        color: checkedRows[index]?.[idx] ? "green" : "inherit",
+
                                                                                     }}
                                                                                 >
                                                                                     {activity.name}
@@ -301,9 +381,7 @@ const TeacherVerifyTable = () => {
                                                                                     sx={{
                                                                                         ...superadminStyle.cellStyle,
                                                                                         py: "4px",
-                                                                                        color: checkedRows[idx]
-                                                                                            ? "green"
-                                                                                            : "inherit",
+
                                                                                     }}
                                                                                 >
                                                                                     {activity.date}
@@ -312,9 +390,7 @@ const TeacherVerifyTable = () => {
                                                                                     sx={{
                                                                                         ...superadminStyle.cellStyle,
                                                                                         py: "4px",
-                                                                                        color: checkedRows[idx]
-                                                                                            ? "green"
-                                                                                            : "inherit",
+
                                                                                     }}
                                                                                 >
                                                                                     {activity.points}
@@ -322,7 +398,7 @@ const TeacherVerifyTable = () => {
                                                                                 <TableCell
                                                                                     onClick={() => {
                                                                                         handleDocsModal(
-                                                                                            activity.link
+                                                                                            activity
                                                                                         );
                                                                                     }}
                                                                                     sx={{
@@ -338,12 +414,12 @@ const TeacherVerifyTable = () => {
                                                                                 </TableCell>
                                                                                 <TableCell
                                                                                     sx={{
-                                                                                        display: "flex",
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
+                                                                                        ...superadminStyle.cellStyle,
+
                                                                                     }}
                                                                                 >
                                                                                     <input
+                                                                                        className=" w-3 h-3 mt-0.5 accent-blue-600 "
                                                                                         type="checkbox"
                                                                                         checked={checkedRows[index]?.[idx] || false}
                                                                                         onChange={() => handleCheckboxChange(index, idx)}

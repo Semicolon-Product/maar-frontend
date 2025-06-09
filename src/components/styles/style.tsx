@@ -12,7 +12,7 @@ export const superadminStyle = {
   },
 
   cellStyle: {
-    fontSize: "0.65em",
+    fontSize: "0.70em",
     textAlign: "center",
     color: "black",
     paddingX: "6px",
@@ -54,5 +54,5 @@ export const teacherPageModalStyle = {
   boxShadow: 24,
   outline: "none",
   borderRadius: 2,
-  p: 2,
+  
 };
