@@ -29,10 +29,7 @@ const NewAllPoint = () => {
 
   //------------------------------Calculate Total Points-----------------------
   useEffect(() => {
-    let currentTotalPoints: number = 0; // Explicitly type currentTotalPoints
-
-    // Define an array of keys from StudentActivityFormData that hold point values.
-    // Using `keyof StudentActivityFormData` ensures type safety for these keys.
+    let currentTotalPoints: number = 0; 
     const pointKeys: Array<keyof StudentActivityFormData> = [
       "moocs12Weeks",
       "moocs8Weeks",

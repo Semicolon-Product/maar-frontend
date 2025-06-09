@@ -383,7 +383,8 @@ export const activity=[
 ]
 
 
-export const firstYear = [
+export const firstYear =
+ [
   {
     name: "MOOCS",
     max: 40,
@@ -540,6 +541,13 @@ export const firstYear = [
     ]
   },
   {
+    name: "Activities in a Professional Society/Student Chapter",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
     name: "Relevant Industry Visit & Report",
     point_per_activity: 10,
     max: 20,
@@ -595,12 +603,13 @@ export const firstYear = [
   }
 ];
 
-export const secondYear = [
+export const secondYear = 
+ [
   {
     name: "MOOCS",
     max: 40,
-    remain: 0,
-    already_acquired: 0,
+    remain: 25,
+    already_acquired: 15,
     subpoints: [
       { name: "10 weeks", point_per_activity: 20 },
       { name: "8 weeks", point_per_activity: 15 },
@@ -615,15 +624,15 @@ export const secondYear = [
         name: "Organizer",
         point_per_activity: 5,
         max: 10,
-        remain: 0,
-        already_acquired: 10
+        remain: 5,
+        already_acquired: 5
       },
       {
         name: "Participant",
         point_per_activity: 3,
         max: 6,
-        remain: 0,
-        already_acquired: 0
+        remain: 3,
+        already_acquired: 3
       }
     ]
   },
@@ -631,21 +640,21 @@ export const secondYear = [
     name: "Rural Reporting",
     point_per_activity: 5,
     max: 10,
-    remain: 0,
-    already_acquired: 0
+    remain: 5,
+    already_acquired: 5
   },
   {
     name: "Tree Plantation",
     point_per_activity: 1,
     max: 10,
-    remain: 0,
-    already_acquired: 0
+    remain: 7,
+    already_acquired: 3
   },
   {
     name: "Relief & Charitable Activities",
     max: 40,
-    remain: 0,
-    already_acquired: 0,
+    remain: 30,
+    already_acquired: 10,
     subpoints: [
       {
         name: "Collection of Fund",
@@ -661,29 +670,29 @@ export const secondYear = [
     name: "Participation in Debate",
     point_per_activity: 10,
     max: 20,
-    remain: 0,
-    already_acquired: 0
+    remain: 10,
+    already_acquired: 10
   },
   {
     name: "Publication",
     point_per_activity: 10,
     max: 20,
-    remain: 0,
-    already_acquired: 0
+    remain: 10,
+    already_acquired: 10
   },
   {
     name: "Research Publication",
     point_per_activity: 15,
     max: 30,
-    remain: 0,
-    already_acquired: 0
+    remain: 15,
+    already_acquired: 15
   },
   {
     name: "Innovation Project",
     point_per_activity: 30,
     max: 60,
-    remain: 0,
-    already_acquired: 0
+    remain: 30,
+    already_acquired: 30
   },
   {
     name: "Blood Donation",
@@ -692,15 +701,15 @@ export const secondYear = [
         name: "Donate Blood",
         point_per_activity: 8,
         max: 16,
-        remain: 0,
-        already_acquired: 0
+        remain: 8,
+        already_acquired: 8
       },
       {
         name: "Organize Blood Donation Camp",
         point_per_activity: 10,
         max: 20,
-        remain: 0,
-        already_acquired: 0
+        remain: 10,
+        already_acquired: 10
       }
     ]
   },
@@ -711,58 +720,65 @@ export const secondYear = [
         name: "Personal",
         point_per_activity: 10,
         max: 20,
-        remain: 0,
-        already_acquired: 0
+        remain: 10,
+        already_acquired: 10
       },
       {
         name: "College",
         point_per_activity: 5,
         max: 10,
-        remain: 0,
-        already_acquired: 0
+        remain: 5,
+        already_acquired: 5
       },
       {
         name: "University",
         point_per_activity: 10,
         max: 20,
-        remain: 0,
-        already_acquired: 0
+        remain: 10,
+        already_acquired: 10
       },
       {
         name: "District",
         point_per_activity: 12,
         max: 24,
-        remain: 0,
-        already_acquired: 0
+        remain: 12,
+        already_acquired: 12
       },
       {
         name: "Other",
-        point_per_activity: 10,
-        max: 20,
-        remain: 0,
-        already_acquired: 0
+        point_per_activity: 15,
+        max: 30,
+        remain: 15,
+        already_acquired: 15
       },
       {
         name: "National",
         point_per_activity: 20,
         max: 40,
-        remain: 0,
-        already_acquired: 0
+        remain: 20,
+        already_acquired: 20
       }
     ]
+  },
+  {
+    name: "Activities in a Professional Society/Student Chapter",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
   },
   {
     name: "Relevant Industry Visit & Report",
     point_per_activity: 10,
     max: 20,
-    remain: 0,
+    remain: 20,
     already_acquired: 0
   },
   {
     name: "Community Service & Allied Activities",
     point_per_activity: 10,
     max: 20,
-    remain: 0,
+    remain: 20,
     already_acquired: 0
   },
   {
@@ -772,35 +788,35 @@ export const secondYear = [
         name: "Organise Entrepreneurship Programmes",
         point_per_activity: 10,
         max: 20,
-        remain: 0,
+        remain: 20,
         already_acquired: 0
       },
       {
         name: "Take Part in Entrepreneurship",
         point_per_activity: 5,
         max: 10,
-        remain: 0,
+        remain: 10,
         already_acquired: 0
       },
       {
         name: "Film Making",
         point_per_activity: 10,
         max: 20,
-        remain: 0,
+        remain: 20,
         already_acquired: 0
       },
       {
         name: "Submit Business Plan",
         point_per_activity: 10,
         max: 20,
-        remain: 0,
+        remain: 20,
         already_acquired: 0
       },
       {
         name: "Work for Start-up",
         point_per_activity: 20,
         max: 40,
-        remain: 0,
+        remain: 40,
         already_acquired: 0
       }
     ]
