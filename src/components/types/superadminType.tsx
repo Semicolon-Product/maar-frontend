@@ -150,6 +150,12 @@ export interface Activity {
   already_acquired?: number;
   subpoints?: Subpoint[];
 }
+ export interface StudentYearlyDetailsProps {
+  data: any; // Replace `any` with a proper type if available
+  currentyear: number;
+  year: number;
+}
+
 export type YearlyActivityList = Activity[];
 
 export interface individualActivity {

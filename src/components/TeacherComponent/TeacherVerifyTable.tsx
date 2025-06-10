@@ -27,7 +27,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Close from '@mui/icons-material/Close';
 import type { individualActivity, TeacherVerifyTableProps } from "../types/superadminType";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Activity {
     serialNo: string;
@@ -345,94 +345,112 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
                                                                         >
                                                                             Verify
                                                                         </TableCell>
+                                                                        <TableCell
+                                                                            sx={{
+                                                                                ...superadminStyle.headerStyle,
+                                                                                py: "4px",
+                                                                            }}
+                                                                        >
+                                                                            Delete
+                                                                        </TableCell>
                                                                     </TableRow>
                                                                 </TableHead>
                                                                 <TableBody>
                                                                     {student.activities.map((activity: individualActivity, idx: number) => (
-                                                                            <TableRow
-                                                                                key={idx}
+                                                                        <TableRow
+                                                                            key={idx}
+                                                                            sx={{
+                                                                                background:
+                                                                                    idx % 2
+                                                                                        ? "#eceff1"
+                                                                                        : "white",
+                                                                            }}
+                                                                        >
+                                                                            <TableCell
                                                                                 sx={{
-                                                                                    background:
-                                                                                        idx % 2
-                                                                                            ? "#eceff1"
-                                                                                            : "white",
+                                                                                    ...superadminStyle.cellStyle,
+
                                                                                 }}
                                                                             >
-                                                                                <TableCell
-                                                                                    sx={{
-                                                                                        ...superadminStyle.cellStyle,
+                                                                                {activity.serialNo}
+                                                                            </TableCell>
+                                                                            {/* Repeat same for other cells like activity.name, date, etc. */}
 
-                                                                                    }}
-                                                                                >
-                                                                                    {activity.serialNo}
-                                                                                </TableCell>
-                                                                                {/* Repeat same for other cells like activity.name, date, etc. */}
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.cellStyle,
+                                                                                    py: "4px",
 
-                                                                                <TableCell
-                                                                                    sx={{
-                                                                                        ...superadminStyle.cellStyle,
-                                                                                        py: "4px",
+                                                                                }}
+                                                                            >
+                                                                                {activity.name}
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.cellStyle,
+                                                                                    py: "4px",
 
-                                                                                    }}
-                                                                                >
-                                                                                    {activity.name}
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    sx={{
-                                                                                        ...superadminStyle.cellStyle,
-                                                                                        py: "4px",
+                                                                                }}
+                                                                            >
+                                                                                {activity.date}
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.cellStyle,
+                                                                                    py: "4px",
 
-                                                                                    }}
-                                                                                >
-                                                                                    {activity.date}
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    sx={{
-                                                                                        ...superadminStyle.cellStyle,
-                                                                                        py: "4px",
+                                                                                }}
+                                                                            >
+                                                                                {activity.points}
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                onClick={() => {
+                                                                                    handleDocsModal(
+                                                                                        activity
+                                                                                    );
+                                                                                }}
+                                                                                sx={{
+                                                                                    ...superadminStyle.cellStyle,
+                                                                                    py: "4px",
+                                                                                    color: "blue",
+                                                                                    cursor: "pointer",
+                                                                                    textDecoration:
+                                                                                        "underline",
+                                                                                }}
+                                                                            >
+                                                                                {activity.docs}
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.cellStyle,
 
-                                                                                    }}
-                                                                                >
-                                                                                    {activity.points}
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    onClick={() => {
-                                                                                        handleDocsModal(
-                                                                                            activity
-                                                                                        );
-                                                                                    }}
-                                                                                    sx={{
-                                                                                        ...superadminStyle.cellStyle,
-                                                                                        py: "4px",
-                                                                                        color: "blue",
-                                                                                        cursor: "pointer",
-                                                                                        textDecoration:
-                                                                                            "underline",
-                                                                                    }}
-                                                                                >
-                                                                                    {activity.docs}
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    sx={{
-                                                                                        ...superadminStyle.cellStyle,
+                                                                                }}
+                                                                            >
+                                                                                <input
+                                                                                    className=" w-3 h-3 mt-0.5 accent-blue-600 "
+                                                                                    type="checkbox"
+                                                                                    checked={checkedRows[index]?.[idx] || false}
+                                                                                    onChange={() => handleCheckboxChange(index, idx)}
+                                                                                />
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.cellStyle,
 
-                                                                                    }}
-                                                                                >
-                                                                                    <input
-                                                                                        className=" w-3 h-3 mt-0.5 accent-blue-600 "
-                                                                                        type="checkbox"
-                                                                                        checked={checkedRows[index]?.[idx] || false}
-                                                                                        onChange={() => handleCheckboxChange(index, idx)}
-                                                                                    />
-                                                                                </TableCell>
-                                                                            </TableRow>
-                                                                        )
+                                                                                }}
+                                                                            >
+                                                                                <IconButton aria-label="delete" color="error" onClick={() => console.log("Delete")}>
+                                                                                    <DeleteIcon sx={{ fontSize: "20px" }} />
+                                                                                </IconButton>
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                    )
                                                                     )}
                                                                 </TableBody>
                                                             </Table>
                                                             <div className="flex justify-end mt-1 ">
                                                                 <button
-                                                                    className="px-4 py-1 text-white bg-green-400 hover:bg-green-500 cursor-pointer"
+                                                                    className="px-4 py-1 rounded-sm text-white bg-green-600 hover:bg-green-500 cursor-pointer"
                                                                     onClick={() =>
                                                                         handleSubmit(index, student)
                                                                     }

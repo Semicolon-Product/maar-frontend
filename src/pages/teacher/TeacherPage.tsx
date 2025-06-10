@@ -9,9 +9,10 @@ import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 import { teacherPageModalStyle } from "@/components/styles/style";
 
-import { firstYear } from "@/components/data/data";
+
 import { allStudentDetails } from "@/components/data/data";
 import { X } from "lucide-react";
+import { studentdata } from "@/components/data/data";
 
 interface SidebarContentProps {
   selectedSection: string;
@@ -85,11 +86,11 @@ const TeacherPage = () => {
           <div className="flex justify-end p-2">
             <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
               <X size={24} />
-              
+
             </button>
           </div>
 
-         
+
           <SidebarContent
             selectedSection={selectedSection}
             setSelectedSection={setSelectedSection}
@@ -123,22 +124,22 @@ const TeacherPage = () => {
 
             {selectedSection === "first" && (
               <div>
-                Your are in first year
+                <h2 className="">First Year Student Data</h2>
                 <TeacherVerifyTable data={allStudentDetails.firstYear} />
               </div>
             )}
             {selectedSection === "second" && <div>
-              Your are in second year
+              <h2 className="">Second Year Student Data</h2>
               <TeacherVerifyTable data={allStudentDetails.secondYear} />
             </div>}
             {selectedSection === "third" && (
               <div>
-                Your are in third year
+                <h2 className="">Third Year Student Data</h2>
                 <TeacherVerifyTable data={allStudentDetails.thirdYear} />
               </div>
             )}
             {selectedSection === "four" && <div>
-              Your are in fourth year
+              <h2 className="">Fourth Year Student Data</h2>
               <TeacherVerifyTable data={allStudentDetails.fourthYear} />
 
             </div>}
@@ -155,6 +156,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   setSelectedSection,
 }) => (
   <>
+  <div className="flex flex-col h-full">
     <div className="flex items-center space-x-4 p-4">
       <Avatar className="w-10 h-10">
         <AvatarImage src="https://github.com/shadcn.png" />
@@ -185,8 +187,9 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         </li>
       ))}
     </ul>
-    <div className="mt-auto text-center text-xs text-gray-400 py-4 border-t border-gray-700">
-      © {new Date().getFullYear()} Semicolon Pvt Ltd
+    <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
+      © {new Date().getFullYear()} Abc Pvt Ltd
+    </div>
     </div>
   </>
 );

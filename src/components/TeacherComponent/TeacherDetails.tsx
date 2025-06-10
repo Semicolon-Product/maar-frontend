@@ -20,9 +20,7 @@ const TeacherDetails = () => {
                     <p><strong>Name:</strong> Mr. Sekhar Ghosh</p>
                     <p><strong>Email:</strong> sekhar.ghosh@school.edu</p>
                     <p><strong>Department:</strong> Computer Science</p>
-                    <p>
-                        <strong>Subjects:</strong> Data Structures, Web Development, Algorithms
-                    </p>
+
                 </div>
             </div>
 
@@ -43,7 +41,25 @@ const TeacherDetails = () => {
             </div>
             {/* File Upload Section */}
             <div className="bg-red-100 rounded-xl shadow p-6 w-full max-w-4xl mx-auto mt-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">Create Student </h2>
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Create Student</h2>
+
+                {/* Instruction Box */}
+                <div className="bg-red-50 border border-red-300 p-4 rounded-md mb-6 text-sm text-gray-700">
+                    <h3 className="font-medium mb-2">📋 Excel File Format Instructions:</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                        <li>Only upload <strong>.xlsx</strong> or <strong>.xls</strong> files.</li>
+                        <li>Ensure the first row contains headers with these exact column names:</li>
+                        <ul className="list-disc list-inside ml-4 text-gray-800">
+                            <li><code>Name</code></li>
+                            <li><code>Email</code></li>
+                            <li><code>University_Roll_No</code></li>
+                            <li><code>Mobile_No</code></li>
+                        </ul>
+                        <li>Each student record should be placed in a new row under the corresponding headers.</li>
+                        <li>Do not leave any mandatory field blank.</li>
+                        <li>Double-check email and mobile number formats before uploading.</li>
+                    </ul>
+                </div>
 
                 <form className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     {/* Year Selector */}
@@ -64,7 +80,7 @@ const TeacherDetails = () => {
                     </div>
 
                     {/* File Input */}
-                    <div className="flex flex-col w-full sm:w-1/2 bg-red-100">
+                    <div className="flex flex-col w-full sm:w-1/2">
                         <label htmlFor="fileUpload" className="text-sm font-medium text-gray-700 mb-1">
                             Upload Excel File
                         </label>
@@ -77,6 +93,7 @@ const TeacherDetails = () => {
                     </div>
                 </form>
             </div>
+
 
         </div>
     );

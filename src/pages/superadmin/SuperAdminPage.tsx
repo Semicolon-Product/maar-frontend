@@ -246,60 +246,62 @@ const SuperAdminPage = () => {
             {/* Render Section Content */}
             <div className="mt-6">
               {selectedSection === "dashboard" &&
-                <div className="p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {/* Current Date & Time */}
-                  <div className="bg-blue-100 backdrop-blur-sm rounded-2xl shadow-md p-5 border">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold mb-2 text-gray-800">
-                      <FaCalendarAlt className="text-blue-500 text-xl" />
-                      Current Date & Time
-                    </h3>
-                    <p className="text-gray-700 text-md">{details.currentDateTime}</p>
+                <div className="p-4 grid gap-6">
+                  {/* Row 1 - 3 Equal Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="bg-blue-100 rounded-xl shadow-md p-5 border border-blue-200">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
+                        <FaCalendarAlt className="text-blue-500 text-xl" />
+                        Current Date & Time
+                      </h3>
+                      <p className="text-gray-700 text-base">{details.currentDateTime}</p>
+                    </div>
+
+                    <div className="bg-green-100 rounded-xl shadow-md p-5 border border-green-200">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
+                        <FaSchool className="text-green-500 text-xl" />
+                        Institute Name
+                      </h3>
+                      <p className="text-gray-700 text-base">{details.instituteName}</p>
+                    </div>
+
+                    <div className="bg-purple-100 rounded-xl shadow-md p-5 border border-purple-200">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
+                        <FaChalkboardTeacher className="text-purple-500 text-xl" />
+                        Total Teachers
+                      </h3>
+                      <p className="text-gray-700 text-base">{details.totalTeachers}</p>
+                    </div>
                   </div>
 
-                  {/* Institute Name */}
-                  <div className="bg-green-100 backdrop-blur-sm rounded-2xl shadow-md p-5 border">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold mb-2 text-gray-800">
-                      <FaSchool className="text-green-500 text-xl" />
-                      Institute Name
-                    </h3>
-                    <p className="text-gray-700 text-md">{details.instituteName}</p>
-                  </div>
+                  {/* Row 2 - Code (1/3) and Payment (2/3) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* 1/3 Card */}
+                    <div className="bg-red-100 rounded-xl shadow-md p-5 border border-red-200">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
+                        <FaBarcode className="text-orange-500 text-xl" />
+                        Institute Code
+                      </h3>
+                      <p className="text-gray-700 text-base">{details.instituteCode}</p>
+                    </div>
 
-                  {/* Total Teachers */}
-                  <div className="bg-purple-100 backdrop-blur-sm rounded-2xl shadow-md p-5 border">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold mb-2 text-gray-800">
-                      <FaChalkboardTeacher className="text-purple-500 text-xl" />
-                      Total Teachers
-                    </h3>
-                    <p className="text-gray-700 text-md">{details.totalTeachers}</p>
-                  </div>
-
-                  {/* Institute Code */}
-                  <div className="bg-red-100 backdrop-blur-sm rounded-2xl shadow-md p-5 border">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold mb-2 text-gray-800">
-                      <FaBarcode className="text-orange-500 text-xl" />
-                      Institute Code
-                    </h3>
-                    <p className="text-gray-700 text-md">{details.instituteCode}</p>
-                  </div>
-
-                  {/* Current Plan (wide card) */}
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-md p-5 border col-span-1 md:col-span-2 lg:col-span-3">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold mb-2 text-gray-800">
-                      {/*  <FaCreditCard className="text-red-500 text-xl" /> */}
-                      Current Plan
-                    </h3>
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-gray-700">
-                      <div>
-                        <p className="text-md font-medium">{details.currentPlan.name}</p>
-                        <p className="text-sm text-gray-500">{details.currentPlan.description}</p>
+                    {/* 2/3 Card */}
+                    <div className="lg:col-span-2 bg-orange-100 rounded-xl shadow-md p-5 border border-gray-200">
+                      <h3 className="text-lg font-semibold mb-3 text-gray-800">Current Plan</h3>
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                          <p className="text-md font-medium">{details.currentPlan.name}</p>
+                          <p className="text-sm text-gray-500">{details.currentPlan.description}</p>
+                        </div>
+                        <button className="px-4 py-2 bg-blue-600 text-white rounded-l hover:bg-blue-700 transition">
+                          Upgrade Plan
+                        </button>
                       </div>
-                      <button className="mt-3 md:mt-0 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
-                        Upgrade Plan
-                      </button>
                     </div>
                   </div>
                 </div>
+
+
 
               }
 
@@ -393,8 +395,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ selectedSection, setSel
       </ul>
 
       {/* Footer Stuck to Bottom */}
-      <div className="mt-auto text-center text-xs text-gray-400 py-4 border-t border-gray-700">
-        © {new Date().getFullYear()} Semicolon Pvt Ltd
+      <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
+        © {new Date().getFullYear()} Abc Pvt Ltd
       </div>
     </div>
   );
