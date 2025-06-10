@@ -6,7 +6,7 @@ import InputWithLabel from '@/components/InputWithLabel';
 import AllPoints from '@/components/AllPoints';
 import NewAllPoint from '@/components/NewAllPoint';
 import StudentYearlyDetails from '@/components/StudentComponent/StudentYearlyDetails';
-import { firstYear, secondYear } from '@/components/data/data';
+import { studentdata } from '@/components/data/data';
 interface SidebarContentProps {
     selectedYear: string;
     setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
@@ -62,12 +62,22 @@ const StudentDetails = () => {
 
                     {selectedYear === "first" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={firstYear}/>
+                            <StudentYearlyDetails data={studentdata.firstyear} currentyear={studentdata.currentyear} year={1}/>
                         </div>
                     }
                     {selectedYear === "second" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={secondYear}/>
+                            <StudentYearlyDetails data={studentdata.secondyear} currentyear={studentdata.currentyear} year={2}/>
+                        </div>
+                    }
+                    {selectedYear === "third" &&
+                        <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
+                            <StudentYearlyDetails data={studentdata.thirdyear} currentyear={studentdata.currentyear} year={3}/>
+                        </div>
+                    }
+                    {selectedYear === "fourth" &&
+                        <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
+                            <StudentYearlyDetails data={studentdata.fourthyear} currentyear={studentdata.currentyear} year={4}/>
                         </div>
                     }
 
