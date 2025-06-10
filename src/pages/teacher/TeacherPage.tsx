@@ -9,7 +9,7 @@ import TeacherVerifyTable from "@/components/TeacherVerifyTable";
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 import { teacherPageModalStyle } from "@/components/styles/style";
 
-import { firstYear } from "@/components/data/data";
+import { studentdata } from "@/components/data/data";
 
 interface SidebarContentProps {
   selectedSection: string;
