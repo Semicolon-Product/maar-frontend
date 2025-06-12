@@ -6,8 +6,10 @@ import {
   type StudentYearlyDetailsProps,
 } from "../types/superadminType";
 import { toast, ToastContainer } from "react-toastify";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<StudentActivityFormData>(
     initialStudentActivityFormData
   );
@@ -270,12 +272,62 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
       );
       return;
     }
+    else {
+      setOpen(true);
+      console.log("Form Data Submitted:", formData, totalMoocs);
+    }
 
-    console.log("Form Data Submitted:", formData, totalMoocs);
+
+  };
+
+
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    setOpen(false);
+    // Add your form submission logic here
+    
   };
 
   return (
     <div>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle
+          sx={{
+            backgroundColor: '', // Light green background
+            textAlign: 'center',
+            fontWeight: 'bold'
+          }}
+        >
+          Confirm Submission
+        </DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to submit the data?
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+          <Button
+            onClick={handleClose}
+            sx={{textTransform:"none",py:"0.25em", backgroundColor: '#f44336', color: '#fff', '&:hover': { backgroundColor: '#d32f2f' } }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirm}
+            sx={{textTransform:"none",py:"0.25em", backgroundColor: '#4caf50', color: '#fff', '&:hover': { backgroundColor: '#388e3c' } }}
+            autoFocus
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {year <= currentyear ? (
         <div>
 

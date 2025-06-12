@@ -30,7 +30,7 @@ export const teachers = [
 
 export const students = [
   {
-    name: "Amit Kumar", rollNo: "23CS001", points: 85, verified: false, activities: [
+    name: "Amit Kumar", rollNo: "23CS001", points: 85,signature:"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,verified: false, activities: [
       {
         serialNo: 1,
         name: "Python Workshop",
@@ -78,7 +78,7 @@ export const students = [
     ]
   },
   {
-    name: "Sara Mehta", rollNo: "23CS002", points: 90, verified: false, activities:
+    name: "Sara Mehta", rollNo: "23CS002", points: 90,signature:"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" , verified: false, activities:
       [
         {
           serialNo: 1,
@@ -1229,11 +1229,13 @@ export const studentdata =
  }
 
  export const allStudentDetails = {
+  "teacherSignature":"https://signaturely.com/wp-content/uploads/2020/04/warren-buffett-signature-signaturely.png",
   "firstYear": [
     {
       "name": "Amit Kumar",
       "rollNo": "23CS101",
       "points": 85,
+     "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1260,6 +1262,7 @@ export const studentdata =
       "name": "Sara Mehta",
       "rollNo": "23CS102",
       "points": 90,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1286,6 +1289,7 @@ export const studentdata =
       "name": "Ravi Sharma",
       "rollNo": "23CS103",
       "points": 76,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1312,6 +1316,7 @@ export const studentdata =
       "name": "Priya Verma",
       "rollNo": "23CS104",
       "points": 92,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1338,6 +1343,7 @@ export const studentdata =
       "name": "Karan Singh",
       "rollNo": "23CS105",
       "points": 70,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1366,6 +1372,7 @@ export const studentdata =
       "name": "Anita Roy",
       "rollNo": "22CS201",
       "points": 88,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": true,
       "activities": [
         {
@@ -1392,6 +1399,7 @@ export const studentdata =
       "name": "Vikram Patel",
       "rollNo": "22CS202",
       "points": 80,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1418,6 +1426,7 @@ export const studentdata =
       "name": "Deepa Nair",
       "rollNo": "22CS203",
       "points": 85,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1444,6 +1453,7 @@ export const studentdata =
       "name": "Rohit Desai",
       "rollNo": "22CS204",
       "points": 78,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": true,
       "activities": [
         {
@@ -1470,6 +1480,7 @@ export const studentdata =
       "name": "Sneha Gupta",
       "rollNo": "22CS205",
       "points": 92,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1497,7 +1508,7 @@ export const studentdata =
     {
       "name": "Manish Sharma",
       "rollNo": "21CS301",
-      "points": 85,
+      "points": 85,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1523,7 +1534,7 @@ export const studentdata =
     {
       "name": "Neha Singh",
       "rollNo": "21CS302",
-      "points": 90,
+      "points": 90,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1549,7 +1560,7 @@ export const studentdata =
     {
       "name": "Rajesh Kumar",
       "rollNo": "21CS303",
-      "points": 76,
+      "points": 76,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1575,7 +1586,7 @@ export const studentdata =
     {
       "name": "Divya Patel",
       "rollNo": "21CS304",
-      "points": 92,
+      "points": 92,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1601,7 +1612,7 @@ export const studentdata =
     {
       "name": "Ayesha Khan",
       "rollNo": "21CS305",
-      "points": 70,
+      "points": 70,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1629,7 +1640,7 @@ export const studentdata =
     {
       "name": "Vikas Sharma",
       "rollNo": "20CS401",
-      "points": 85,
+      "points": 85,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1655,7 +1666,7 @@ export const studentdata =
     {
       "name": "Neelam Gupta",
       "rollNo": "20CS402",
-      "points": 90,
+      "points": 90,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1681,7 +1692,7 @@ export const studentdata =
     {
       "name": "Ramesh Patel",
       "rollNo": "20CS403",
-      "points": 76,
+      "points": 76,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1707,7 +1718,7 @@ export const studentdata =
     {
       "name": "Sonal Mehta",
       "rollNo": "20CS404",
-      "points": 92,
+      "points": 92,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {
@@ -1733,7 +1744,7 @@ export const studentdata =
     {
       "name": "Kavita Joshi",
       "rollNo": "20CS405",
-      "points": 70,
+      "points": 70,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
         {

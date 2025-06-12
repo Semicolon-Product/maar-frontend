@@ -17,6 +17,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import { superadminStyle, teacherPageModalStyle } from "@/components/styles/style";
@@ -28,7 +29,13 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Close from '@mui/icons-material/Close';
 import type { individualActivity, TeacherVerifyTableProps } from "../types/superadminType";
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import pdfIcon from '../../../public/assets/PDF_file_icon.png'
+import pdf from '../../../public/assets/4726010.png'
+import { generateIndividualReportPDF } from "../../pdfs/generateIndividualReportPDF";
+import { generateAllReports } from "@/pdfs/generateAllReports";
+import { BsFileEarmarkPdfFill } from "react-icons/bs";
 interface Activity {
     serialNo: string;
     name: string;
@@ -39,7 +46,7 @@ interface Activity {
     status: boolean;
 }
 
-const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
+const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature }) => {
 
 
     const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -120,6 +127,14 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
 
     };
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const handleDeleteActivity = (activity: individualActivity) => {
+        setShowDeleteModal(!showDeleteModal)
+        console.log("Delete activity", activity)
+    }
+    const downloadIndividualReport = (individualReportdata: any) => {
+        generateIndividualReportPDF(individualReportdata)
+    }
 
     const students = data
     return (
@@ -183,8 +198,76 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
                     </Box>
                 </Box>
             </Modal>
+            <Dialog open={showDeleteModal}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this activity?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <button
+                        onClick={() => setShowDeleteModal(false)}
+                        className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+                    >
+                        Cancel
+                    </button>
 
-            <div>
+                    <button
+                        //onClick={handleDelete} // Replace with your actual delete function
+                        className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                    >
+                        Delete
+                    </button>
+
+                </DialogActions>
+            </Dialog>
+
+            <div className="relative">
+
+                {/* Top-right image */}
+                <div className="flex justify-between items-center px-4 py-2">
+                    {/* Left side: status section */}
+                    <div className="flex items-center gap-6 text-base font-medium text-gray-700">
+                        {/* Submit & Remain */}
+                        <div className="flex gap-2">
+                            <p className="text-green-600">Submit: 80</p>;
+                            <p className="text-red-600">Remain: 20</p>;
+                        </div>
+
+                        {/* Verified */}
+                        <div className="flex items-center gap-1 text-green-600">
+                            Verified:
+                            <CheckCircleIcon sx={{ color: "green", fontSize: "20px" }} />
+                            (20)
+                        </div>;
+
+                        {/* Pending */}
+                        <div className="flex items-center gap-1 text-red-600">
+                            Pending:
+                            <CancelIcon sx={{ color: "#c9352a", fontSize: "20px" }} />
+                            (80)
+                        </div>;
+                    </div>
+
+                    {/* Right side: download icon */}
+                    <div className="flex justify-end">
+                        <Tooltip title="Download All Students Report">
+                            <img
+                                onClick={() => generateAllReports(students, signature)}
+                                src={pdf}
+                                height={100}
+                                width={100}
+                                className="scale-50 h-18 w-18 p-2 rounded-3xl transition-all duration-300 ease-in-out hover:bg-amber-100 cursor-pointer"
+                                alt="Download PDF"
+                            />
+                        </Tooltip>
+                    </div>
+                </div>
+
+
+
+
                 <TableContainer component={Paper}>
                     <Table sx={{ fontSize: "18px" }}>
                         <TableHead>
@@ -202,6 +285,9 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
                                 </TableCell>
                                 <TableCell sx={superadminStyle.headerStyle}>
                                     Total Acquired Points
+                                </TableCell>
+                                <TableCell sx={superadminStyle.headerStyle}>
+                                    Report
                                 </TableCell>
                                 <TableCell sx={superadminStyle.headerStyle}>
                                     Status
@@ -242,10 +328,19 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
                                         <TableCell
                                             sx={{ ...superadminStyle.cellStyle, py: "4px" }}
                                         >
+                                            <Tooltip title="Download Report">
+                                            <IconButton onClick={() => downloadIndividualReport(student)}>
+                                                <BsFileEarmarkPdfFill color="#cc3f35" size={19} />
+                                            </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
+                                        >
                                             {student.verified ? (
                                                 <CheckCircleIcon sx={{ color: "green", fontSize: "20px" }} />
                                             ) : (
-                                                <CancelIcon sx={{ color: "red", fontSize: "20px" }} />
+                                                <CancelIcon sx={{ color: "#c9352a", fontSize: "20px" }} />
                                             )}
 
                                         </TableCell>
@@ -439,7 +534,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data }) => {
 
                                                                                 }}
                                                                             >
-                                                                                <IconButton aria-label="delete" color="error" onClick={() => console.log("Delete")}>
+                                                                                <IconButton aria-label="delete" color="error" onClick={() => handleDeleteActivity(activity)}>
                                                                                     <DeleteIcon sx={{ fontSize: "20px" }} />
                                                                                 </IconButton>
                                                                             </TableCell>

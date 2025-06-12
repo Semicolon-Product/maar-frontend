@@ -12,7 +12,7 @@ export const superadminStyle = {
   },
 
   cellStyle: {
-    fontSize: "0.70em",
+    fontSize: "0.6em",
     textAlign: "center",
     color: "black",
     paddingX: "6px",

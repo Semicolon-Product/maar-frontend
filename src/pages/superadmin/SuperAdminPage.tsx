@@ -24,7 +24,10 @@ import { superadminStyle } from '@/components/styles/style';
 import Close from '@mui/icons-material/Close';
 import type { Teacher } from '@/components/types/superadminType';
 import { X } from 'lucide-react';
-
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
+import { getLoggedInSuperadminId } from '@/utils/auth';
+import { toast, ToastContainer } from 'react-toastify';
+import { createTeacher } from '@/api/superAdminApi';
 
 
 interface SidebarContentProps {
@@ -49,9 +52,17 @@ const SuperAdminPage = () => {
     const { name, value } = e.target;
     setTeacherData(prev => ({ ...prev, [name]: value }));
   };
-
+  //-----------add teacher 
+  const handleOpenAddModal = () => {
+    setIsEditMode(false); // not editing, it's new
+    setTeacherData({ name: '', dept: '', userId: '', password: '' });
+    setShowAddModal(true);
+  };
   //-----edit teacher
+  const [isEditMode, setIsEditMode] = useState(false);
+
   const handleTeacherEdit = (teacher: Teacher) => {
+    setIsEditMode(true);
     setTeacherData({
       name: teacher.name,
       dept: teacher.department,
@@ -80,11 +91,64 @@ const SuperAdminPage = () => {
     },
   };
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleDeleteTeacher = (teacher: Teacher) => {
+    setShowDeleteModal(!showDeleteModal)
+    console.log("Delete activity", teacher)
+  }
+
+  const superadminId = getLoggedInSuperadminId();
+
+  console.log("Superadminid", superadminId)
+
+
+
+  const handleAddTeacher = async () => {
+    const { name, dept, userId, password } = teacherData;
+
+    if (!name) {
+      toast.error('Email is required!');
+      return;
+    }
+
+    if (!dept) {
+      toast.error('Department is required!');
+      return;
+    }
+    if (!userId) {
+      toast.error('User ID is required!');
+      return;
+    }
+    if (!password) {
+      toast.error('Password is required!');
+      return;
+    }
+
+
+    createTeacher(teacherData)
+      .then((response) => {
+        if (response.status) {
+          toast.success(response.message);
+          setShowAddModal(!showAddModal);
+        } else {
+          toast.error(response.message);
+        }
+      })
+      .catch((error: any) => {
+
+        toast.error(error?.message);
+      });
+
+  };
+
+  const handleUpdateTeacher = () => {
+    console.log("teacherData", teacherData)
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
 
-
+      <ToastContainer position='top-right' />
       <div className="flex h-[100vh] overflow-hidden">
 
         {/* Sidebar for Desktop */}
@@ -124,7 +188,7 @@ const SuperAdminPage = () => {
             >
               <Box sx={{ flex: 1 }} />
               <p className="flex-1 text-white flex justify-center text-center my-[0.15em] sm:my-[0.15em] md:my-[0.5em] text-[0.85rem] sm:text-[1rem] md:text-[1.2rem] whitespace-nowrap">
-                Add New Teacher
+                {isEditMode ? 'Edit Teacher' : 'Add New Teacher'}
               </p>
 
               <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
@@ -218,7 +282,12 @@ const SuperAdminPage = () => {
                 gap: 1
               }}
             >
-              <Button sx={{ ...superadminStyle.button, color: "white", background: "green" }}>Add</Button>
+              <Button
+                sx={{
+                  ...superadminStyle.button, color: "white", background: "green"
+
+                }}
+                onClick={isEditMode ? handleUpdateTeacher : handleAddTeacher}> {isEditMode ? 'Update' : 'Add'}</Button>
               <Button sx={{ ...superadminStyle.button, color: "white", background: "red" }} onClick={() => handleClear()}>Clear</Button>
             </Box>
           </div>
@@ -300,9 +369,6 @@ const SuperAdminPage = () => {
                     </div>
                   </div>
                 </div>
-
-
-
               }
 
 
@@ -311,30 +377,30 @@ const SuperAdminPage = () => {
                 <div>
                   <Button variant="contained" sx={{
                     ...superadminStyle.button, mb: 2,
-                  }} onClick={() => setShowAddModal(!showAddModal)}>Add Teacher</Button>
+                  }} onClick={() => handleOpenAddModal()}>Add Teacher</Button>
                   <TableContainer component={Paper}>
                     <Table>
                       <TableHead>
                         <TableRow sx={{ backgroundColor: "#2a4054", height: "30px", }}>
-                          <TableCell sx={superadminStyle.headerStyle}>Teacher Name</TableCell>
-                          <TableCell sx={superadminStyle.headerStyle}>Department</TableCell>
-                          <TableCell sx={superadminStyle.headerStyle}>User ID</TableCell>
-                          <TableCell sx={superadminStyle.headerStyle}>Password</TableCell>
-                          <TableCell sx={superadminStyle.headerStyle}>Action</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Teacher Name</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Department</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>User ID</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Password</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {teachers.map((teacher, index) => (
                           <TableRow key={index} sx={{ background: index % 2 ? "#eceff1" : "white" }}>
-                            <TableCell sx={superadminStyle.cellStyle}>{teacher.name}</TableCell>
-                            <TableCell sx={superadminStyle.cellStyle}>{teacher.department}</TableCell>
-                            <TableCell sx={superadminStyle.cellStyle}>{teacher.userId}</TableCell>
-                            <TableCell sx={superadminStyle.cellStyle}>{teacher.password}</TableCell>
-                            <TableCell sx={superadminStyle.cellStyle}>
+                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.name}</TableCell>
+                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.department}</TableCell>
+                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.userId}</TableCell>
+                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.password}</TableCell>
+                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>
                               <IconButton aria-label="edit" color="primary" onClick={() => handleTeacherEdit(teacher)}>
                                 <EditIcon sx={{ fontSize: "20px" }} />
                               </IconButton>
-                              <IconButton aria-label="delete" color="error" onClick={() => console.log("Delete", teacher)}>
+                              <IconButton aria-label="delete" color="error" onClick={() => handleDeleteTeacher(teacher)}>
                                 <DeleteIcon sx={{ fontSize: "20px" }} />
                               </IconButton>
                             </TableCell>
@@ -347,14 +413,36 @@ const SuperAdminPage = () => {
                 </div>
 
               )}
-              {selectedSection === "settings" && <p>Site settings and configurations.</p>}
-              {selectedSection === "reports" && <p>Reports and analytics.</p>}
-              {selectedSection === "logout" && <p>Logging out...</p>}
+
             </div>
           </div>
         </div>
 
       </div>
+      <Dialog open={showDeleteModal}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this teacher?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <button
+            onClick={() => setShowDeleteModal(false)}
+            className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+          >
+            Cancel
+          </button>
+
+          <button
+            //onClick={handleDelete} // Replace with your actual delete function
+            className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
+
+        </DialogActions>
+      </Dialog>
 
     </div>
   );

@@ -178,4 +178,30 @@ interface Student {
 
 export interface TeacherVerifyTableProps {
   data: Student[];
+  signature:string;
+}
+
+export interface SuperAdminSignupFormData {
+  email: string;
+  password: string;
+  collegeName: string;
+  collegeCode: string;
+}
+
+export interface SuperAdminSignupApiPayload {
+  email: string;
+  password: string;
+  college_name: string;
+  college_code: string;
+}
+
+export interface SuperAdminLoginForm {
+  email: string;
+  password: string;
+}
+export interface TeacherCreatePayload {
+  name: string;
+  dept: string;
+  userId: string;
+  password: string;
 }

@@ -124,23 +124,26 @@ const TeacherPage = () => {
 
             {selectedSection === "first" && (
               <div>
-                <h2 className="">First Year Student Data</h2>
-                <TeacherVerifyTable data={allStudentDetails.firstYear} />
+                <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">
+                  First Year Student Data
+                </h2>
+
+                <TeacherVerifyTable data={allStudentDetails.firstYear} signature={allStudentDetails.teacherSignature} />
               </div>
             )}
             {selectedSection === "second" && <div>
-              <h2 className="">Second Year Student Data</h2>
-              <TeacherVerifyTable data={allStudentDetails.secondYear} />
+              <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">Second Year Student Data</h2>
+              <TeacherVerifyTable data={allStudentDetails.secondYear} signature={allStudentDetails.teacherSignature} />
             </div>}
             {selectedSection === "third" && (
               <div>
-                <h2 className="">Third Year Student Data</h2>
-                <TeacherVerifyTable data={allStudentDetails.thirdYear} />
+                <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">Third Year Student Data</h2>
+                <TeacherVerifyTable data={allStudentDetails.thirdYear} signature={allStudentDetails.teacherSignature} />
               </div>
             )}
             {selectedSection === "four" && <div>
-              <h2 className="">Fourth Year Student Data</h2>
-              <TeacherVerifyTable data={allStudentDetails.fourthYear} />
+              <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">Fourth Year Student Data</h2>
+              <TeacherVerifyTable data={allStudentDetails.fourthYear} signature={allStudentDetails.teacherSignature} />
 
             </div>}
             {selectedSection === "logout" && <p>Logging out...</p>}
@@ -156,40 +159,40 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   setSelectedSection,
 }) => (
   <>
-  <div className="flex flex-col h-full">
-    <div className="flex items-center space-x-4 p-4">
-      <Avatar className="w-10 h-10">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>TP</AvatarFallback>
-      </Avatar>
-      <div>
-        <h2 className="text-lg font-semibold">Mr. Sharma</h2>
-        <p className="text-sm text-gray-400">Teacher ID: TCH2025</p>
+    <div className="flex flex-col h-full">
+      <div className="flex items-center space-x-4 p-4">
+        <Avatar className="w-10 h-10">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>TP</AvatarFallback>
+        </Avatar>
+        <div>
+          <h2 className="text-lg font-semibold">Mr. Sharma</h2>
+          <p className="text-sm text-gray-400">Teacher ID: TCH2025</p>
+        </div>
       </div>
-    </div>
 
-    <ul className="space-y-4 mt-4">
-      {[
-        { id: "dashboard", label: "Dashboard" },
-        { id: "first", label: "First Year" },
-        { id: "second", label: "Second Year" },
-        { id: "third", label: "Third Year" },
-        { id: "four", label: "Fourth Year" },
-        { id: "logout", label: "Logout" },
-      ].map(({ id, label }) => (
-        <li
-          key={id}
-          className={`p-1 rounded font-bold cursor-pointer ${selectedSection === id ? " text-blue-300" : "hover:text-blue-500"
-            }`}
-          onClick={() => setSelectedSection(id)}
-        >
-          {label}
-        </li>
-      ))}
-    </ul>
-    <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
-      © {new Date().getFullYear()} Abc Pvt Ltd
-    </div>
+      <ul className="space-y-4 mt-4">
+        {[
+          { id: "dashboard", label: "Dashboard" },
+          { id: "first", label: "First Year" },
+          { id: "second", label: "Second Year" },
+          { id: "third", label: "Third Year" },
+          { id: "four", label: "Fourth Year" },
+          { id: "logout", label: "Logout" },
+        ].map(({ id, label }) => (
+          <li
+            key={id}
+            className={`p-1 rounded font-bold cursor-pointer ${selectedSection === id ? " text-blue-300" : "hover:text-blue-500"
+              }`}
+            onClick={() => setSelectedSection(id)}
+          >
+            {label}
+          </li>
+        ))}
+      </ul>
+      <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
+        © {new Date().getFullYear()} Abc Pvt Ltd
+      </div>
     </div>
   </>
 );
