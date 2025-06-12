@@ -7,6 +7,8 @@ import AllPoints from '@/components/AllPoints';
 import NewAllPoint from '@/components/NewAllPoint';
 import StudentYearlyDetails from '@/components/StudentComponent/StudentYearlyDetails';
 import { studentdata } from '@/components/data/data';
+import { X } from 'lucide-react';
+import StudentDetail from '@/components/StudentComponent/StudentDetail';
 interface SidebarContentProps {
     selectedYear: string;
     setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
@@ -27,16 +29,15 @@ const StudentDetails = () => {
 
             {/* Sidebar for Mobile */}
             {isSidebarOpen && (
-                <div className=" inset-0 bg-gray-800 text-white w-64 z-50 px-2 pt-2 md:hidden sticky top-0 h-screen overflow-y-auto">
-                    <SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
-                    <div className="text-right pr-4">
-                        <Button
-                            className="mt-4 bg-white text-black"
-                            onClick={() => setIsSidebarOpen(false)}
-                        >
-                            Close
-                        </Button>
+                <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
+                    <div className="flex justify-end p-2">
+                        <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
+                            <X size={24} />
+
+                        </button>
                     </div>
+                    <SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+
                 </div>
             )}
 
@@ -44,7 +45,7 @@ const StudentDetails = () => {
             <div className="flex-1 overflow-y-auto">
 
                 {/* Top bar with menu icon */}
-                <div className="flex justify-end p-4">
+                <div className="flex justify-end p-4 pb-0">
                     <Button
                         className="text-black bg-transparent hover:bg-gray-100 md:hidden block"
                         onClick={() => setIsSidebarOpen(true)}
@@ -55,29 +56,30 @@ const StudentDetails = () => {
 
                 <div className="p-0">{/* <p>You are in {selectedYear} year</p> */}
 
-                    {selectedYear === "first" && <div>
-
+                    {selectedYear === "details" && <div>
+                        <StudentDetail/>
                     </div>}
 
 
                     {selectedYear === "first" &&
-                        <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={studentdata.firstyear} currentyear={studentdata.currentyear} year={1}/>
+                        <div className="pt-1 sm:pt-6 px-2 md:px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
+
+                            <StudentYearlyDetails data={studentdata.firstyear} currentyear={studentdata.currentyear} year={1} />
                         </div>
                     }
                     {selectedYear === "second" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={studentdata.secondyear} currentyear={studentdata.currentyear} year={2}/>
+                            <StudentYearlyDetails data={studentdata.secondyear} currentyear={studentdata.currentyear} year={2} />
                         </div>
                     }
                     {selectedYear === "third" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={studentdata.thirdyear} currentyear={studentdata.currentyear} year={3}/>
+                            <StudentYearlyDetails data={studentdata.thirdyear} currentyear={studentdata.currentyear} year={3} />
                         </div>
                     }
                     {selectedYear === "fourth" &&
                         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
-                            <StudentYearlyDetails data={studentdata.fourthyear} currentyear={studentdata.currentyear} year={4}/>
+                            <StudentYearlyDetails data={studentdata.fourthyear} currentyear={studentdata.currentyear} year={4} />
                         </div>
                     }
 
@@ -94,6 +96,7 @@ const StudentDetails = () => {
 
 const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelectedYear }) => (
     <>
+    <div className="flex flex-col h-full">
         <div className="flex items-center space-x-4 p-4 ">
             <Avatar className="w-10 h-10">
                 <AvatarImage src="https://github.com/shadcn.png" />
@@ -124,6 +127,11 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelect
                 </li>
             ))}
         </ul>
+
+        <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
+            © {new Date().getFullYear()} Abc Pvt Ltd
+        </div>
+        </div>
     </>
 );
 

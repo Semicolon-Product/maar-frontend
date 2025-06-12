@@ -3,7 +3,7 @@
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
-import StudentDetails from './pages/student/StudentDetails'
+import StudentDetails from './pages/student/StudentDetailsPage'
 import Automate from './pages/Automate'
 import SuperAdminPage from './pages/superadmin/SuperAdminPage'
 import TeacherPage from './pages/teacher/TeacherPage'

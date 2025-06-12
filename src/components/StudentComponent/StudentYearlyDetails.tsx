@@ -6,8 +6,10 @@ import {
   type StudentYearlyDetailsProps,
 } from "../types/superadminType";
 import { toast, ToastContainer } from "react-toastify";
-const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, currentyear, year }) => {
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<StudentActivityFormData>(
     initialStudentActivityFormData
   );
@@ -64,7 +66,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
 
     if (
       Number(formData.techFestOrganizer) +
-        data[1].subpoints[0].already_acquired >
+      data[1].subpoints[0].already_acquired >
       10
     ) {
       toast.error(
@@ -74,7 +76,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.techFestParticipant) +
-        data[1].subpoints[1].already_acquired >
+      data[1].subpoints[1].already_acquired >
       6
     ) {
       toast.error(
@@ -94,8 +96,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.reliefFundCollection) +
-        Number(formData.reliefWorkTeam) +
-        data[4].already_acquired >
+      Number(formData.reliefWorkTeam) +
+      data[4].already_acquired >
       40
     ) {
       toast.error("5. Relief/Charitable Activities can't be greater than 20");
@@ -134,7 +136,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.bloodDonationCampOrganization) +
-        data[9].subpoints[1].already_acquired >
+      data[9].subpoints[1].already_acquired >
       20
     ) {
       toast.error(
@@ -162,7 +164,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.sportsUniversity) +
-        data[10].subpoints[2].already_acquired >
+      data[10].subpoints[2].already_acquired >
       20
     ) {
       toast.error(
@@ -190,7 +192,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.sportsNationalInternational) +
-        data[10].subpoints[5].already_acquired >
+      data[10].subpoints[5].already_acquired >
       40
     ) {
       toast.error(
@@ -200,7 +202,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.professionalSocietyActivities) +
-        data[11].already_acquired >
+      data[11].already_acquired >
       20
     ) {
       toast.error(
@@ -222,7 +224,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.entrepreneurshipOrganize) +
-        data[14].subpoints[0].already_acquired >
+      data[14].subpoints[0].already_acquired >
       20
     ) {
       toast.error(
@@ -232,7 +234,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.entrepreneurshipParticipate) +
-        data[14].subpoints[1].already_acquired >
+      data[14].subpoints[1].already_acquired >
       10
     ) {
       toast.error(
@@ -242,7 +244,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.entrepreneurshipVideo) +
-        data[14].subpoints[2].already_acquired >
+      data[14].subpoints[2].already_acquired >
       20
     ) {
       toast.error(
@@ -252,7 +254,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.entrepreneurshipBusinessPlan) +
-        data[14].subpoints[3].already_acquired >
+      data[14].subpoints[3].already_acquired >
       20
     ) {
       toast.error(
@@ -262,7 +264,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
     }
     if (
       Number(formData.entrepreneurshipWorkForStartup) +
-        data[14].subpoints[4].already_acquired >
+      data[14].subpoints[4].already_acquired >
       40
     ) {
       toast.error(
@@ -270,42 +272,86 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
       );
       return;
     }
+    else {
+      setOpen(true);
+      console.log("Form Data Submitted:", formData, totalMoocs);
+    }
 
-    console.log("Form Data Submitted:", formData, totalMoocs);
+
+  };
+
+
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    setOpen(false);
+    // Add your form submission logic here
+    
   };
 
   return (
     <div>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle
+          sx={{
+            backgroundColor: '', // Light green background
+            textAlign: 'center',
+            fontWeight: 'bold'
+          }}
+        >
+          Confirm Submission
+        </DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to submit the data?
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+          <Button
+            onClick={handleClose}
+            sx={{textTransform:"none",py:"0.25em", backgroundColor: '#f44336', color: '#fff', '&:hover': { backgroundColor: '#d32f2f' } }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirm}
+            sx={{textTransform:"none",py:"0.25em", backgroundColor: '#4caf50', color: '#fff', '&:hover': { backgroundColor: '#388e3c' } }}
+            autoFocus
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {year <= currentyear ? (
         <div>
-          <button
-            type="submit"
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>{" "}
+
           Total Points: {totalPoint}
           <div className="max-h-[90vh] overflow-y-auto">
-            <ToastContainer position="bottom-left" />
+            <ToastContainer position="top-right" />
 
             <form>
               <table className="table-auto border border-black w-full text-sm">
-                <thead className="bg-gray-300 font-semibold text-center sticky top-0 z-10">
-                  <tr>
-                    <th className="border border-black border-right px-2 py-1 sticky top-0 z-10">
+                <thead className="bg-gray-300 font-semibold text-center ">
+                  <tr className="">
+                    <th className="border border-black border-right px-2 py-1 ">
                       Activity
                     </th>
-                    <th className="border border-black px-2 py-1 sticky top-0 z-10">
+                    <th className="border border-black px-2 py-1 ">
                       Points per Activity
                     </th>
-                    <th className="border border-black px-2 py-1 sticky top-0 z-10">
+                    <th className="border border-black px-2 py-1 ">
                       Permissible Points (max)
                     </th>
-                    <th className="border border-black px-2 py-1 sticky top-0 z-10">
+                    <th className="border border-black px-2 py-1 ">
                       Remain Point
                     </th>
-                    <th className="border border-black px-2 py-1 sticky top-0 z-10">
+                    <th className="border border-black px-2 py-1 ">
                       Already Aquire
                     </th>
                   </tr>
@@ -1415,15 +1461,16 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps>  = ({ data, curr
                   </tr>
                 </tbody>
               </table>
-              {/* <button
-                    type="submit"
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-                    onClick={handleSubmit}
-                >
-                    Submit
-                </button> */}
+
             </form>
           </div>
+          <button
+            type="submit"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
       ) : (
         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
