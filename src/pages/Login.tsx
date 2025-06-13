@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { SuperAdminLoginForm, SuperAdminSignupApiPayload, SuperAdminSignupFormData } from '@/components/types/superadminType';
 import { toast, ToastContainer } from 'react-toastify';
 import { superAdminLogin, superAdminSignup } from '@/api/superAdminApi';
+import { loginTeacher } from '@/api/teacherApi';
 
 
 const Login = () => {
@@ -37,6 +38,40 @@ const Login = () => {
 
 
     //-------------------------teacher function 
+    const [teacherLogin, setTeacherLogin] = useState({
+        userId: "",
+        password: ""
+    });
+    const handleTeacherInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setTeacherLogin((prev) => ({ ...prev, [id]: value }));
+    };
+    const handleTeacherLogin = async () => {
+        const { userId, password } = teacherLogin;
+
+        if (!userId || !password) {
+            toast.error("Please fill in both fields");
+            return;
+        }
+
+        try {
+            const res = await loginTeacher(userId, password);
+            console.log("LOGIN TEACHER:",res)
+            if(res.status){
+                //toast.success(res);
+
+            //localStorage.setItem("token", res.token);
+            localStorage.setItem("role", "teacher");
+
+            navigate("/teacher");
+            }
+            
+        } catch (err: any) {
+            toast.error(err.message || "Login failed");
+        }
+    };
+
+
     //-------------------------superadmin function  
 
     const [superAdminSignupFormData, setSuperAdminSignUpFormData] = useState<SuperAdminSignupFormData>({
@@ -49,9 +84,6 @@ const Login = () => {
         email: '',
         password: '',
     });
-
-
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
 
@@ -223,17 +255,21 @@ const Login = () => {
                                         <div className="text-center p-1 rounded-2xl bg-gray-200">Teacher</div>
 
                                         <div className="flex flex-col gap-2">
-                                            <label className="text-sm font-medium">Email</label>
-                                            <input type="email" id="email" placeholder="me@example.com" className="border rounded-md px-3 py-2" required />
+                                            <label className="text-sm font-medium">User Name :</label>
+                                            <input type="text" id="userId" placeholder="" className="border rounded-md px-3 py-2"
+                                                value={teacherLogin.userId}
+                                                onChange={handleTeacherInputChange} />
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <div className="flex justify-between items-center">
-                                                <label className="text-sm font-medium">Password</label>
+                                                <label className="text-sm font-medium">Password :</label>
                                                 <a href="#" className="text-sm text-blue-600 hover:underline">Forgot your password?</a>
                                             </div>
-                                            <input type="password" id="password" className="border rounded-md px-3 py-2" required />
+                                            <input type="password" id="password" className="border rounded-md px-3 py-2" required
+                                                value={teacherLogin.password}
+                                                onChange={handleTeacherInputChange} />
                                         </div>
-                                        <button type="submit" className="bg-black text-white py-2 rounded-md cursor-pointer" onClick={() => { navigate("/teacher"); }}>Login</button>
+                                        <button type="submit" className="bg-black text-white py-2 rounded-md cursor-pointer" onClick={handleTeacherLogin}>Login</button>
                                     </div>)}
                                 {role === "superadmin" && !superadminLogin && (
                                     <div className=' flex flex-col gap-2'>

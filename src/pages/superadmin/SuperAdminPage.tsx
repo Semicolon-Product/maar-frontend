@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaCreditCard } from "react-icons/fa";
@@ -22,12 +22,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { teachers } from '@/components/data/data';
 import { superadminStyle } from '@/components/styles/style';
 import Close from '@mui/icons-material/Close';
-import type { Teacher } from '@/components/types/superadminType';
+import type { GetAllTeachersResponse, Teacher } from '@/components/types/superadminType';
 import { X } from 'lucide-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
 import { getLoggedInSuperadminId } from '@/utils/auth';
 import { toast, ToastContainer } from 'react-toastify';
-import { createTeacher } from '@/api/superAdminApi';
+import { createTeacher, deleteTeacherById, getAllTeacher, updateTeacherById } from '@/api/superAdminApi';
+import { useNavigate } from 'react-router-dom';
 
 
 interface SidebarContentProps {
@@ -36,12 +37,20 @@ interface SidebarContentProps {
 }
 
 const SuperAdminPage = () => {
+  const navigate = useNavigate();
   const [selectedSection, setSelectedSection] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const currentDateTime = new Date().toLocaleString();
+
   //--------------manage user-------------
   const [showAddModal, setShowAddModal] = useState(false)
-  const [teacherData, setTeacherData] = useState({
+  const [teacherData, setTeacherData] = useState<{
+    id?: number;
+    name: string;
+    dept: string;
+    userId: string;
+    password: string;
+  }>({
+    id: undefined,
     name: '',
     dept: '',
     userId: '',
@@ -49,13 +58,14 @@ const SuperAdminPage = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
     const { name, value } = e.target;
     setTeacherData(prev => ({ ...prev, [name]: value }));
   };
   //-----------add teacher 
   const handleOpenAddModal = () => {
     setIsEditMode(false); // not editing, it's new
-    setTeacherData({ name: '', dept: '', userId: '', password: '' });
+    setTeacherData({ id: undefined, name: '', dept: '', userId: '', password: '' });
     setShowAddModal(true);
   };
   //-----edit teacher
@@ -64,6 +74,7 @@ const SuperAdminPage = () => {
   const handleTeacherEdit = (teacher: Teacher) => {
     setIsEditMode(true);
     setTeacherData({
+      id: teacher.id,
       name: teacher.name,
       dept: teacher.department,
       userId: teacher.userId,
@@ -74,28 +85,61 @@ const SuperAdminPage = () => {
 
   const handleClear = () => {
     setTeacherData({
+
       name: "",
       dept: "",
       userId: "",
       password: "",
     });
   }
-  const details = {
-    currentDateTime: "2025-06-09 14:30:00",
-    instituteName: "Dream Institute of Technology",
-    totalTeachers: 42,
-    instituteCode: "DIT-CSE-2025",
-    currentPlan: {
-      name: "Premium Plan",
-      description: "Access to full features, analytics, and support.",
-    },
+
+
+
+  const getCurrentDateTime = (): string => {
+    const now = new Date();
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    };
+
+    return now.toLocaleString("en-IN", options); // You can change the locale as needed
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   const handleDeleteTeacher = (teacher: Teacher) => {
+    console.log("Delete", teacher)
     setShowDeleteModal(!showDeleteModal)
+    setSelectedTeacher(teacher);
     console.log("Delete activity", teacher)
   }
+
+  const confirmDelete = async () => {
+    if (!selectedTeacher || selectedTeacher.id === undefined) return;
+
+    try {
+      const res = await deleteTeacherById(selectedTeacher.id);
+
+      if (res.status) {
+        toast.success(res.message);
+      }
+
+      setShowDeleteModal(false);
+      getAllDetails();
+    } catch (err) {
+      console.error("Error deleting teacher", err);
+      toast.error("Failed to delete teacher. Please try again.");
+    }
+  };
+
+
 
   const superadminId = getLoggedInSuperadminId();
 
@@ -128,8 +172,10 @@ const SuperAdminPage = () => {
     createTeacher(teacherData)
       .then((response) => {
         if (response.status) {
+          console.log("add teacher", response)
           toast.success(response.message);
           setShowAddModal(!showAddModal);
+          getAllDetails();
         } else {
           toast.error(response.message);
         }
@@ -141,9 +187,62 @@ const SuperAdminPage = () => {
 
   };
 
-  const handleUpdateTeacher = () => {
-    console.log("teacherData", teacherData)
+
+  const handleUpdateTeacher = async () => {
+    const updatedData = {
+      name: teacherData.name,
+      department: teacherData.dept, 
+      userId: teacherData.userId,
+      password: teacherData.password
+    };
+
+    if (!teacherData.id) {
+      console.error("Teacher ID is missing for update");
+      return;
+    }
+
+    try {
+      const response = await updateTeacherById(teacherData.id, updatedData);
+      console.log("Update successful", response);
+    } catch (err) {
+      console.error("Update failed", err);
+    }
   };
+
+
+  const getAllDetails = async () => {
+    const allTeachers = getAllTeacher();
+    allTeachers
+      .then((res) => {
+        console.log("all details", res);
+        setBackendAllTeachers(res)
+      })
+      .catch((err) => {
+        console.error("Error fetching teachers", err);
+      });
+  }
+
+  useEffect(() => {
+    getAllDetails();
+  }, []);
+
+  const [backendAllTeachers, setBackendAllTeachers] = useState<GetAllTeachersResponse>();
+  //console.log("all teachers", backendAllTeachers);
+
+  //---------------log-out functionality 
+
+  useEffect(() => {
+    if (selectedSection === "logout") {
+      // Clear auth tokens/local storage
+      localStorage.removeItem("token");
+      localStorage.removeItem("user"); // If you're storing user data
+
+      // Redirect to login page
+      setTimeout(() => {
+        navigate("/");
+      }, 1000); // Optional: add delay for UX
+    }
+  }, [selectedSection]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -177,6 +276,7 @@ const SuperAdminPage = () => {
         )}
 
         <Modal open={showAddModal} onClose={() => setShowAddModal(false)}>
+
           <div className="max-h-screen bg-white max-w-[90vw] sm:max-w-[95vw] md:max-w-[60vw] mt-[5%] mx-auto md:mx-[20%] flex flex-col rounded-lg">
             <Box
               sx={{
@@ -323,7 +423,7 @@ const SuperAdminPage = () => {
                         <FaCalendarAlt className="text-blue-500 text-xl" />
                         Current Date & Time
                       </h3>
-                      <p className="text-gray-700 text-base">{details.currentDateTime}</p>
+                      <p className="text-gray-700 text-base">{getCurrentDateTime()}</p>
                     </div>
 
                     <div className="bg-green-100 rounded-xl shadow-md p-5 border border-green-200">
@@ -331,7 +431,7 @@ const SuperAdminPage = () => {
                         <FaSchool className="text-green-500 text-xl" />
                         Institute Name
                       </h3>
-                      <p className="text-gray-700 text-base">{details.instituteName}</p>
+                      <p className="text-gray-700 text-base">{backendAllTeachers?.college.college_name}</p>
                     </div>
 
                     <div className="bg-purple-100 rounded-xl shadow-md p-5 border border-purple-200">
@@ -339,7 +439,7 @@ const SuperAdminPage = () => {
                         <FaChalkboardTeacher className="text-purple-500 text-xl" />
                         Total Teachers
                       </h3>
-                      <p className="text-gray-700 text-base">{details.totalTeachers}</p>
+                      <p className="text-gray-700 text-base">{backendAllTeachers?.totalTeachers}</p>
                     </div>
                   </div>
 
@@ -351,7 +451,7 @@ const SuperAdminPage = () => {
                         <FaBarcode className="text-orange-500 text-xl" />
                         Institute Code
                       </h3>
-                      <p className="text-gray-700 text-base">{details.instituteCode}</p>
+                      <p className="text-gray-700 text-base">{backendAllTeachers?.college.college_code}</p>
                     </div>
 
                     {/* 2/3 Card */}
@@ -359,8 +459,8 @@ const SuperAdminPage = () => {
                       <h3 className="text-lg font-semibold mb-3 text-gray-800">Current Plan</h3>
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                          <p className="text-md font-medium">{details.currentPlan.name}</p>
-                          <p className="text-sm text-gray-500">{details.currentPlan.description}</p>
+                          <p className="text-md font-medium">Premium</p>
+                          <p className="text-sm text-gray-500">details.currentPlan.description</p>
                         </div>
                         <button className="px-4 py-2 bg-blue-600 text-white rounded-l hover:bg-blue-700 transition">
                           Upgrade Plan
@@ -389,24 +489,36 @@ const SuperAdminPage = () => {
                           <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Action</TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody>
-                        {teachers.map((teacher, index) => (
-                          <TableRow key={index} sx={{ background: index % 2 ? "#eceff1" : "white" }}>
-                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.name}</TableCell>
-                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.department}</TableCell>
-                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.userId}</TableCell>
-                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.password}</TableCell>
-                            <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>
-                              <IconButton aria-label="edit" color="primary" onClick={() => handleTeacherEdit(teacher)}>
-                                <EditIcon sx={{ fontSize: "20px" }} />
-                              </IconButton>
-                              <IconButton aria-label="delete" color="error" onClick={() => handleDeleteTeacher(teacher)}>
-                                <DeleteIcon sx={{ fontSize: "20px" }} />
-                              </IconButton>
+                      {backendAllTeachers?.totalTeachers ?
+                        <TableBody>
+                          {backendAllTeachers?.teachers.map((teacher, index) => (
+                            <TableRow key={index} sx={{ background: index % 2 ? "#eceff1" : "white" }}>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.name}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.department}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.userId}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.password}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>
+                                <IconButton aria-label="edit" color="primary" onClick={() => handleTeacherEdit(teacher)}>
+                                  <EditIcon sx={{ fontSize: "20px" }} />
+                                </IconButton>
+                                <IconButton aria-label="delete" color="error" onClick={() => handleDeleteTeacher(teacher)}>
+                                  <DeleteIcon sx={{ fontSize: "20px" }} />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                        :
+                        <TableBody>
+                          <TableRow>
+                            <TableCell colSpan={4} align="center" sx={{ fontStyle: "italic", color: "gray", py: 3 }}>
+                              No teachers available. Please add a new teacher to get started.
                             </TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
+                        </TableBody>
+
+                      }
+
                     </Table>
                   </TableContainer>
 
@@ -414,6 +526,11 @@ const SuperAdminPage = () => {
 
               )}
 
+              {selectedSection === "logout" && (
+                <div>
+                  Logging out...
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -435,7 +552,7 @@ const SuperAdminPage = () => {
           </button>
 
           <button
-            //onClick={handleDelete} // Replace with your actual delete function
+            onClick={confirmDelete}// Replace with your actual delete function
             className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
           >
             Delete

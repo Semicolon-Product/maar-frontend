@@ -5,6 +5,18 @@ export interface Teacher {
   department: string;
   userId: string;
   password: string;
+  id?:number
+}
+
+export interface CollegeInfo {
+  college_name: string;
+  college_code: string;
+}
+
+export interface GetAllTeachersResponse {
+  teachers: Teacher[];
+  totalTeachers: number;
+  college: CollegeInfo;
 }
 export interface StudentActivityFormData {
   moocs12Weeks: number;

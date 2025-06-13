@@ -17,8 +17,8 @@ export const getApi = async (endpoint: string, payload?: ApiPayload) => {
         'Content-Type': 'application/json',
       },
     });
-
-    return response.data;
+    //console.log("res==",response)
+    return response;
   } catch (error: any) {
     console.error('API GET Error:', error);
     throw error.response?.data || error;
