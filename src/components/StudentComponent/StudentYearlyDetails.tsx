@@ -329,15 +329,15 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
       </Dialog>
 
       {year <= currentyear ? (
-        <div>
+        <div className="h-screen flex flex-col">
 
           Total Points: {totalPoint}
-          <div className="max-h-[90vh] overflow-y-auto">
+          <div className="max-h-[83vh] overflow-y-auto">
             <ToastContainer position="top-right" />
 
             <form>
-              <table className="table-auto border border-black w-full text-sm">
-                <thead className="bg-gray-300 font-semibold text-center ">
+              <table className="table-auto border border-black w-full text-sm ">
+                <thead className="bg-gray-300 font-semibold text-center top-0 sticky">
                   <tr className="">
                     <th className="border border-black border-right px-2 py-1 ">
                       Activity
@@ -1466,7 +1466,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
           </div>
           <button
             type="submit"
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer w-30 hover:bg-blue-600 transition-colors duration-200"
             onClick={handleSubmit}
           >
             Submit
