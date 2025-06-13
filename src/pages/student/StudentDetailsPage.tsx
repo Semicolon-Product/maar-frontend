@@ -19,10 +19,10 @@ const StudentDetails = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-screen overflow-hidden ">
 
             {/* Sidebar for Desktop */}
-            <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
+            <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto" >
 
                 <SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
             </div>
@@ -31,24 +31,24 @@ const StudentDetails = () => {
             {isSidebarOpen && (
                 <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
                     <div className="flex justify-end p-2">
-                        <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
+                        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-white hover:text-red-400">
                             <X size={24} />
 
                         </button>
                     </div>
-                    <SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+                    <div onClick={() => setIsSidebarOpen(!isSidebarOpen)}><SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear}/></div>
 
                 </div>
             )}
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto" >
 
                 {/* Top bar with menu icon */}
                 <div className="flex justify-end p-4 pb-0">
                     <Button
                         className="text-black bg-transparent hover:bg-gray-100 md:hidden block"
-                        onClick={() => setIsSidebarOpen(true)}
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                     >
                         <IoReorderThree className="text-xl scale-150" />
                     </Button>
@@ -62,7 +62,7 @@ const StudentDetails = () => {
 
 
                     {selectedYear === "first" &&
-                        <div className="pt-1 sm:pt-6 px-2 md:px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
+                        <div className="pt-1 sm:pt-6 px-2 md:px-6 pb-6 space-y-6 sm:space-y-8 ">
 
                             <StudentYearlyDetails data={studentdata.firstyear} currentyear={studentdata.currentyear} year={1} />
                         </div>
@@ -82,12 +82,6 @@ const StudentDetails = () => {
                             <StudentYearlyDetails data={studentdata.fourthyear} currentyear={studentdata.currentyear} year={4} />
                         </div>
                     }
-
-
-
-
-
-
                 </div>
             </div>
         </div>
@@ -120,8 +114,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelect
                     className={`p-2 rounded cursor-pointer ${selectedYear === year
                         ? "bg-black text-white"
                         : "hover:bg-gray-700"
-                        }`}
-                    onClick={() => setSelectedYear(year)}
+                        }` }
+                    onClick={() => {setSelectedYear(year);}}
                 >
                     {year.charAt(0).toUpperCase() + year.slice(1)} Year
                 </li>
