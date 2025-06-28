@@ -78,7 +78,7 @@ const StudentDetail = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {Object.entries(studentData.points).map(([year, data]) => (
           <div key={year} className="bg-red-100 rounded-lg shadow p-4 text-center border border-red-400">
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">{year}</h3>
+            <h3 className="text-lg font-semibold mb-2 text-red-600">{year}</h3>
             <p className="text-sm text-gray-700">
               <strong>Uploaded:</strong> {data.uploaded}
             </p>

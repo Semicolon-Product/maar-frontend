@@ -71,7 +71,7 @@ const TeacherDetails = () => {
     }
   };
     return (
-        <div className="p-4 space-y-6">
+        <div className="p-0 space-y-0">
             {/* Teacher Info Card */}
             <div className="bg-green-100 rounded-xl shadow p-6 w-full max-w-4xl mx-auto">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">

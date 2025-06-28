@@ -18,7 +18,7 @@ interface SidebarContentProps {
 }
 
 const StudentDetails = () => {
-    const [selectedYear, setSelectedYear] = useState("first");
+    const [selectedYear, setSelectedYear] = useState("details");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
