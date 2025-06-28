@@ -22,11 +22,8 @@ export const postApi = async (
     }
   }
 
-  try {
+  
     const response = await axios.post(url, payload, { headers });
     return response.data;
-  } catch (error: any) {
-    console.error('POST API Error:', error);
-    throw error.response?.data || error;
-  }
+ 
 };

@@ -1,9 +1,30 @@
-import React from 'react';
+import { postApi } from '@/api/postApi';
+import { getTeacherDetailsFromApi } from '@/api/teacherApi';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { MdOutlineSaveAlt } from "react-icons/md";
+
+
 const TeacherDetails = () => {
-    const teacherData = [
+
+
+
+    const [teacherDataApi, setTeacherDataApi] = useState();
+    const [studentData, setStudentData] = useState<any[]>([]);
+    const getTeacherDetails = async () => {
+        const res = await getTeacherDetailsFromApi();
+        setTeacherDataApi(res.data.teacher)
+        setStudentData(res.data.teacher.studentData)
+        console.log("getTeacherDetailsFromApi==", res.data.teacher)
+    }
+
+    useEffect(() => {
+        getTeacherDetails();
+    }, [])
+    /* const teacherData = [
         {
             teacher: {
+                id:36,
                 name: "Mr. Sekhar Ghosh",
                 email: "sekhar.ghosh@school.edu",
                 department: "Computer Science",
@@ -16,9 +37,39 @@ const TeacherDetails = () => {
                 { year: "4th Year", count: 95, submit: 70, remain: 25 }
             ]
         }
-    ];
-    const teacher = teacherData[0].teacher;
-    const studentData = teacherData[0].studentData;
+    ]; */
+    //const teacher = teacherData[0].teacher;
+
+    //const studentData = teacher[0].studentData;
+
+    const [year, setYear] = useState("1");
+    const [excelFile, setExcelFile] = useState<File | null>(null);
+    const [signatureFile, setSignatureFile] = useState<File | null>(null);
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+   /*  if (!excelFile || !signatureFile) {
+      alert("Please upload both Excel file and signature");
+      return;
+    } */
+
+    const formData = new FormData();
+    formData.append("year", year);
+    formData.append("excel", excelFile);
+    formData.append("signature", signatureFile);
+     for (let pair of formData.entries()) {
+    console.log(`${pair[0]}:`, pair[1]);
+  }
+
+    try {
+      const res = await postApi("uploadStudentsWithSignature",);
+      console.log("res ==",res)
+      
+    } catch (err) {
+      console.error("Upload failed", err);
+    }
+  };
     return (
         <div className="p-4 space-y-6">
             {/* Teacher Info Card */}
@@ -30,9 +81,9 @@ const TeacherDetails = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                     {/* Column 1: Teacher Info */}
                     <div className="space-y-2 text-gray-700">
-                        <p><strong>Name:</strong> {teacher.name}</p>
-                        <p><strong>Email:</strong> {teacher.email}</p>
-                        <p><strong>Department:</strong>{teacher.department}</p>
+                        <p><strong>Name:</strong> {teacherDataApi?.name}</p>
+                        <p><strong>Email:</strong> {teacherDataApi?.userId}</p>
+                        <p><strong>Department:</strong>{teacherDataApi?.department}</p>
                     </div>
 
                     {/* Column 2: Signature */}
@@ -40,7 +91,7 @@ const TeacherDetails = () => {
 
                         <div className="border-2 border-dotted border-green-400 p-2 rounded">
                             <img
-                                src={teacher.signature}
+                                src={teacherDataApi?.signature}
                                 alt="Signature"
                                 className="h-20 object-contain"
                             />
@@ -52,7 +103,7 @@ const TeacherDetails = () => {
 
             {/* Student Info Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                {studentData.map((item, index) => (
+                {studentData?.map((item, index) => (
                     <div
                         key={index}
                         className="bg-yellow-100 rounded-xl shadow p-4 flex flex-col justify-between text-center"
@@ -91,7 +142,7 @@ const TeacherDetails = () => {
                     </div>
 
                     {/* Input Fields - takes ~60% width on md+ */}
-                    <form className="flex flex-col gap-4 md:w-3/5 mt-1">
+                    <form className="flex flex-col gap-4 md:w-3/5 mt-1" onSubmit={handleSubmit}>
                         {/* Year Selector */}
                         <div className="flex flex-col">
                             <label htmlFor="year" className="text-sm font-medium text-gray-700 mb-1">
@@ -100,6 +151,7 @@ const TeacherDetails = () => {
                             <select
                                 id="year"
                                 className="p-2 rounded border border-gray-300 bg-red-50 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                onChange={(e) => setYear(e.target.value)}
                             >
                                 <option value="">--Select--</option>
                                 <option value="1st Year">1st Year</option>
@@ -119,6 +171,7 @@ const TeacherDetails = () => {
                                 type="file"
                                 accept=".xlsx, .xls"
                                 className="p-2 rounded border border-gray-300 bg-red-50 focus:ring-1 focus:ring-red-300"
+                                onChange={(e) => setExcelFile(e.target.files[0])}
                             />
                         </div>
 
@@ -131,6 +184,7 @@ const TeacherDetails = () => {
                                 id="signatureUpload"
                                 type="file"
                                 accept="image/*"
+                                onChange={(e) => setSignatureFile(e.target.files[0])}
                                 className="p-2 rounded border border-gray-300 bg-red-50 focus:ring-1 focus:ring-red-300"
                             />
                         </div>

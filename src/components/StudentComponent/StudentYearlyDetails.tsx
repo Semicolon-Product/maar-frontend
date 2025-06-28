@@ -7,6 +7,8 @@ import {
 } from "../types/superadminType";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Save } from "lucide-react";
+
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
@@ -1466,9 +1468,10 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
           </div>
           <button
             type="submit"
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer w-30 hover:bg-blue-600 transition-colors duration-200"
+            className="mt-4 flex gap-2 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer w-30 hover:bg-blue-600 transition-colors duration-200"
             onClick={handleSubmit}
           >
+            <Save/>
             Submit
           </button>
         </div>

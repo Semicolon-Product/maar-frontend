@@ -17,7 +17,7 @@ export const superAdminSignup = async (data: SuperAdminSignupApiPayload) => {
 export const superAdminLogin = async (data:SuperAdminLoginForm)=>{
     try {
     const response = await postApi('superadmin/signin', data, false); 
-    localStorage.setItem('token', response.token);
+    localStorage.setItem('token', response.data.token);
     return response;
   } catch (error) {
     throw error;

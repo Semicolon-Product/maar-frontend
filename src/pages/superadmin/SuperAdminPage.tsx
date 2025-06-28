@@ -191,7 +191,7 @@ const SuperAdminPage = () => {
   const handleUpdateTeacher = async () => {
     const updatedData = {
       name: teacherData.name,
-      department: teacherData.dept, 
+      department: teacherData.dept,
       userId: teacherData.userId,
       password: teacherData.password
     };
@@ -460,13 +460,16 @@ const SuperAdminPage = () => {
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                           <p className="text-md font-medium">Premium</p>
-                          <p className="text-sm text-gray-500">details.currentPlan.description</p>
+                          <p className="text-sm text-gray-700">
+                            Every student needs to pay ₹10 under the current plan.
+                          </p>
                         </div>
                         <button className="px-4 py-2 bg-blue-600 text-white rounded-l hover:bg-blue-700 transition">
                           Upgrade Plan
                         </button>
                       </div>
                     </div>
+
                   </div>
                 </div>
               }
