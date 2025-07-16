@@ -8,7 +8,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Save } from "lucide-react";
-
+import './tableStyle.css'
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
@@ -334,12 +334,12 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
         <div className="h-screen flex flex-col">
 
           Total Points: {totalPoint}
-          <div className="max-h-[83vh] overflow-y-auto">
+          <div className="max-h-[83vh] overflow-y-auto myForm">
             <ToastContainer position="top-right" />
 
             <form>
               <table className="table-auto border border-black w-full text-sm ">
-                <thead className="bg-gray-300 font-semibold text-center top-0 sticky">
+                <thead className="bgHead font-semibold text-center top-0 sticky mythead">
                   <tr className="">
                     <th className="border border-black border-right px-2 py-1 ">
                       Activity
@@ -358,7 +358,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="mytbody">
                   {/* MOOCS */}
                   <tr className="bg-yellow-300 font-semibold">
                     <td colSpan={5} className="border border-black px-2 py-1">
