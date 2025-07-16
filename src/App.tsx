@@ -21,7 +21,9 @@ function App() {
 
 
       <Route path="/superadmin" element={
+
         <SuperAdminPage />
+
        
       } />
       <Route path="/teacher" element={<TeacherPage />} />
