@@ -226,28 +226,28 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
             <div className="relative">
 
                 {/* Top-right image */}
-                <div className="flex justify-between items-center px-4 py-2">
+                <div className="flex justify-between items-start md:items-center px-2 md:px-4 py-2 flex-wrap">
                     {/* Left side: status section */}
-                    <div className="flex items-center gap-6 text-base font-medium text-gray-700">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-gray-700 max-w-[80%]">
                         {/* Submit & Remain */}
                         <div className="flex gap-2">
-                            <p className="text-green-600">Submit: 80</p>;
-                            <p className="text-red-600">Remain: 20</p>;
+                            <p className="text-green-600">Submit: 80</p>
+                            <p className="text-red-600">Remain: 20</p>
                         </div>
 
                         {/* Verified */}
                         <div className="flex items-center gap-1 text-green-600">
                             Verified:
-                            <CheckCircleIcon sx={{ color: "green", fontSize: "20px" }} />
+                            <CheckCircleIcon sx={{ color: "green", fontSize: 18 }} />
                             (20)
-                        </div>;
+                        </div>
 
                         {/* Pending */}
                         <div className="flex items-center gap-1 text-red-600">
                             Pending:
-                            <CancelIcon sx={{ color: "#c9352a", fontSize: "20px" }} />
+                            <CancelIcon sx={{ color: "#c9352a", fontSize: 18 }} />
                             (80)
-                        </div>;
+                        </div>
                     </div>
 
                     {/* Right side: download icon */}
@@ -256,14 +256,15 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                             <img
                                 onClick={() => generateAllReports(students, signature)}
                                 src={pdf}
-                                height={100}
-                                width={100}
-                                className="scale-50 h-18 w-18 p-2 rounded-3xl transition-all duration-300 ease-in-out hover:bg-amber-100 cursor-pointer"
+                                height={80}
+                                width={80}
+                                className="h-12 w-12 p-2 rounded-3xl transition-all duration-300 ease-in-out hover:bg-amber-100 cursor-pointer"
                                 alt="Download PDF"
                             />
                         </Tooltip>
                     </div>
                 </div>
+
 
 
 
@@ -329,9 +330,9 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                                             sx={{ ...superadminStyle.cellStyle, py: "4px" }}
                                         >
                                             <Tooltip title="Download Report">
-                                            <IconButton onClick={() => downloadIndividualReport(student)}>
-                                                <BsFileEarmarkPdfFill color="#cc3f35" size={19} />
-                                            </IconButton>
+                                                <IconButton onClick={() => downloadIndividualReport(student)}>
+                                                    <BsFileEarmarkPdfFill color="#cc3f35" size={19} />
+                                                </IconButton>
                                             </Tooltip>
                                         </TableCell>
                                         <TableCell

@@ -8,6 +8,9 @@ import NewAllPoint from '@/components/NewAllPoint';
 import StudentYearlyDetails from '@/components/StudentComponent/StudentYearlyDetails';
 import { studentdata } from '@/components/data/data';
 import { X } from 'lucide-react';
+import { FaUser, FaRegCalendarAlt, FaGraduationCap } from "react-icons/fa";
+import { BookOpen, User2, CalendarCheck2, GraduationCap } from "lucide-react";
+
 import StudentDetail from '@/components/StudentComponent/StudentDetail';
 interface SidebarContentProps {
     selectedYear: string;
@@ -15,11 +18,11 @@ interface SidebarContentProps {
 }
 
 const StudentDetails = () => {
-    const [selectedYear, setSelectedYear] = useState("first");
+    const [selectedYear, setSelectedYear] = useState("details");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div className="flex h-screen overflow-hidden ">
+        <div className="flex h-[100vh] overflow-hidden"  >
 
             {/* Sidebar for Desktop */}
             <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto" >
@@ -36,16 +39,16 @@ const StudentDetails = () => {
 
                         </button>
                     </div>
-                    <div onClick={() => setIsSidebarOpen(!isSidebarOpen)}><SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear}/></div>
+                    <div onClick={() => setIsSidebarOpen(!isSidebarOpen)}><SidebarContent selectedYear={selectedYear} setSelectedYear={setSelectedYear} /></div>
 
                 </div>
             )}
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto" >
+            <div className="flex-1 overflow-y-auto">
 
                 {/* Top bar with menu icon */}
-                <div className="flex justify-end p-4 pb-0">
+                <div className="flex justify-end p-0 pb-0">
                     <Button
                         className="text-black bg-transparent hover:bg-gray-100 md:hidden block"
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -57,7 +60,7 @@ const StudentDetails = () => {
                 <div className="p-0">{/* <p>You are in {selectedYear} year</p> */}
 
                     {selectedYear === "details" && <div>
-                        <StudentDetail/>
+                        <StudentDetail />
                     </div>}
 
 
@@ -90,41 +93,58 @@ const StudentDetails = () => {
 
 const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelectedYear }) => (
     <>
-    <div className="flex flex-col h-full">
-        <div className="flex items-center space-x-4 p-4 ">
-            <Avatar className="w-10 h-10">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>SG</AvatarFallback>
-            </Avatar>
-            <div>
-                <h2 className="text-lg font-semibold">Sekhar Ghosh</h2>
-                <p className="text-sm text-gray-400">25300121026</p>
+        <div className="flex flex-col h-full">
+            <div className="flex items-center space-x-4 p-4 ">
+                <Avatar className="w-10 h-10">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>SG</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h2 className="text-lg font-semibold">Sekhar Ghosh</h2>
+                    <p className="text-sm text-gray-400">25300121026</p>
+                </div>
             </div>
-        </div>
 
-        <ul className="space-y-4 mt-4">
-            <li className={`p-2 rounded cursor-pointer ${selectedYear === "details"
-                ? "bg-black text-white"
-                : "hover:bg-gray-700"
-                }`}
-                onClick={() => setSelectedYear("details")}>Details</li>
-            {["first", "second", "third", "fourth"].map((year) => (
+            <ul className="space-y-4 mt-4">
                 <li
-                    key={year}
-                    className={`p-2 rounded cursor-pointer ${selectedYear === year
-                        ? "bg-black text-white"
-                        : "hover:bg-gray-700"
-                        }` }
-                    onClick={() => {setSelectedYear(year);}}
+                    className={`p-2 rounded cursor-pointer flex items-center gap-2 font-bold ${selectedYear === "details"
+                            ? " text-blue-600"
+                            : "hover:text-blue-700"
+                        }`}
+                    onClick={() => setSelectedYear("details")}
                 >
-                    {year.charAt(0).toUpperCase() + year.slice(1)} Year
+                    <User2 className="w-4 h-4" />
+                    Details
                 </li>
-            ))}
-        </ul>
 
-        <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
-            © {new Date().getFullYear()} Abc Pvt Ltd
-        </div>
+                {["first", "second", "third", "fourth"].map((year, idx) => {
+                    const icons = [
+                        <BookOpen className="w-4 h-4" />,
+                        <CalendarCheck2 className="w-4 h-4" />,
+                        <GraduationCap className="w-4 h-4" />,
+                        <FaGraduationCap className="w-4 h-4" />,
+                    ];
+
+                    return (
+                        <li
+                            key={year}
+                            className={`p-2 rounded cursor-pointer flex items-center gap-2 font-bold ${selectedYear === year
+                                    ? " text-blue-600"
+                                    : "hover:text-blue-700"
+                                }`}
+                            onClick={() => setSelectedYear(year)}
+                        >
+                            {icons[idx]}
+                            {year.charAt(0).toUpperCase() + year.slice(1)} Year
+                        </li>
+                    );
+                })}
+            </ul>
+
+
+            <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
+                © {new Date().getFullYear()} Abc Pvt Ltd
+            </div>
         </div>
     </>
 );

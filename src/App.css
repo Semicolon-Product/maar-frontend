@@ -58,19 +58,20 @@ select.pointsDropdown {
   border-radius: 2px;
   outline: none;
   text-align: center;
-   appearance: none;           /* Most modern browsers */
-  -webkit-appearance: none;   /* Safari, Chrome */
-  -moz-appearance: none;      /* Firefox */
-  background: none; 
+  appearance: none; /* Most modern browsers */
+  -webkit-appearance: none; /* Safari, Chrome */
+  -moz-appearance: none; /* Firefox */
+  background: none;
   font-size: 12px;
   padding: 0 4px;
+  background-color: rgba(254, 154, 236, 0.227);
 }
 
 select.pointsDropdown:focus {
   border-color: blue;
 }
- 
-.fileInputBox{
+
+.fileInputBox {
   border: 1px solid black;
   margin-left: 4px;
   border-radius: 2px;
@@ -80,5 +81,6 @@ select.pointsDropdown:focus {
   max-width: 150px;
   padding: 0 1px;
   font-size: 12px;
-cursor: pointer;
-} 
+  cursor: pointer;
+  background-color: rgba(125, 242, 0, 0.227);
+}

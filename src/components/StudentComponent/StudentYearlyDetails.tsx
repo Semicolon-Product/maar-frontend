@@ -7,9 +7,20 @@ import {
 } from "../types/superadminType";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Save } from "lucide-react";
+import './tableStyle.css'
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
+
+  const [validationMessage, setValidationMessage] = useState('');
+const [showValidationPopup, setShowValidationPopup] = useState(false);
+
+const showValidationError = (message: string) => {
+  setValidationMessage(message);
+  setShowValidationPopup(true);
+};
+
   const [formData, setFormData] = useState<StudentActivityFormData>(
     initialStudentActivityFormData
   );
@@ -60,7 +71,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
       Number(formData.moocs12Weeks);
 
     if (totalMoocs + data[0].already_acquired > 40) {
-      toast.error("1. MOOCs can't be greater than 40");
+      /* toast.error("1. MOOCs can't be greater than 40"); */
+       showValidationError("1. MOOCs can't be greater than 40");
       return;
     }
 
@@ -294,6 +306,41 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
   return (
     <div>
+
+     {showValidationPopup && (
+  <div className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 ">
+    <div className="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-md border-t-4 border-red-600 relative animate-fade-in border ">
+      {/* Icon or Decorative Alert Top */}
+      <div className="flex items-center justify-center mb-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-10 w-10 text-red-600"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.75a.75.75 0 10-1.5 0v4.5a.75.75 0 001.5 0v-4.5zM10 14a1 1 0 100-2 1 1 0 000 2z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
+
+      {/* Message */}
+      <p className="text-center text-gray-800 font-medium">{validationMessage}</p>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setShowValidationPopup(false)}
+        className="mt-6 w-full bg-red-600 hover:bg-red-700 transition-colors text-white font-semibold py-2 rounded-lg"
+      >
+        Dismiss
+      </button>
+    </div>
+  </div>
+)}
+
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle
           sx={{
@@ -332,12 +379,12 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
         <div className="h-screen flex flex-col">
 
           Total Points: {totalPoint}
-          <div className="max-h-[83vh] overflow-y-auto">
+          <div className="max-h-[83vh] overflow-y-auto myForm">
             <ToastContainer position="top-right" />
 
             <form>
               <table className="table-auto border border-black w-full text-sm ">
-                <thead className="bg-gray-300 font-semibold text-center top-0 sticky">
+                <thead className="bgHead font-semibold text-center top-0 sticky mythead">
                   <tr className="">
                     <th className="border border-black border-right px-2 py-1 ">
                       Activity
@@ -356,7 +403,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="mytbody">
                   {/* MOOCS */}
                   <tr className="bg-yellow-300 font-semibold">
                     <td colSpan={5} className="border border-black px-2 py-1">
@@ -1466,9 +1513,10 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
           </div>
           <button
             type="submit"
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer w-30 hover:bg-blue-600 transition-colors duration-200"
+            className="mt-4 flex gap-2 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer w-30 hover:bg-blue-600 transition-colors duration-200"
             onClick={handleSubmit}
           >
+            <Save/>
             Submit
           </button>
         </div>

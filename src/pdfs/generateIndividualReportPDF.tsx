@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { saveAs } from "file-saver";
 
 // Helper to load image from URL and return base64 data
 const getImageBase64FromUrl = async (url: string): Promise<string> => {
@@ -48,18 +49,25 @@ export const generateIndividualReportPDF = async (data: any) => {
   // Insert each image below the table
   for (let i = 0; i < data.activities.length; i++) {
     const activity = data.activities[i];
-    const imageData = await getImageBase64FromUrl(activity.link);
 
-    // Check space; add page if needed
-    if (finalY > 250) {
-      doc.addPage();
-      finalY = 20;
+    if (activity.link) {
+      try {
+        const imageData = await getImageBase64FromUrl(activity.link);
+
+        // Check space; add page if needed
+        if (finalY > 250) {
+          doc.addPage();
+          finalY = 20;
+        }
+
+        doc.setFontSize(11);
+        doc.text(`${activity.serialNo}. ${activity.name} - Certificate:`, 14, finalY + 10);
+        doc.addImage(imageData, "PNG", 14, finalY + 14, 60, 40);
+        finalY += 60;
+      } catch (error) {
+        console.warn(`Image load failed for ${activity.name}`);
+      }
     }
-
-    doc.setFontSize(11);
-    doc.text(`${activity.serialNo}. ${activity.name} - Certificate:`, 14, finalY + 10);
-    doc.addImage(imageData, "PNG", 14, finalY + 14, 60, 40); // Adjust size as needed
-    finalY += 60;
   }
 
   // === Signature Section ===
@@ -67,7 +75,6 @@ export const generateIndividualReportPDF = async (data: any) => {
     const pageHeight = doc.internal.pageSize.getHeight();
     const pageWidth = doc.internal.pageSize.getWidth();
 
-    // If not enough space, add new page
     if (finalY > pageHeight - 50) {
       doc.addPage();
       finalY = 20;
@@ -88,6 +95,7 @@ export const generateIndividualReportPDF = async (data: any) => {
     }
   }
 
-  // Save the PDF
-  doc.save(`${data.rollNo}_report.pdf`);
+  // Save the PDF using FileSaver (more reliable in Edge/Firefox)
+  const pdfBlob = doc.output("blob");
+  saveAs(pdfBlob, `${data.rollNo}_report.pdf`);
 };

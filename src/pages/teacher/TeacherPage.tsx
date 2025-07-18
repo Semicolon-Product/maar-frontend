@@ -9,7 +9,6 @@ import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 import { teacherPageModalStyle } from "@/components/styles/style";
 
-
 import { allStudentDetails } from "@/components/data/data";
 import { X } from "lucide-react";
 import { studentdata } from "@/components/data/data";
@@ -43,7 +42,7 @@ const TeacherPage = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden" >
       <ToastContainer />
       <Modal open={openDocsModal} onClose={handleClose}>
         <Box sx={teacherPageModalStyle}>
@@ -100,56 +99,67 @@ const TeacherPage = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        {/* Top bar with menu icon */}
-        <div className="flex justify-end px-4 pt-4 pb-0  md:hidden ">
+        {/* Top bar: h2 on left, menu icon on right */}
+        <div className="flex items-center justify-between px-4 pt-4 pb-2">
+          {/* Heading */}
+          {selectedSection && selectedSection !== "dashboard" && (
+          <h2 className="text-base md:text-2xl font-semibold bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md px-3 py-1 w-fit">
+            {selectedSection === "first" && "First Year Student Data"}
+            {selectedSection === "second" && "Second Year Student Data"}
+            {selectedSection === "third" && "Third Year Student Data"}
+            {selectedSection === "four" && "Fourth Year Student Data"}
+          </h2>
+          )}
 
-
-          <Button
-            className="text-black bg-transparent hover:bg-gray-100"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            <IoReorderThree className="text-xl scale-150" />
-          </Button>
+          {/* Menu icon - show only on small screens */}
+          <div className="md:hidden">
+            <Button
+              className="text-black bg-transparent hover:bg-gray-100"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              <IoReorderThree className="text-xl scale-150" />
+            </Button>
+          </div>
         </div>
 
-
+        {/* Content */}
         <div className="p-4">
-
-
-          {/* Render Section Content */}
           <div className="mt-0">
-            {selectedSection === "dashboard" && (
-              <TeacherDetails />
-            )}
+            {selectedSection === "dashboard" && <TeacherDetails />}
 
             {selectedSection === "first" && (
-              <div>
-                <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">
-                  First Year Student Data
-                </h2>
-
-                <TeacherVerifyTable data={allStudentDetails.firstYear} signature={allStudentDetails.teacherSignature} />
-              </div>
+              <TeacherVerifyTable
+                data={allStudentDetails.firstYear}
+                signature={allStudentDetails.teacherSignature}
+              />
             )}
-            {selectedSection === "second" && <div>
-              <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">Second Year Student Data</h2>
-              <TeacherVerifyTable data={allStudentDetails.secondYear} signature={allStudentDetails.teacherSignature} />
-            </div>}
+
+            {selectedSection === "second" && (
+              <TeacherVerifyTable
+                data={allStudentDetails.secondYear}
+                signature={allStudentDetails.teacherSignature}
+              />
+            )}
+
             {selectedSection === "third" && (
-              <div>
-                <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">Third Year Student Data</h2>
-                <TeacherVerifyTable data={allStudentDetails.thirdYear} signature={allStudentDetails.teacherSignature} />
-              </div>
+              <TeacherVerifyTable
+                data={allStudentDetails.thirdYear}
+                signature={allStudentDetails.teacherSignature}
+              />
             )}
-            {selectedSection === "four" && <div>
-              <h2 className="text-base md:text-2xl font-semibold text-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-gray-800 rounded-lg shadow-md w-[80vw] md:w-[25vw] mx-auto py-2">Fourth Year Student Data</h2>
-              <TeacherVerifyTable data={allStudentDetails.fourthYear} signature={allStudentDetails.teacherSignature} />
 
-            </div>}
+            {selectedSection === "four" && (
+              <TeacherVerifyTable
+                data={allStudentDetails.fourthYear}
+                signature={allStudentDetails.teacherSignature}
+              />
+            )}
+
             {selectedSection === "logout" && <p>Logging out...</p>}
           </div>
         </div>
       </div>
+
     </div>
   );
 };

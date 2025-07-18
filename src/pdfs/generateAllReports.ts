@@ -15,7 +15,6 @@ const getImageBase64FromUrl = async (url: string): Promise<string> => {
 
 export const generateAllReports = async (students: any[], teacherSignatureUrl: string) => {
   const doc = new jsPDF();
-
   const teacherSignature = await getImageBase64FromUrl(teacherSignatureUrl);
 
   for (let i = 0; i < students.length; i++) {
@@ -24,14 +23,12 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
 
     doc.setFontSize(16);
     doc.text("Student Activity Report", 14, 20);
-
     doc.setFontSize(12);
     doc.text(`Name: ${student.name}`, 14, 30);
     doc.text(`Roll No: ${student.rollNo}`, 14, 38);
     doc.text(`Total Points: ${student.points}`, 14, 46);
     doc.text(`Verified: ${student.verified ? "Yes" : "No"}`, 14, 54);
 
-    // Table
     let finalY = 62;
     autoTable(doc, {
       startY: finalY,
@@ -49,24 +46,17 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
       },
     });
 
-    // Insert images from activity.link
     for (let j = 0; j < student.activities.length; j++) {
       const activity = student.activities[j];
       if (activity.link) {
         try {
           const imageData = await getImageBase64FromUrl(activity.link);
-
           if (finalY > 250) {
             doc.addPage();
             finalY = 20;
           }
-
           doc.setFontSize(11);
-          doc.text(
-            `${activity.serialNo}. ${activity.name} - Certificate:`,
-            14,
-            finalY + 10
-          );
+          doc.text(`${activity.serialNo}. ${activity.name} - Certificate:`, 14, finalY + 10);
           doc.addImage(imageData, "PNG", 14, finalY + 14, 60, 40);
           finalY += 60;
         } catch (error) {
@@ -75,7 +65,6 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
       }
     }
 
-    // 🧑‍🎓 Add Student Signature (bottom-right of their page)
     if (student.signature) {
       try {
         const studentSignature = await getImageBase64FromUrl(student.signature);
@@ -95,7 +84,6 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
     }
   }
 
-  // 🧑‍🏫 Add Teacher Signature at END of the DOCUMENT
   doc.addPage();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -108,6 +96,19 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
   doc.text("Teacher Signature:", sigX, sigY - 10);
   doc.addImage(teacherSignature, "PNG", sigX, sigY, sigWidth, sigHeight);
 
-  // Save the full report
-  doc.save("All_Students_Report.pdf");
+  // === Cross-browser safe download ===
+  const pdfBlob = doc.output("blob");
+  const blobUrl = window.URL.createObjectURL(pdfBlob);
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = "All_Students_Report.pdf";
+  a.style.display = "none";
+
+  document.body.appendChild(a);
+  a.click();
+
+  setTimeout(() => {
+    window.URL.revokeObjectURL(blobUrl);
+    document.body.removeChild(a);
+  }, 100);
 };

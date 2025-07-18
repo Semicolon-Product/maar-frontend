@@ -1,0 +1,41 @@
+.mythead::before {
+  content: "";
+  display: block;
+  height: 50px;
+  
+  
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1;
+  pointer-events: none; 
+}
+.myForm {
+ border:2px solid rgb(59, 33, 33);
+border-radius: 15px;
+}
+/* styles.css */
+.myForm::-webkit-scrollbar {
+  width: 5px;
+}
+
+.myForm::-webkit-scrollbar-track {
+  background: #eaeaea;
+  border-radius: 0px;
+}
+
+.myForm::-webkit-scrollbar-thumb {
+  background-color: #2a4054;
+  border-radius: 8px;
+}
+
+.myForm::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+                
+.bgHead {
+background: #2a4054;
+border:none;
+color:white
+}
