@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaCreditCard } from "react-icons/fa";
+import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaCreditCard, FaStar } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -23,14 +23,14 @@ import { teachers } from '@/components/data/data';
 import { superadminStyle } from '@/components/styles/style';
 import Close from '@mui/icons-material/Close';
 import type { GetAllTeachersResponse, Teacher } from '@/components/types/superadminType';
-import { X } from 'lucide-react';
+import { Star, User, X, Zap } from 'lucide-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
 import { getLoggedInSuperadminId } from '@/utils/auth';
 import { toast, ToastContainer } from 'react-toastify';
 import { createTeacher, deleteTeacherById, getAllTeacher, updateTeacherById } from '@/api/superAdminApi';
 import { useNavigate } from 'react-router-dom';
-
-
+import { HiOutlineUserGroup, HiUserGroup } from "react-icons/hi2";
+import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
 interface SidebarContentProps {
   selectedSection: string;
   setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
@@ -245,8 +245,16 @@ const SuperAdminPage = () => {
   }, [selectedSection]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+   /*  <div className="flex flex-col min-h-screen">
 
+ */
+<div
+  className="flex flex-col min-h-screen bg-cover bg-center text-white"
+ /*  style={{
+    backgroundImage: "url('https://imapro.in/bahrain/global/bg.svg')", // Replace with your actual image path
+    backgroundAttachment: "fixed",
+  }} */
+>
       <ToastContainer position='top-right' />
       <div className="flex h-[100vh] overflow-hidden">
 
@@ -346,7 +354,7 @@ const SuperAdminPage = () => {
 
                   <div className="flex gap-1 flex-col sm:flex-row">
                     <div className='flex flex-1'>
-                      <label htmlFor="" className='flex-1/3 modalLabel'>User Id :</label>
+                      <label htmlFor="" className='flex-1/3 modalLabel'>Email :</label>
                       <input
                         type="text"
                         name="userId"
@@ -457,20 +465,132 @@ const SuperAdminPage = () => {
                     {/* 2/3 Card */}
                     <div className="lg:col-span-2 bg-orange-100 rounded-xl shadow-md p-5 border border-gray-200">
                       <h3 className="text-lg font-semibold mb-3 text-gray-800">Current Plan</h3>
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                          <p className="text-md font-medium">Premium</p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Left Column - Plan Details */}
+                        <div className="space-y-1">
+                          <p className="text-md font-medium text-gray-900">Plan: Premium</p>
                           <p className="text-sm text-gray-700">
-                            Every student needs to pay ₹10 under the current plan.
+
                           </p>
                         </div>
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded-l hover:bg-blue-700 transition">
-                          Upgrade Plan
+
+                        {/* Right Column - Payment Info */}
+                        <div className="space-y-1">
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Last Payment Date:</span> 10 July 2025
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Plan Expiry Date:</span> 10 July 2026
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+
+                  </div>
+                  <div className="w-full max-w-7xl mx-auto px-4 py-12">
+                    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
+
+                      {/* Left Card - Standard */}
+                      <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[520px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
+                        <div>
+                          <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">Standard Plan</h4>
+                          <div className="flex items-center gap-2 mb-3">
+                            <HiUserGroup className="h-6 w-6 text-blue-500" />
+                            <h3 className="text-xl font-bold text-gray-800">Up to 1200 Students</h3>
+                          </div>
+                          <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
+                            <li>₹20 per student</li>
+                            <li>Email support</li>
+                            <li>Basic analytics</li>
+                          </ul>
+                          <p className="text-sm text-gray-400 line-through">₹24,000/year</p>
+                          <p className="text-3xl font-bold text-green-600">₹19,999/year</p>
+                        </div>
+                        <button className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition">
+                          Choose Standard
+                        </button>
+                      </div>
+
+                      {/* Middle Card - Premium */}
+                      <div className="bg-gradient-to-br from-[#fff9db] via-[#fff4bf] to-[#fef08a] shadow-2xl border-3 border-yellow-400 rounded-2xl p-6 flex flex-col h-[560px] justify-between scale-105 z-10 hover:scale-[1.07] transition-transform duration-300">
+                        <div>
+                          <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">Premium Plan</h4>
+                          <div className="flex items-center gap-2 mb-3">
+                            <FaStar className="h-6 w-6 text-yellow-500" />
+                            <h3 className="text-xl font-bold text-gray-900">Up to 3000 Students</h3>
+                          </div>
+                          <ul className="text-sm text-gray-800 list-disc pl-5 space-y-1 mb-4">
+                            <li>₹18 per student</li>
+                            <li>Priority email support</li>
+                            <li>Advanced reporting dashboard</li>
+                            <li>Data export feature</li>
+                          </ul>
+                          <p className="text-sm text-gray-500 line-through">₹54,000/year</p>
+                          <p className="text-3xl font-bold text-yellow-700">₹46,999/year</p>
+                        </div>
+                        <img
+                          src={premium}
+                          alt="Premium Plan"
+                          className="w-full h-48 object-contain my-4"
+                        />
+                        <button className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
+                          Choose Premium
+                        </button>
+                      </div>
+
+                      {/* Right Card - Enterprise */}
+                      <div className="bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] shadow-lg border border-yellow-300 rounded-2xl p-6 flex flex-col h-[520px] justify-between hover:scale-105 hover:rotate-y-3 transition-transform duration-300">
+                        <div>
+                          <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">Enterprise Plan</h4>
+                          <div className="flex items-center gap-2 mb-3">
+                            <HiOutlineUserGroup className="h-6 w-6 text-indigo-500" />
+                            <h3 className="text-xl font-bold text-gray-800">Up to 5000 Students</h3>
+                          </div>
+                          <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
+                            <li>₹15 per student</li>
+                            <li>Dedicated account manager</li>
+                            <li>Full API access</li>
+                            <li>Custom integrations</li>
+                          </ul>
+                          <p className="text-sm text-gray-400 line-through">₹75,000/year</p>
+                          <p className="text-3xl font-bold text-green-600">₹62,999/year</p>
+                        </div>
+                        <button className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
+                          Choose Enterprise
                         </button>
                       </div>
                     </div>
 
+                    {/* Contact Section */}
+                    <div className="mt-10 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
+                      <p className="text-sm text-gray-800 font-medium">
+                        Need access for more than 5000 students?{" "}
+                        <span className="text-blue-600 underline cursor-pointer hover:text-blue-800">Contact us</span> for an enterprise solution.
+                      </p>
+                    </div>
+
+                    {/* Auto Submission Add-on */}
+                    <div className="mt-8">
+                      <div className="bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] border border-orange-300 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
+                        <div className="flex items-center gap-3">
+                          <Zap className="h-6 w-6 text-orange-500" />
+                          <div>
+                            <p className="text-md font-bold text-gray-800">Auto Submission Feature</p>
+                            <p className="text-sm text-gray-700">Sync student records automatically every year.</p>
+                          </div>
+                        </div>
+                        <p className="text-lg font-bold text-green-700">₹5,000/year</p>
+                      </div>
+                    </div>
                   </div>
+
+
+
                 </div>
               }
 

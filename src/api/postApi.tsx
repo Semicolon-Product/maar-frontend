@@ -24,6 +24,6 @@ export const postApi = async (
 
   
     const response = await axios.post(url, payload, { headers });
-    return response.data;
+    return response;
  
 };

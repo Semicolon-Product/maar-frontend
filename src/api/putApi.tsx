@@ -26,7 +26,7 @@ export const putApi = async (
 
   try {
     const response = await axios.put(url, payload, { headers });
-    return response.data;
+    return response;
   } catch (error: any) {
     console.error('PUT API Error:', error);
     throw error.response?.data || error;

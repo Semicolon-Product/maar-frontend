@@ -12,6 +12,15 @@ import './tableStyle.css'
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
+
+  const [validationMessage, setValidationMessage] = useState('');
+const [showValidationPopup, setShowValidationPopup] = useState(false);
+
+const showValidationError = (message: string) => {
+  setValidationMessage(message);
+  setShowValidationPopup(true);
+};
+
   const [formData, setFormData] = useState<StudentActivityFormData>(
     initialStudentActivityFormData
   );
@@ -62,7 +71,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
       Number(formData.moocs12Weeks);
 
     if (totalMoocs + data[0].already_acquired > 40) {
-      toast.error("1. MOOCs can't be greater than 40");
+      /* toast.error("1. MOOCs can't be greater than 40"); */
+       showValidationError("1. MOOCs can't be greater than 40");
       return;
     }
 
@@ -296,6 +306,41 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
   return (
     <div>
+
+     {showValidationPopup && (
+  <div className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 ">
+    <div className="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-md border-t-4 border-red-600 relative animate-fade-in border ">
+      {/* Icon or Decorative Alert Top */}
+      <div className="flex items-center justify-center mb-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-10 w-10 text-red-600"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.75a.75.75 0 10-1.5 0v4.5a.75.75 0 001.5 0v-4.5zM10 14a1 1 0 100-2 1 1 0 000 2z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
+
+      {/* Message */}
+      <p className="text-center text-gray-800 font-medium">{validationMessage}</p>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setShowValidationPopup(false)}
+        className="mt-6 w-full bg-red-600 hover:bg-red-700 transition-colors text-white font-semibold py-2 rounded-lg"
+      >
+        Dismiss
+      </button>
+    </div>
+  </div>
+)}
+
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle
           sx={{
