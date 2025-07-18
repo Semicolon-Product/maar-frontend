@@ -1,3 +1,5 @@
+import type { YearlyActivityList } from "../types/superadminType";
+
 export const teachers = [
   { name: "Dr. Rajeev", department: "CSE", userId: "T001", password: "pass123" },
   { name: "Ms. Ananya", department: "ECE", userId: "T002", password: "123456" },
@@ -25,3 +27,1910 @@ export const teachers = [
   { name: "Mr. Dinesh", department: "ME", userId: "T024", password: "dinesh456" },
   { name: "Dr. Swathi", department: "ECE", userId: "T025", password: "swathieee" }
 ];
+
+export const students = [
+  {
+    name: "Amit Kumar", rollNo: "23CS001", points: 85,signature:"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,verified: false, activities: [
+      {
+        serialNo: 1,
+        name: "Python Workshop",
+        date: "2025-01-15",
+        points: 10,
+        docs: "python_workshop_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+        
+        
+      },
+      {
+        serialNo: 2,
+        name: "AI Bootcamp",
+        date: "2025-02-10",
+        points: 15,
+        docs: "ai_bootcamp_proof.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 3,
+        name: "National Hackathon",
+        date: "2025-03-05",
+        points: 20,
+        docs: "hackathon_certificate.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 4,
+        name: "Online Course (NPTEL - DBMS)",
+        date: "2025-03-25",
+        points: 10,
+        docs: "nptel_dbms_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 5,
+        name: "IEEE Paper Presentation",
+        date: "2025-04-08",
+        points: 25,
+        docs: "ieee_paper.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 6,
+        name: "Soft Skills Training",
+        date: "2025-05-01",
+        points: 5,
+        docs: "soft_skills.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      }
+    ]
+  },
+  {
+    name: "Sara Mehta", rollNo: "23CS002", points: 90,signature:"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" , verified: false, activities:
+      [
+        {
+          serialNo: 1,
+          name: "Web Development Seminar",
+          date: "2025-01-20",
+          points: 12,
+          docs: "web_dev_seminar.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          status: false
+        },
+        {
+          serialNo: 2,
+          name: "Cloud Computing Workshop",
+          date: "2025-02-12",
+          points: 18,
+          docs: "cloud_computing_workshop.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          status: false
+        },
+        {
+          serialNo: 3,
+          name: "Cybersecurity Training",
+          date: "2025-03-07",
+          points: 20,
+          docs: "cybersecurity_training.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          status: false
+        },
+        {
+          serialNo: 4,
+          name: "Machine Learning Webinar",
+          date: "2025-03-28",
+          points: 10,
+          docs: "ml_webinar_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          status: false
+        },
+        {
+          serialNo: 5,
+          name: "Startup Ideation Challenge",
+          date: "2025-04-12",
+          points: 22,
+          docs: "startup_challenge.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          status: false
+        },
+        {
+          serialNo: 6,
+          name: "Advanced Excel Certification",
+          date: "2025-05-03",
+          points: 8,
+          docs: "excel_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+          status: false
+        }
+      ]
+
+  },
+  {
+    name: "Ravi Sharma", rollNo: "23CS003", points: 76, verified: false, activities: [
+      {
+        serialNo: 1,
+        name: "Python Workshop",
+        date: "2025-01-15",
+        points: 10,
+        docs: "python_workshop_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=", status: false
+      },
+      {
+        serialNo: 2,
+        name: "AI Bootcamp",
+        date: "2025-02-10",
+        points: 15,
+        docs: "ai_bootcamp_proof.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 3,
+        name: "National Hackathon",
+        date: "2025-03-05",
+        points: 20,
+        docs: "hackathon_certificate.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 4,
+        name: "Online Course (NPTEL - DBMS)",
+        date: "2025-03-25",
+        points: 10,
+        docs: "nptel_dbms_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 5,
+        name: "IEEE Paper Presentation",
+        date: "2025-04-08",
+        points: 25,
+        docs: "ieee_paper.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 6,
+        name: "Soft Skills Training",
+        date: "2025-05-01",
+        points: 5,
+        docs: "soft_skills.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      }
+    ]
+  },
+  {
+    name: "Priya Verma", rollNo: "23CS004", points: 92, verified: false, activities: [
+      {
+        serialNo: 1,
+        name: "Python Workshop",
+        date: "2025-01-15",
+        points: 10,
+        docs: "python_workshop_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=", status: false
+      },
+      {
+        serialNo: 2,
+        name: "AI Bootcamp",
+        date: "2025-02-10",
+        points: 15,
+        docs: "ai_bootcamp_proof.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 3,
+        name: "National Hackathon",
+        date: "2025-03-05",
+        points: 20,
+        docs: "hackathon_certificate.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 4,
+        name: "Online Course (NPTEL - DBMS)",
+        date: "2025-03-25",
+        points: 10,
+        docs: "nptel_dbms_cert.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 5,
+        name: "IEEE Paper Presentation",
+        date: "2025-04-08",
+        points: 25,
+        docs: "ieee_paper.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      },
+      {
+        serialNo: 6,
+        name: "Soft Skills Training",
+        date: "2025-05-01",
+        points: 5,
+        docs: "soft_skills.pdf",link:"https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png?s=2048x2048&w=is&k=20&c=Tk6S2jeovqVbITf3miDtSIrRgS93PBr0NeJgkRwigyo=",
+      }
+    ]
+  },
+
+  
+];
+
+  
+export const activity=[
+  {
+    "max": "40",
+    "moocs12Weeks": { "points": 20, "alreadyAcquired": 0 },
+    "moocs8Weeks": { "points": 15, "alreadyAcquired": 0 },
+    "moocs4Weeks": { "points": 10, "alreadyAcquired": 0 },
+    "moocs2Weeks": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "techFestOrganizer": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "6",
+    "techFestParticipant": { "points": 3, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "ruralReporting": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "treePlantation": { "points": 1, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "40",
+    "reliefFundCollection": { "points": 5, "alreadyAcquired": 0 },
+    "reliefWorkTeam": { "points": 20, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "participationInArts": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "publication": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "30",
+    "researchPublication": { "points": 15, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "60",
+    "innovativeProjects": { "points": 30, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "16",
+    "bloodDonation": { "points": 8, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "bloodDonationCampOrganization": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "sportsPersonal": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "sportsCollege": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "sportsUniversity": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "24",
+    "sportsDistrict": { "points": 12, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "30",
+    "sportsState": { "points": 15, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "40",
+    "sportsNationalInternational": { "points": 20, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "professionalSocietyActivities": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "industryVisit": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "communityService": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "entrepreneurshipOrganize": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "10",
+    "entrepreneurshipParticipate": { "points": 5, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "entrepreneurshipVideo": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "20",
+    "entrepreneurshipBusinessPlan": { "points": 10, "alreadyAcquired": 0 }
+  },
+  {
+    "max": "40",
+    "entrepreneurshipWorkForStartup": { "points": 20, "alreadyAcquired": 0 }
+  }
+]
+
+
+export const studentdata =
+ {
+  currentyear:2,
+
+   firstyear:[
+    
+  {
+    name: "MOOCS",
+    max: 40,
+    remain: 40,
+    already_acquired: 0,
+    subpoints: [
+      { name: "10 weeks", point_per_activity: 20 },
+      { name: "8 weeks", point_per_activity: 15 },
+      { name: "4 weeks", point_per_activity: 10 },
+      { name: "2 weeks", point_per_activity: 5 }
+    ]
+  },
+  {
+    name: "Tech Fest",
+    subpoints: [
+      {
+        name: "Organizer",
+        point_per_activity: 5,
+        max: 10,
+        remain: 10,
+        already_acquired: 0
+      },
+      {
+        name: "Participant",
+        point_per_activity: 3,
+        max: 6,
+        remain: 6,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Rural Reporting",
+    point_per_activity: 5,
+    max: 10,
+    remain: 10,
+    already_acquired: 0
+  },
+  {
+    name: "Tree Plantation",
+    point_per_activity: 1,
+    max: 10,
+    remain: 10,
+    already_acquired: 0
+  },
+  {
+    name: "Relief & Charitable Activities",
+    max: 40,
+    remain: 40,
+    already_acquired: 0,
+    subpoints: [
+      {
+        name: "Collection of Fund",
+        point_per_activity: 5
+      },
+      {
+        name: "Relief Work Team",
+        point_per_activity: 20
+      }
+    ]
+  },
+  {
+    name: "Participation in Debate",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Publication",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Research Publication",
+    point_per_activity: 15,
+    max: 30,
+    remain: 30,
+    already_acquired: 0
+  },
+  {
+    name: "Innovation Project",
+    point_per_activity: 30,
+    max: 60,
+    remain: 60,
+    already_acquired: 0
+  },
+  {
+    name: "Blood Donation",
+    subpoints: [
+      {
+        name: "Donate Blood",
+        point_per_activity: 8,
+        max: 16,
+        remain: 16,
+        already_acquired: 0
+      },
+      {
+        name: "Organize Blood Donation Camp",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Sports",
+    subpoints: [
+      {
+        name: "Personal",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "College",
+        point_per_activity: 5,
+        max: 10,
+        remain: 10,
+        already_acquired: 0
+      },
+      {
+        name: "University",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "District",
+        point_per_activity: 12,
+        max: 24,
+        remain: 24,
+        already_acquired: 0
+      },
+      {
+        name: "Other",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "National",
+        point_per_activity: 20,
+        max: 40,
+        remain: 40,
+        already_acquired: 0
+      }
+    ]
+  },
+  {
+    name: "Activities in a Professional Society/Student Chapter",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Relevant Industry Visit & Report",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Community Service & Allied Activities",
+    point_per_activity: 10,
+    max: 20,
+    remain: 20,
+    already_acquired: 0
+  },
+  {
+    name: "Self-Entrepreneurship",
+    subpoints: [
+      {
+        name: "Organise Entrepreneurship Programmes",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "Take Part in Entrepreneurship",
+        point_per_activity: 5,
+        max: 10,
+        remain: 10,
+        already_acquired: 0
+      },
+      {
+        name: "Film Making",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "Submit Business Plan",
+        point_per_activity: 10,
+        max: 20,
+        remain: 20,
+        already_acquired: 0
+      },
+      {
+        name: "Work for Start-up",
+        point_per_activity: 20,
+        max: 40,
+        remain: 40,
+        already_acquired: 0
+      }
+    ]
+  }
+ ],
+
+
+ secondyear:[
+
+  {
+    name: "MOOCS",
+    max: 40,
+    remain: 25,
+    already_acquired: 15,
+    subpoints: [
+      { name: "10 weeks", point_per_activity: 20 },
+      { name: "8 weeks", point_per_activity: 15 },
+      { name: "4 weeks", point_per_activity: 10 },
+      { name: "2 weeks", point_per_activity: 5 }
+    ]
+  },
+  {
+    name: "Tech Fest",
+    subpoints: [
+      {
+        name: "Organizer",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "Participant",
+        point_per_activity: 3,
+        max: 6,
+        remain: 3,
+        already_acquired: 3
+      }
+    ]
+  },
+  {
+    name: "Rural Reporting",
+    point_per_activity: 5,
+    max: 10,
+    remain: 5,
+    already_acquired: 5
+  },
+  {
+    name: "Tree Plantation",
+    point_per_activity: 1,
+    max: 10,
+    remain: 7,
+    already_acquired: 3
+  },
+  {
+    name: "Relief & Charitable Activities",
+    max: 40,
+    remain: 30,
+    already_acquired: 10,
+    subpoints: [
+      {
+        name: "Collection of Fund",
+        point_per_activity: 5
+      },
+      {
+        name: "Relief Work Team",
+        point_per_activity: 20
+      }
+    ]
+  },
+  {
+    name: "Participation in Debate",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Publication",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Research Publication",
+    point_per_activity: 15,
+    max: 30,
+    remain: 15,
+    already_acquired: 15
+  },
+  {
+    name: "Innovation Project",
+    point_per_activity: 30,
+    max: 60,
+    remain: 30,
+    already_acquired: 30
+  },
+  {
+    name: "Blood Donation",
+    subpoints: [
+      {
+        name: "Donate Blood",
+        point_per_activity: 8,
+        max: 16,
+        remain: 8,
+        already_acquired: 8
+      },
+      {
+        name: "Organize Blood Donation Camp",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      }
+    ]
+  },
+  {
+    name: "Sports",
+    subpoints: [
+      {
+        name: "Personal",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "College",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "University",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "District",
+        point_per_activity: 12,
+        max: 24,
+        remain: 12,
+        already_acquired: 12
+      },
+      {
+        name: "Other",
+        point_per_activity: 15,
+        max: 30,
+        remain: 15,
+        already_acquired: 15
+      },
+      {
+        name: "National",
+        point_per_activity: 20,
+        max: 40,
+        remain: 20,
+        already_acquired: 20
+      }
+    ]
+  },
+  {
+    name: "Activities in a Professional Society/Student Chapter",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Relevant Industry Visit & Report",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Community Service & Allied Activities",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Self-Entrepreneurship",
+    subpoints: [
+      {
+        name: "Organise Entrepreneurship Programmes",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Take Part in Entrepreneurship",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "Film Making",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Submit Business Plan",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Work for Start-up",
+        point_per_activity: 20,
+        max: 40,
+        remain: 20,
+        already_acquired: 10
+      }
+    ]
+  }
+ ],
+
+
+ thirdyear:[
+
+  {
+    name: "MOOCS",
+    max: 40,
+    remain: 25,
+    already_acquired: 15,
+    subpoints: [
+      { name: "10 weeks", point_per_activity: 20 },
+      { name: "8 weeks", point_per_activity: 15 },
+      { name: "4 weeks", point_per_activity: 10 },
+      { name: "2 weeks", point_per_activity: 5 }
+    ]
+  },
+  {
+    name: "Tech Fest",
+    subpoints: [
+      {
+        name: "Organizer",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "Participant",
+        point_per_activity: 3,
+        max: 6,
+        remain: 3,
+        already_acquired: 3
+      }
+    ]
+  },
+  {
+    name: "Rural Reporting",
+    point_per_activity: 5,
+    max: 10,
+    remain: 5,
+    already_acquired: 5
+  },
+  {
+    name: "Tree Plantation",
+    point_per_activity: 1,
+    max: 10,
+    remain: 7,
+    already_acquired: 3
+  },
+  {
+    name: "Relief & Charitable Activities",
+    max: 40,
+    remain: 30,
+    already_acquired: 10,
+    subpoints: [
+      {
+        name: "Collection of Fund",
+        point_per_activity: 5
+      },
+      {
+        name: "Relief Work Team",
+        point_per_activity: 20
+      }
+    ]
+  },
+  {
+    name: "Participation in Debate",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Publication",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Research Publication",
+    point_per_activity: 15,
+    max: 30,
+    remain: 15,
+    already_acquired: 15
+  },
+  {
+    name: "Innovation Project",
+    point_per_activity: 30,
+    max: 60,
+    remain: 30,
+    already_acquired: 30
+  },
+  {
+    name: "Blood Donation",
+    subpoints: [
+      {
+        name: "Donate Blood",
+        point_per_activity: 8,
+        max: 16,
+        remain: 8,
+        already_acquired: 8
+      },
+      {
+        name: "Organize Blood Donation Camp",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      }
+    ]
+  },
+  {
+    name: "Sports",
+    subpoints: [
+      {
+        name: "Personal",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "College",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "University",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "District",
+        point_per_activity: 12,
+        max: 24,
+        remain: 12,
+        already_acquired: 12
+      },
+      {
+        name: "Other",
+        point_per_activity: 15,
+        max: 30,
+        remain: 15,
+        already_acquired: 15
+      },
+      {
+        name: "National",
+        point_per_activity: 20,
+        max: 40,
+        remain: 20,
+        already_acquired: 20
+      }
+    ]
+  },
+  {
+    name: "Activities in a Professional Society/Student Chapter",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Relevant Industry Visit & Report",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Community Service & Allied Activities",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Self-Entrepreneurship",
+    subpoints: [
+      {
+        name: "Organise Entrepreneurship Programmes",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Take Part in Entrepreneurship",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "Film Making",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Submit Business Plan",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Work for Start-up",
+        point_per_activity: 20,
+        max: 40,
+        remain: 20,
+        already_acquired: 10
+      }
+    ]
+  }
+ ],
+
+
+ fourthyear:[
+
+  {
+    name: "MOOCS",
+    max: 40,
+    remain: 25,
+    already_acquired: 15,
+    subpoints: [
+      { name: "10 weeks", point_per_activity: 20 },
+      { name: "8 weeks", point_per_activity: 15 },
+      { name: "4 weeks", point_per_activity: 10 },
+      { name: "2 weeks", point_per_activity: 5 }
+    ]
+  },
+  {
+    name: "Tech Fest",
+    subpoints: [
+      {
+        name: "Organizer",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "Participant",
+        point_per_activity: 3,
+        max: 6,
+        remain: 3,
+        already_acquired: 3
+      }
+    ]
+  },
+  {
+    name: "Rural Reporting",
+    point_per_activity: 5,
+    max: 10,
+    remain: 5,
+    already_acquired: 5
+  },
+  {
+    name: "Tree Plantation",
+    point_per_activity: 1,
+    max: 10,
+    remain: 7,
+    already_acquired: 3
+  },
+  {
+    name: "Relief & Charitable Activities",
+    max: 40,
+    remain: 30,
+    already_acquired: 10,
+    subpoints: [
+      {
+        name: "Collection of Fund",
+        point_per_activity: 5
+      },
+      {
+        name: "Relief Work Team",
+        point_per_activity: 20
+      }
+    ]
+  },
+  {
+    name: "Participation in Debate",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Publication",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Research Publication",
+    point_per_activity: 15,
+    max: 30,
+    remain: 15,
+    already_acquired: 15
+  },
+  {
+    name: "Innovation Project",
+    point_per_activity: 30,
+    max: 60,
+    remain: 30,
+    already_acquired: 30
+  },
+  {
+    name: "Blood Donation",
+    subpoints: [
+      {
+        name: "Donate Blood",
+        point_per_activity: 8,
+        max: 16,
+        remain: 8,
+        already_acquired: 8
+      },
+      {
+        name: "Organize Blood Donation Camp",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      }
+    ]
+  },
+  {
+    name: "Sports",
+    subpoints: [
+      {
+        name: "Personal",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "College",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "University",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "District",
+        point_per_activity: 12,
+        max: 24,
+        remain: 12,
+        already_acquired: 12
+      },
+      {
+        name: "Other",
+        point_per_activity: 15,
+        max: 30,
+        remain: 15,
+        already_acquired: 15
+      },
+      {
+        name: "National",
+        point_per_activity: 20,
+        max: 40,
+        remain: 20,
+        already_acquired: 20
+      }
+    ]
+  },
+  {
+    name: "Activities in a Professional Society/Student Chapter",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Relevant Industry Visit & Report",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Community Service & Allied Activities",
+    point_per_activity: 10,
+    max: 20,
+    remain: 10,
+    already_acquired: 10
+  },
+  {
+    name: "Self-Entrepreneurship",
+    subpoints: [
+      {
+        name: "Organise Entrepreneurship Programmes",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Take Part in Entrepreneurship",
+        point_per_activity: 5,
+        max: 10,
+        remain: 5,
+        already_acquired: 5
+      },
+      {
+        name: "Film Making",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Submit Business Plan",
+        point_per_activity: 10,
+        max: 20,
+        remain: 10,
+        already_acquired: 10
+      },
+      {
+        name: "Work for Start-up",
+        point_per_activity: 20,
+        max: 40,
+        remain: 20,
+        already_acquired: 10
+      }
+    ]
+  }
+]
+ }
+
+ export const allStudentDetails = {
+  "teacherSignature":"https://signaturely.com/wp-content/uploads/2020/04/warren-buffett-signature-signaturely.png",
+  "firstYear": [
+    {
+      "name": "Amit Kumar",
+      "rollNo": "23CS101",
+      "points": 85,
+     "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2025-01-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2025-02-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Sara Mehta",
+      "rollNo": "23CS102",
+      "points": 90,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Web Development Seminar",
+          "date": "2025-01-20",
+          "points": 12,
+          "docs": "web_dev_seminar.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cloud Computing Workshop",
+          "date": "2025-02-12",
+          "points": 18,
+          "docs": "cloud_computing_workshop.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Ravi Sharma",
+      "rollNo": "23CS103",
+      "points": 76,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "National Hackathon",
+          "date": "2025-03-05",
+          "points": 20,
+          "docs": "hackathon_certificate.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Soft Skills Training",
+          "date": "2025-05-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Priya Verma",
+      "rollNo": "23CS104",
+      "points": 92,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2025-04-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Online Course (NPTEL - DBMS)",
+          "date": "2025-03-25",
+          "points": 10,
+          "docs": "nptel_dbms_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Karan Singh",
+      "rollNo": "23CS105",
+      "points": 70,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Soft Skills Training",
+          "date": "2025-05-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Machine Learning Webinar",
+          "date": "2025-03-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ],
+  "secondYear": [
+    {
+      "name": "Anita Roy",
+      "rollNo": "22CS201",
+      "points": 88,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": true,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Cloud Computing Workshop",
+          "date": "2024-10-15",
+          "points": 18,
+          "docs": "cloud_computing_workshop.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cybersecurity Training",
+          "date": "2024-11-07",
+          "points": 20,
+          "docs": "cybersecurity_training.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Vikram Patel",
+      "rollNo": "22CS202",
+      "points": 80,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Web Development Seminar",
+          "date": "2024-10-20",
+          "points": 12,
+          "docs": "web_dev_seminar.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Startup Ideation Challenge",
+          "date": "2024-11-12",
+          "points": 22,
+          "docs": "startup_challenge.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Deepa Nair",
+      "rollNo": "22CS203",
+      "points": 85,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Machine Learning Webinar",
+          "date": "2024-10-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Advanced Excel Certification",
+          "date": "2024-11-03",
+          "points": 8,
+          "docs": "excel_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Rohit Desai",
+      "rollNo": "22CS204",
+      "points": 78,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": true,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2024-10-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2024-11-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Sneha Gupta",
+      "rollNo": "22CS205",
+      "points": 92,
+      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2024-10-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Soft Skills Training",
+          "date": "2024-11-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ],
+  "thirdYear": [
+    {
+      "name": "Manish Sharma",
+      "rollNo": "21CS301",
+      "points": 85,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "AI Bootcamp",
+          "date": "2023-11-15",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cybersecurity Training",
+          "date": "2023-12-07",
+          "points": 20,
+          "docs": "cybersecurity_training.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Neha Singh",
+      "rollNo": "21CS302",
+      "points": 90,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Web Development Seminar",
+          "date": "2023-11-20",
+          "points": 12,
+          "docs": "web_dev_seminar.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Machine Learning Webinar",
+          "date": "2023-12-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Rajesh Kumar",
+      "rollNo": "21CS303",
+      "points": 76,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Startup Ideation Challenge",
+          "date": "2023-11-12",
+          "points": 22,
+          "docs": "startup_challenge.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Advanced Excel Certification",
+          "date": "2023-12-03",
+          "points": 8,
+          "docs": "excel_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Divya Patel",
+      "rollNo": "21CS304",
+      "points": 92,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2023-10-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Soft Skills Training",
+          "date": "2023-11-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Ayesha Khan",
+      "rollNo": "21CS305",
+      "points": 70,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2023-10-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2023-11-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ],
+  "fourthYear": [
+    {
+      "name": "Vikas Sharma",
+      "rollNo": "20CS401",
+      "points": 85,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Soft Skills Training",
+          "date": "2022-05-01",
+          "points": 5,
+          "docs": "soft_skills.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Machine Learning Webinar",
+          "date": "2022-03-28",
+          "points": 10,
+          "docs": "ml_webinar_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Neelam Gupta",
+      "rollNo": "20CS402",
+      "points": 90,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "IEEE Paper Presentation",
+          "date": "2022-04-08",
+          "points": 25,
+          "docs": "ieee_paper.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Online Course (NPTEL - DBMS)",
+          "date": "2022-03-25",
+          "points": 10,
+          "docs": "nptel_dbms_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Ramesh Patel",
+      "rollNo": "20CS403",
+      "points": 76,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Python Workshop",
+          "date": "2022-01-15",
+          "points": 10,
+          "docs": "python_workshop_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "AI Bootcamp",
+          "date": "2022-02-10",
+          "points": 15,
+          "docs": "ai_bootcamp_proof.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Sonal Mehta",
+      "rollNo": "20CS404",
+      "points": 92,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Cloud Computing Workshop",
+          "date": "2022-02-15",
+          "points": 18,
+          "docs": "cloud_computing_workshop.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Cybersecurity Training",
+          "date": "2022-03-07",
+          "points": 20,
+          "docs": "cybersecurity_training.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    },
+    {
+      "name": "Kavita Joshi",
+      "rollNo": "20CS405",
+      "points": 70,"signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
+      "verified": false,
+      "activities": [
+        {
+          "serialNo": "1",
+          "name": "Startup Ideation Challenge",
+          "date": "2022-01-12",
+          "points": 22,
+          "docs": "startup_challenge.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        },
+        {
+          "serialNo": "2",
+          "name": "Advanced Excel Certification",
+          "date": "2022-01-03",
+          "points": 8,
+          "docs": "excel_cert.pdf",
+          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
+          "status": false
+        }
+      ]
+    }
+  ]
+}
+
+
+export const dummyStudents = [
+  {
+    id: 1,
+    name: "Ravi Sharma",
+    email: "ravi.sharma@example.com",
+    rollNo: "UNI123",
+    mobileNo: "9876543210",
+    year: "2023",
+  },
+  {
+    id: 2,
+    name: "Priya Verma",
+    email: "priya.verma@example.com",
+    rollNo: "UNI124",
+    mobileNo: "9876543211",
+    year: "2023",
+  },
+  {
+    id: 3,
+    name: "Amit Singh",
+    email: "amit.singh@example.com",
+    rollNo: "UNI130",
+    mobileNo: "9876543212",
+    year: "2022",
+  },
+  {
+    id: 4,
+    name: "Sneha Roy",
+    email: "sneha.roy@example.com",
+    rollNo: "UNI135",
+    mobileNo: "9876543213",
+    year: "2024",
+  },
+  {
+    id: 5,
+    name: "Karan Mehta",
+    email: "karan.mehta@example.com",
+    rollNo: "UNI138",
+    mobileNo: "9876543214",
+    year: "2022",
+  },
+  {
+    id: 6,
+    name: "Anjali Gupta",
+    email: "anjali.gupta@example.com",
+    rollNo: "UNI139",
+    mobileNo: "9876543215",
+    year: "2024",
+  },
+  {
+    id: 7,
+    name: "Rahul Das",
+    email: "rahul.das@example.com",
+    rollNo: "UNI140",
+    mobileNo: "9876543216",
+    year: "2021",
+  },
+  {
+    id: 8,
+    name: "Neha Kapoor",
+    email: "neha.kapoor@example.com",
+    rollNo: "UNI141",
+    mobileNo: "9876543217",
+    year: "2023",
+  },
+  {
+    id: 9,
+    name: "Manish Yadav",
+    email: "manish.yadav@example.com",
+    rollNo: "UNI142",
+    mobileNo: "9876543218",
+    year: "2021",
+  },
+  {
+    id: 10,
+    name: "Divya Rani",
+    email: "divya.rani@example.com",
+    rollNo: "UNI143",
+    mobileNo: "9876543219",
+    year: "2022",
+  },
+  {
+    id: 11,
+    name: "Aditya Joshi",
+    email: "aditya.joshi@example.com",
+    rollNo: "UNI144",
+    mobileNo: "9876543220",
+    year: "2023",
+  },
+  {
+    id: 12,
+    name: "Pooja Sinha",
+    email: "pooja.sinha@example.com",
+    rollNo: "UNI145",
+    mobileNo: "9876543221",
+    year: "2021",
+  },
+  {
+    id: 13,
+    name: "Saurabh Bansal",
+    email: "saurabh.bansal@example.com",
+    rollNo: "UNI146",
+    mobileNo: "9876543222",
+    year: "2024",
+  },
+  {
+    id: 14,
+    name: "Meena Iyer",
+    email: "meena.iyer@example.com",
+    rollNo: "UNI147",
+    mobileNo: "9876543223",
+    year: "2022",
+  },
+  {
+    id: 15,
+    name: "Vikram Rao",
+    email: "vikram.rao@example.com",
+    rollNo: "UNI148",
+    mobileNo: "9876543224",
+    year: "2021",
+  },
+  {
+    id: 16,
+    name: "Tina Desai",
+    email: "tina.desai@example.com",
+    rollNo: "UNI149",
+    mobileNo: "9876543225",
+    year: "2024",
+  },
+  {
+    id: 17,
+    name: "Arjun Malhotra",
+    email: "arjun.malhotra@example.com",
+    rollNo: "UNI150",
+    mobileNo: "9876543226",
+    year: "2023",
+  },
+  {
+    id: 18,
+    name: "Riya Sen",
+    email: "riya.sen@example.com",
+    rollNo: "UNI151",
+    mobileNo: "9876543227",
+    year: "2023",
+  },
+  {
+    id: 19,
+    name: "Nikhil Jain",
+    email: "nikhil.jain@example.com",
+    rollNo: "UNI152",
+    mobileNo: "9876543228",
+    year: "2022",
+  },
+  {
+    id: 20,
+    name: "Ishita Bhatt",
+    email: "ishita.bhatt@example.com",
+    rollNo: "UNI153",
+    mobileNo: "9876543229",
+    year: "2021",
+  },
+];
+
