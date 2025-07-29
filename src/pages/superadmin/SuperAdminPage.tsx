@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaCreditCard, FaStar } from "react-icons/fa";
+import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaStar } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -19,19 +19,21 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { teachers } from '@/components/data/data';
 import { superadminStyle } from '@/components/styles/style';
 import Close from '@mui/icons-material/Close';
-import type { GetAllTeachersResponse, Teacher } from '@/components/types/superadminType';
-import { Star, User, X, Zap } from 'lucide-react';
+import type { AllDetails, PaymentPlan, SuperadminSidebarData, Teacher, } from '@/components/types/superadminType';
+import { X, Zap } from 'lucide-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
 import { getLoggedInSuperadminId } from '@/utils/auth';
 import { toast, ToastContainer } from 'react-toastify';
-import { createTeacher, deleteTeacherById, getAllTeacher, updateTeacherById } from '@/api/superAdminApi';
+import { PiCurrencyInrBold } from "react-icons/pi";
+
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineUserGroup, HiUserGroup } from "react-icons/hi2";
 import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
+import { deleteApi, getApi, postApi } from '@/api';
 interface SidebarContentProps {
+  details?: SuperadminSidebarData;
   selectedSection: string;
   setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -47,25 +49,23 @@ const SuperAdminPage = () => {
     id?: number;
     name: string;
     dept: string;
-    userId: string;
+    email: string;
     password: string;
+    mobileNo: string
   }>({
     id: undefined,
     name: '',
     dept: '',
-    userId: '',
-    password: ''
+    email: '',
+    password: '',
+    mobileNo: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-    const { name, value } = e.target;
-    setTeacherData(prev => ({ ...prev, [name]: value }));
-  };
   //-----------add teacher 
   const handleOpenAddModal = () => {
     setIsEditMode(false); // not editing, it's new
-    setTeacherData({ id: undefined, name: '', dept: '', userId: '', password: '' });
+    setTeacherData({ id: undefined, name: '', dept: '', email: '', password: '', mobileNo: "" });
     setShowAddModal(true);
   };
   //-----edit teacher
@@ -73,13 +73,15 @@ const SuperAdminPage = () => {
 
   const handleTeacherEdit = (teacher: Teacher) => {
     setIsEditMode(true);
-    setTeacherData({
+    console.log("teacher", teacher);
+    /* setTeacherData({
       id: teacher.id,
       name: teacher.name,
       dept: teacher.department,
-      userId: teacher.userId,
-      password: teacher.password
-    });
+      email: teacher.email,
+      password: teacher.password,
+      mobileNo:teacher.mobile_no
+    }); */
     setShowAddModal(true);
   };
 
@@ -88,8 +90,9 @@ const SuperAdminPage = () => {
 
       name: "",
       dept: "",
-      userId: "",
+      email: "",
       password: "",
+      mobileNo: ""
     });
   }
 
@@ -114,29 +117,33 @@ const SuperAdminPage = () => {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [allTeacher, setAllTeacher] = useState<Teacher[]>();
+  const getAllTeacher = async () => {
+    await getApi("teacher/getAllTeacher").then((res) => {
+      console.log("get all teacher res::", res);
+      setAllTeacher(res?.teachers)
+    })
+  }
   const handleDeleteTeacher = (teacher: Teacher) => {
     console.log("Delete", teacher)
     setShowDeleteModal(!showDeleteModal)
     setSelectedTeacher(teacher);
     console.log("Delete activity", teacher)
+    getAllTeacher()
   }
 
   const confirmDelete = async () => {
     if (!selectedTeacher || selectedTeacher.id === undefined) return;
-
-    try {
-      const res = await deleteTeacherById(selectedTeacher.id);
-
-      if (res.status) {
-        toast.success(res.message);
-      }
-
+    console.log("delte:::", selectedTeacher);
+    await deleteApi(`teacher/delete/${selectedTeacher.id}`).then((res) => {
+      console.log("res in delter", res);
+      toast.success(res?.message)
+      getAllTeacher();
       setShowDeleteModal(false);
-      getAllDetails();
-    } catch (err) {
-      console.error("Error deleting teacher", err);
-      toast.error("Failed to delete teacher. Please try again.");
-    }
+
+    })
+
+
   };
 
 
@@ -146,87 +153,85 @@ const SuperAdminPage = () => {
   console.log("Superadminid", superadminId)
 
 
+  const [errors, setErrors] = useState({
+    name: false,
+    dept: false,
+    email: false,
+    password: false,
+    mobileNo: false,
+  });
+
 
   const handleAddTeacher = async () => {
-    const { name, dept, userId, password } = teacherData;
+    const { name, dept, email, password, mobileNo } = teacherData;
 
-    if (!name) {
-      toast.error('Email is required!');
-      return;
-    }
+    const newErrors = {
+      name: !name,
+      dept: !dept,
+      email: !email,
+      password: !password,
+      mobileNo: !mobileNo,
+    };
 
-    if (!dept) {
-      toast.error('Department is required!');
-      return;
-    }
-    if (!userId) {
-      toast.error('User ID is required!');
-      return;
-    }
-    if (!password) {
-      toast.error('Password is required!');
-      return;
-    }
+    setErrors(newErrors);
 
 
-    createTeacher(teacherData)
-      .then((response) => {
-        if (response.status) {
-          console.log("add teacher", response)
-          toast.success(response.message);
-          setShowAddModal(!showAddModal);
-          getAllDetails();
-        } else {
-          toast.error(response.message);
-        }
+
+    // Proceed to submit if all fields are valid
+    try {
+      const payload = { teacher_name: name, department: dept, email: email, password: password, mobile_no: mobileNo }
+      await postApi("teacher/create", payload).then((res) => {
+        console.log("res in teacher create::", res)
+        toast.success(res.message)
+        setShowAddModal(false);
+        handleClear()
+        getAllTeacher();
       })
-      .catch((error: any) => {
-
-        toast.error(error?.message);
-      });
-
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
   };
 
 
   const handleUpdateTeacher = async () => {
-    const updatedData = {
+    /* const updatedData = {
       name: teacherData.name,
       department: teacherData.dept,
       userId: teacherData.userId,
       password: teacherData.password
-    };
+    }; */
 
     if (!teacherData.id) {
       console.error("Teacher ID is missing for update");
       return;
     }
 
-    try {
-      const response = await updateTeacherById(teacherData.id, updatedData);
-      console.log("Update successful", response);
-    } catch (err) {
-      console.error("Update failed", err);
-    }
+
   };
 
-
+  const [allDetails, setAllDetails] = useState<AllDetails>();
   const getAllDetails = async () => {
-    const allTeachers = getAllTeacher();
-    allTeachers
-      .then((res) => {
-        console.log("all details", res);
-        setBackendAllTeachers(res)
-      })
-      .catch((err) => {
-        console.error("Error fetching teachers", err);
-      });
+    await getApi("superadmin/getDetails").then((res) => {
+      console.log("in page::", res)
+      setAllDetails(res?.data);
+      setAllTeacher(res?.data?.teachers);
+    })
+  }
+  const [paymentDetails, setPaymentDetails] = useState<PaymentPlan[]>();
+  const getPlanDetails = async () => {
+    await getApi("superadmin/getPlans").then((res) => {
+      console.log("res isn payment:::", res?.data);
+      setPaymentDetails(res?.data)
+
+    })
   }
 
   useEffect(() => {
     getAllDetails();
+    getPlanDetails();
   }, []);
+  console.log("data::", allDetails)
 
-  const [backendAllTeachers, setBackendAllTeachers] = useState<GetAllTeachersResponse>();
   //console.log("all teachers", backendAllTeachers);
 
   //---------------log-out functionality 
@@ -244,23 +249,41 @@ const SuperAdminPage = () => {
     }
   }, [selectedSection]);
 
-  return (
-   /*  <div className="flex flex-col min-h-screen">
+  console.log("payment details::", paymentDetails)
 
- */
-<div
-  className="flex flex-col min-h-screen bg-cover bg-center text-white"
- /*  style={{
-    backgroundImage: "url('https://imapro.in/bahrain/global/bg.svg')", // Replace with your actual image path
-    backgroundAttachment: "fixed",
-  }} */
->
+  const handleCreatePayment = async (amount: string | undefined) => {
+  console.log("amount", amount, typeof amount);
+  try {
+    const res = await postApi("superadmin/createPayment", { amount });
+    console.log("payment status::", res);
+
+    if (res?.payUrl) {
+      window.open(res.payUrl, "_blank");
+    } else {
+      console.error("Payment URL not found");
+    }
+  } catch (error) {
+    console.error("Payment creation failed", error);
+  }
+};
+  return (
+
+    <div
+      className="flex flex-col min-h-screen bg-cover bg-center text-white"
+    /*  style={{
+       backgroundImage: "url('https://imapro.in/bahrain/global/bg.svg')", // Replace with your actual image path
+       backgroundAttachment: "fixed",
+     }} */
+    >
       <ToastContainer position='top-right' />
       <div className="flex h-[100vh] overflow-hidden">
 
         {/* Sidebar for Desktop */}
         <div className="hidden md:block bg-gray-900 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
-          <SidebarContent selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
+          <SidebarContent
+            details={allDetails?.superadmin}
+            selectedSection={selectedSection}
+            setSelectedSection={setSelectedSection} />
         </div>
 
         {/* Sidebar for Mobile */}
@@ -277,6 +300,7 @@ const SuperAdminPage = () => {
 
             {/* Sidebar content below the icon */}
             <SidebarContent
+              details={allDetails?.superadmin}
               selectedSection={selectedSection}
               setSelectedSection={setSelectedSection}
             />
@@ -284,122 +308,139 @@ const SuperAdminPage = () => {
         )}
 
         <Modal open={showAddModal} onClose={() => setShowAddModal(false)}>
-
-          <div className="max-h-screen bg-white max-w-[90vw] sm:max-w-[95vw] md:max-w-[60vw] mt-[5%] mx-auto md:mx-[20%] flex flex-col rounded-lg">
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                bgcolor: "#2a4054",
-                borderRadius: "0em",
-              }}
-            >
-              <Box sx={{ flex: 1 }} />
-              <p className="flex-1 text-white flex justify-center text-center my-[0.15em] sm:my-[0.15em] md:my-[0.5em] text-[0.85rem] sm:text-[1rem] md:text-[1.2rem] whitespace-nowrap">
+          <div className="bg-white max-w-[95vw] sm:max-w-[90vw] md:max-w-[60vw] mt-[5%] mx-auto rounded-lg shadow-lg flex flex-col max-h-screen overflow-hidden">
+            {/* Header */}
+            <Box sx={{ display: "flex", alignItems: "center", bgcolor: "#2a4054", px: 2, py: 1 }}>
+              <Typography
+                variant="h6"
+                className="text-white text-center flex-1 text-sm sm:text-base md:text-lg"
+              >
                 {isEditMode ? 'Edit Teacher' : 'Add New Teacher'}
-              </p>
-
-              <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-                <IconButton
-                  size="small"
-                  sx={{ p: "0.25em", m: 0 }}
-                  onClick={() => setShowAddModal(false)}
-                >
-                  <Close fontSize="small" sx={{ p: 0, m: 0 }} htmlColor="white" />
-                </IconButton>
-              </Box>
+              </Typography>
+              <IconButton onClick={() => setShowAddModal(false)} size="small">
+                <Close fontSize="small" sx={{ color: "white" }} />
+              </IconButton>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                overflow: "auto",
-                paddingTop: "0.5em",
-                minHeight: "40vh",
-              }}
-            >
 
-              <div className=" p-6 bg-white  border-gray-200 space-y-4 modalContainer">
+            {/* Content */}
+            <Box sx={{ p: 3, overflowY: "auto", minHeight: "40vh" }}>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Teacher Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Teacher Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={teacherData.name}
+                      onChange={(e) =>
+                        setTeacherData((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.name ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                        }`}
+                    />
 
-
-                {/* Input Fields */}
-                <div className="my-auto ">
-                  <div className="flex gap-1 flex-col mb-1 sm:mb-0 sm:flex-row" style={{ marginBottom: "0.35em" }}>
-
-
-                    <div className='flex flex-1  flex-row xs:flex-col' >
-                      <label htmlFor="" className='flex-1/3 modalLabel '>Teacher Name :</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={teacherData.name}
-                        onChange={handleChange}
-                        placeholder=""
-                        className="w-full flex-2/3 px-4 py-1 border border-gray-300 rounded-md modalInput "
-                      />
-                    </div>
-                    <div className='flex flex-1'>
-                      <label htmlFor="" className='flex-1/3 modalLabel'>Department :</label>
-                      <input
-                        type="text"
-                        name="dept"
-                        value={teacherData.dept}
-                        onChange={handleChange}
-                        placeholder=""
-                        className="w-full flex-2/3 px-4 py-1 border border-gray-300 rounded-md  modalInput"
-                      />
-                    </div>
                   </div>
 
+                  {/* Department */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <input
+                      type="text"
+                      name="dept"
+                      value={teacherData.dept}
+                      onChange={(e) =>
+                        setTeacherData((prev) => ({ ...prev, dept: e.target.value }))
+                      }
+                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.dept ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                        }`}
+                    />
+                  </div>
 
-                  <div className="flex gap-1 flex-col sm:flex-row">
-                    <div className='flex flex-1'>
-                      <label htmlFor="" className='flex-1/3 modalLabel'>Email :</label>
-                      <input
-                        type="text"
-                        name="userId"
-                        value={teacherData.userId}
-                        onChange={handleChange}
-                        placeholder=""
-                        className="w-full flex-2/3 px-4 py-1 border border-gray-300 rounded-md modalInput"
-                      />
-                    </div>
-                    <div className='flex flex-1'>
-                      <label htmlFor="" className='flex-1/3 modalLabel'>Password :</label>
-                      <input
-                        type="text"
-                        name="password"
-                        value={teacherData.password}
-                        onChange={handleChange}
-                        placeholder=""
-                        className="w-full flex-2/3 px-4 py-1 border border-gray-300 rounded-md modalInput "
-                      />
-                    </div>
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={teacherData.email}
+                      onChange={(e) =>
+                        setTeacherData((prev) => ({ ...prev, email: e.target.value }))
+                      }
+                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                        }`}
+                    />
+                  </div>
+
+                  {/* Password */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input
+                      type="text"
+                      name="password"
+                      value={teacherData.password}
+                      onChange={(e) =>
+                        setTeacherData((prev) => ({ ...prev, password: e.target.value }))
+                      }
+                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                        }`}
+                    />
+                  </div>
+
+                  {/* Mobile No */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Mobile No</label>
+                    <input
+                      type="text"
+                      name="mobileNo"
+                      value={teacherData.mobileNo}
+                      onChange={(e) =>
+                        setTeacherData((prev) => ({ ...prev, mobileNo: e.target.value }))
+                      }
+                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.mobileNo ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                        }`}
+                    />
                   </div>
                 </div>
               </div>
             </Box>
-            <Divider sx={{ width: "100%", borderBottomWidth: 2, borderColor: "gray" }} />
+
+            {/* Footer */}
+            <Divider />
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                paddingY: "0.35em",
-                paddingX: "0.25em",
-                marginRight: "0.5em",
-                gap: 1
+                gap: 1,
+                p: 2,
               }}
             >
               <Button
                 sx={{
-                  ...superadminStyle.button, color: "white", background: "green"
-
+                  ...superadminStyle.button,
+                  color: "white",
+                  backgroundColor: "green",
+                  '&:hover': { backgroundColor: "#228B22" },
                 }}
-                onClick={isEditMode ? handleUpdateTeacher : handleAddTeacher}> {isEditMode ? 'Update' : 'Add'}</Button>
-              <Button sx={{ ...superadminStyle.button, color: "white", background: "red" }} onClick={() => handleClear()}>Clear</Button>
+                onClick={isEditMode ? handleUpdateTeacher : handleAddTeacher}
+              >
+                {isEditMode ? 'Update' : 'Add'}
+              </Button>
+              <Button
+                sx={{
+                  ...superadminStyle.button,
+                  color: "white",
+                  backgroundColor: "red",
+                  '&:hover': { backgroundColor: "#cc0000" },
+                }}
+                onClick={handleClear}
+              >
+                Clear
+              </Button>
             </Box>
           </div>
         </Modal>
+
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto ">
@@ -439,7 +480,7 @@ const SuperAdminPage = () => {
                         <FaSchool className="text-green-500 text-xl" />
                         Institute Name
                       </h3>
-                      <p className="text-gray-700 text-base">{backendAllTeachers?.college.college_name}</p>
+                      <p className="text-gray-700 text-base">{allDetails?.institute.name}</p>
                     </div>
 
                     <div className="bg-purple-100 rounded-xl shadow-md p-5 border border-purple-200">
@@ -447,7 +488,8 @@ const SuperAdminPage = () => {
                         <FaChalkboardTeacher className="text-purple-500 text-xl" />
                         Total Teachers
                       </h3>
-                      <p className="text-gray-700 text-base">{backendAllTeachers?.totalTeachers}</p>
+                      <p className="text-gray-700 text-base">{allDetails?.teachers?.length}
+                      </p>
                     </div>
                   </div>
 
@@ -459,26 +501,44 @@ const SuperAdminPage = () => {
                         <FaBarcode className="text-orange-500 text-xl" />
                         Institute Code
                       </h3>
-                      <p className="text-gray-700 text-base">{backendAllTeachers?.college.college_code}</p>
+                      <p className="text-gray-700 text-base">{allDetails?.institute.institute_code}</p>
                     </div>
 
                     {/* 2/3 Card */}
                     <div className="lg:col-span-2 bg-orange-100 rounded-xl shadow-md p-5 border border-gray-200">
-                      <h3 className="text-lg font-semibold mb-3 text-gray-800">Current Plan</h3>
+                      <div className="flex justify-between items-center mb-3">
+                        <h3 className="flex items-center text-lg font-semibold text-gray-800 gap-2">
+                          <PiCurrencyInrBold className="text-orange-500 text-xl" />
+
+                          Current Plan
+                        </h3>
+                        <span className="text-sm font-medium text-white bg-orange-500 px-3 py-1 rounded-full">
+                          Premium Plan
+                        </span>
+                      </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Left Column - Plan Details */}
-                        <div className="space-y-1">
-                          <p className="text-md font-medium text-gray-900">Plan: Premium</p>
+                        <div className="space-y-2">
                           <p className="text-sm text-gray-700">
-
+                            Total Quota: <span className="font-medium">{allDetails?.payment?.student_quota ?? 0}</span>
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            Registered Students: <span className="font-medium">{allDetails?.payment?.students_registered ?? 0}</span>
                           </p>
                         </div>
 
                         {/* Right Column - Payment Info */}
-                        <div className="space-y-1">
+                        <div className="space-y-2">
                           <p className="text-sm text-gray-700">
-                            <span className="font-medium">Last Payment Date:</span> 10 July 2025
+                            <span className="font-medium">Last Payment Date:</span>{" "}
+                            {allDetails?.payment?.paid_on
+                              ? new Date(allDetails.payment.paid_on).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              })
+                              : "N/A"}
                           </p>
                           <p className="text-sm text-gray-700">
                             <span className="font-medium">Plan Expiry Date:</span> 10 July 2026
@@ -491,76 +551,75 @@ const SuperAdminPage = () => {
 
 
 
+
                   </div>
                   <div className="w-full max-w-7xl mx-auto px-4 py-12">
                     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
-
-                      {/* Left Card - Standard */}
                       <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[520px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
                         <div>
-                          <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">Standard Plan</h4>
+                          <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">{paymentDetails && paymentDetails[0]?.plan_name} Plan</h4>
                           <div className="flex items-center gap-2 mb-3">
                             <HiUserGroup className="h-6 w-6 text-blue-500" />
-                            <h3 className="text-xl font-bold text-gray-800">Up to 1200 Students</h3>
+                            <h3 className="text-xl font-bold text-gray-800">Up to{paymentDetails && paymentDetails[0]?.total_students}  Students</h3>
                           </div>
                           <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
-                            <li>₹20 per student</li>
+                            <li>₹{paymentDetails && paymentDetails[0]?.amount_per_student}  per student</li>
                             <li>Email support</li>
                             <li>Basic analytics</li>
                           </ul>
                           <p className="text-sm text-gray-400 line-through">₹24,000/year</p>
-                          <p className="text-3xl font-bold text-green-600">₹19,999/year</p>
+                          <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[0]?.total_amount}/year</p>
                         </div>
-                        <button className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition">
+                        <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[0]?.total_amount)} className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition">
                           Choose Standard
                         </button>
                       </div>
 
-                      {/* Middle Card - Premium */}
+
                       <div className="bg-gradient-to-br from-[#fff9db] via-[#fff4bf] to-[#fef08a] shadow-2xl border-3 border-yellow-400 rounded-2xl p-6 flex flex-col h-[560px] justify-between scale-105 z-10 hover:scale-[1.07] transition-transform duration-300">
                         <div>
-                          <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">Premium Plan</h4>
+                          <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">{paymentDetails && paymentDetails[1]?.plan_name} Plan</h4>
                           <div className="flex items-center gap-2 mb-3">
                             <FaStar className="h-6 w-6 text-yellow-500" />
-                            <h3 className="text-xl font-bold text-gray-900">Up to 3000 Students</h3>
+                            <h3 className="text-xl font-bold text-gray-900">Up to {paymentDetails && paymentDetails[1]?.total_students}  Students</h3>
                           </div>
                           <ul className="text-sm text-gray-800 list-disc pl-5 space-y-1 mb-4">
-                            <li>₹18 per student</li>
+                            <li>₹{paymentDetails && paymentDetails[1]?.amount_per_student}  per student</li>
                             <li>Priority email support</li>
                             <li>Advanced reporting dashboard</li>
                             <li>Data export feature</li>
                           </ul>
                           <p className="text-sm text-gray-500 line-through">₹54,000/year</p>
-                          <p className="text-3xl font-bold text-yellow-700">₹46,999/year</p>
+                          <p className="text-3xl font-bold text-yellow-700">₹{paymentDetails && paymentDetails[1]?.total_amount}/year</p>
                         </div>
                         <img
                           src={premium}
                           alt="Premium Plan"
                           className="w-full h-48 object-contain my-4"
                         />
-                        <button className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
+                        <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[1]?.total_amount)} className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
                           Choose Premium
                         </button>
                       </div>
 
-                      {/* Right Card - Enterprise */}
+
                       <div className="bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] shadow-lg border border-yellow-300 rounded-2xl p-6 flex flex-col h-[520px] justify-between hover:scale-105 hover:rotate-y-3 transition-transform duration-300">
                         <div>
-                          <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">Enterprise Plan</h4>
+                          <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">{paymentDetails && paymentDetails[2]?.plan_name} Plan</h4>
                           <div className="flex items-center gap-2 mb-3">
                             <HiOutlineUserGroup className="h-6 w-6 text-indigo-500" />
-                            <h3 className="text-xl font-bold text-gray-800">Up to 5000 Students</h3>
+                            <h3 className="text-xl font-bold text-gray-800">Up to {paymentDetails && paymentDetails[2]?.total_students} Students</h3>
                           </div>
                           <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
-                            <li>₹15 per student</li>
+                            <li>₹{paymentDetails && paymentDetails[2]?.amount_per_student}  per student</li>
                             <li>Dedicated account manager</li>
                             <li>Full API access</li>
                             <li>Custom integrations</li>
                           </ul>
                           <p className="text-sm text-gray-400 line-through">₹75,000/year</p>
-                          <p className="text-3xl font-bold text-green-600">₹62,999/year</p>
+                          <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[2]?.total_amount}/year</p>
                         </div>
-                        <button className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
+                        <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[2]?.total_amount)} className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
                           Choose Enterprise
                         </button>
                       </div>
@@ -599,27 +658,29 @@ const SuperAdminPage = () => {
 
                 <div>
                   <Button variant="contained" sx={{
-                    ...superadminStyle.button, mb: 2,
+                    fontSize: "12px", mb: 2, textTransform: "none", background: "#2a4054", p: 1
                   }} onClick={() => handleOpenAddModal()}>Add Teacher</Button>
                   <TableContainer component={Paper}>
                     <Table>
                       <TableHead>
                         <TableRow sx={{ backgroundColor: "#2a4054", height: "30px", }}>
                           <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Teacher Name</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Email</TableCell>
+                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Mobile No</TableCell>
                           <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Department</TableCell>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>User ID</TableCell>
                           <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Password</TableCell>
                           <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Action</TableCell>
                         </TableRow>
                       </TableHead>
-                      {backendAllTeachers?.totalTeachers ?
+                      {allTeacher?.length ?
                         <TableBody>
-                          {backendAllTeachers?.teachers.map((teacher, index) => (
+                          {allTeacher?.map((teacher: any, index: number) => (
                             <TableRow key={index} sx={{ background: index % 2 ? "#eceff1" : "white" }}>
                               <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.name}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.email}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.mobile_no}</TableCell>
                               <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.department}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.userId}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.password}</TableCell>
+                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.password_hash}</TableCell>
                               <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>
                                 <IconButton aria-label="edit" color="primary" onClick={() => handleTeacherEdit(teacher)}>
                                   <EditIcon sx={{ fontSize: "20px" }} />
@@ -688,7 +749,7 @@ const SuperAdminPage = () => {
   );
 };
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ selectedSection, setSelectedSection }) => {
+const SidebarContent: React.FC<SidebarContentProps> = ({ details, selectedSection, setSelectedSection }) => {
   return (
     <div className="flex flex-col h-full">
 
@@ -699,8 +760,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ selectedSection, setSel
           <AvatarFallback>SA</AvatarFallback>
         </Avatar>
         <div>
-          <h2 className="text-lg font-semibold">Super Admin</h2>
-          <p className="text-sm text-gray-400">superadmin@portal.com</p>
+          <h2 className="text-lg font-semibold">{details?.name}</h2>
+          <p className="text-sm text-gray-400">{details?.email}</p>
         </div>
       </div>
 

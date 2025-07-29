@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
+import type { IndividualActivity } from "@/components/types/superadminType";
 
 // Helper to load image from URL and return base64 data
 const getImageBase64FromUrl = async (url: string): Promise<string> => {
@@ -16,29 +17,31 @@ const getImageBase64FromUrl = async (url: string): Promise<string> => {
 
 export const generateIndividualReportPDF = async (data: any) => {
   const doc = new jsPDF();
-
+  const total = data?.activities?.reduce((total:number, item:IndividualActivity) => total + (item.point || 0), 0)
   // Title
   doc.setFontSize(16);
-  doc.text("Individual Student Activity Report", 14, 20);
+  doc.text(`${data.name} Activity Report` , 14, 20);
+
 
   // Basic Info
   doc.setFontSize(12);
   doc.text(`Name: ${data.name}`, 14, 30);
-  doc.text(`Roll No: ${data.rollNo}`, 14, 38);
-  doc.text(`Total Points: ${data.points}`, 14, 46);
-  doc.text(`Verified: ${data.verified ? "Yes" : "No"}`, 14, 54);
+  doc.text(`Roll No: ${data.roll_no}`, 14, 38);
+  doc.text(`Total Points: ${total}`, 14, 46);
+  doc.text(`Verified: ${data?.status ? "Yes" : "No"}`, 14, 54);
 
   // Table
   let finalY = 62;
   autoTable(doc, {
     startY: finalY,
-    head: [["S.No", "Activity", "Date", "Points", "Document"]],
-    body: data.activities.map((item: any) => [
-      item.serialNo,
-      item.name,
-      item.date,
-      item.points,
-      item.docs,
+    head: [["Sr.No", "Activity Serial No", "Activity", "Date", "Points", "Document"]],
+    body: data.activities.map((item: any, index: number) => [
+      index,
+      item.activity_serial_no,
+      item.activity_name,
+      item.uploaded_at,
+      item.point,
+      item.document_url,
     ]),
     theme: "striped",
     didDrawPage: (data) => {
@@ -97,5 +100,5 @@ export const generateIndividualReportPDF = async (data: any) => {
 
   // Save the PDF using FileSaver (more reliable in Edge/Firefox)
   const pdfBlob = doc.output("blob");
-  saveAs(pdfBlob, `${data.rollNo}_report.pdf`);
+  saveAs(pdfBlob, `${data.roll_no}_report.pdf`);
 };

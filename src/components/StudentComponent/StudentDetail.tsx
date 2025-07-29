@@ -1,33 +1,48 @@
-import React from "react";
+import  { useEffect, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
 
-const studentData = {
-  name: "Sayak Khan",
-  email: "sayak@example.com",
-  rollNo: "UNI2023001",
-  phone: "9876543210",
-  points: {
-    "1st Year": { uploaded: 25, approved: 20 },
-    "2nd Year": { uploaded: 30, approved: 28 },
-    "3rd Year": { uploaded: 40, approved: 35 },
-    "4th Year": { uploaded: 45, approved: 40 },
-  },
+type StudentPointsByYear = {
+  uploaded: number;
+  approved: number;
 };
 
-const StudentDetail = () => {
-  const totalUploaded = Object.values(studentData.points).reduce(
-    (acc, year) => acc + year.uploaded,
-    0
-  );
-  const totalApproved = Object.values(studentData.points).reduce(
-    (acc, year) => acc + year.approved,
-    0
-  );
-  const handleSignatureUpload = (e) => {
-    const file = e.target.files[0];
-    // Preview or upload logic here
+type StudentData = {
+  name: string;
+  roll_no: string;
+  mobile_no: string;
+  signature: string | null;
+  admission_year: number;
+  email: string;
+  current_year: number;
+  points: {
+    "1st Year": StudentPointsByYear;
+    "2nd Year": StudentPointsByYear;
+    "3rd Year": StudentPointsByYear;
+    "4th Year": StudentPointsByYear;
   };
+};
 
+
+const StudentDetail = (student:any) => {
+  const [studentData,setStudentData]=useState<StudentData>();
+  useEffect(()=>{
+setStudentData(student.student)
+  },[student])
+  console.log("student data apo::",student.student);
+
+ const totalUploaded = Object.values(studentData?.points || {}).reduce(
+  (acc, year) => acc + (year?.uploaded || 0),
+  0
+);
+
+const totalApproved = Object.values(studentData?.points || {}).reduce(
+  (acc, year) => acc + (year?.approved || 0),
+  0
+);
+
+
+
+  
 
   return (
     <div className="p-4 max-w-5xl mx-auto bg-gray-50 min-h-screen">
@@ -39,20 +54,20 @@ const StudentDetail = () => {
           {/* Column 1 */}
           <div className="space-y-3">
             <div>
-              <span className="font-semibold">Name:</span> {studentData.name}
+              <span className="font-semibold">Name:</span> {studentData?.name}
             </div>
             <div>
-              <span className="font-semibold">Email:</span> {studentData.email}
+              <span className="font-semibold">Email:</span> {studentData?.email}
             </div>
             <div>
-              <span className="font-semibold">Roll No:</span> {studentData.rollNo}
+              <span className="font-semibold">Roll No:</span> {studentData?.roll_no}
             </div>
           </div>
 
           {/* Column 2 */}
           <div className="space-y-3">
             <div>
-              <span className="font-semibold">Phone:</span> {studentData.phone}
+              <span className="font-semibold">Phone:</span> {studentData?.mobile_no}
             </div>
             <div>
               <span className="font-semibold">Total Uploaded Points:</span> {totalUploaded}
@@ -66,7 +81,7 @@ const StudentDetail = () => {
           <div className="flex flex-col items-center justify-center">
             <div className="border-2 border-dotted border-green-400 p-2 rounded w-full bg-white flex justify-center items-center mb-2">
               <img
-                src={studentData.signature || "https://www.shutterstock.com/image-vector/signature-vector-hand-drawn-autograph-600nw-2387543207.jpg"}
+                src={studentData?.signature || "https://www.shutterstock.com/image-vector/signature-vector-hand-drawn-autograph-600nw-2387543207.jpg"}
                 alt="Signature"
                 className="max-h-20 object-contain"
                 style={{ aspectRatio: "auto" }}
@@ -89,14 +104,14 @@ const StudentDetail = () => {
 
       {/* Year-wise Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {Object.entries(studentData.points).map(([year, data]) => (
+        {Object.entries(studentData?.points || {}).map(([year, data]) => (
           <div key={year} className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition">
             <h3 className="text-lg font-semibold text-red-700 mb-2">{year}</h3>
             <p className="text-sm text-gray-800">
-              <strong>Uploaded:</strong> {data.uploaded}
+              <strong>Uploaded:</strong> {data?.uploaded}
             </p>
             <p className="text-sm text-gray-800">
-              <strong>Approved:</strong> {data.approved}
+              <strong>Approved:</strong> {data?.approved}
             </p>
           </div>
         ))}

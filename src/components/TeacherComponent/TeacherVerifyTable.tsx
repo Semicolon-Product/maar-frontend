@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { toast, } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,31 +26,28 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Close from '@mui/icons-material/Close';
-import type { individualActivity, TeacherVerifyTableProps } from "../types/superadminType";
-import DeleteIcon from '@mui/icons-material/Delete';
+//import Close from '@mui/icons-material/Close';
+import type { IndividualActivity, TeacherVerifyTableProps } from "../types/superadminType";
+//import DeleteIcon from '@mui/icons-material/Delete';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import pdfIcon from '../../../public/assets/PDF_file_icon.png'
-import pdf from '../../../public/assets/4726010.png'
+//import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+//import pdfIcon from '../../../public/assets/PDF_file_icon.png'
+//import pdf from '../../../public/assets/4726010.png'
 import { generateIndividualReportPDF } from "../../pdfs/generateIndividualReportPDF";
 import { generateAllReports } from "@/pdfs/generateAllReports";
-import { BsFileEarmarkPdfFill } from "react-icons/bs";
-interface Activity {
-    serialNo: string;
-    name: string;
-    date: string;
-    points: number;
-    docs: string;
-    link: string;
-    status: boolean;
-}
+import { BsFileEarmarkPdfFill, BsTrash } from "react-icons/bs";
+import dayjs from "dayjs";
+import { postApi } from "@/api";
+import { PhoneCallIcon } from "lucide-react";
+
+
 
 const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature }) => {
+    const selectedActivityRef = useRef<IndividualActivity | null>(null);
 
 
     const [openIndex, setOpenIndex] = useState<number | null>(null);
-    const [verifiedRows, setVerifiedRows] = useState<{
+    /* const [verifiedRows, setVerifiedRows] = useState<{
         [studentIndex: number]: { [activityIndex: number]: boolean };
     }>({});
 
@@ -60,57 +57,36 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
 
     const [checkedRows, setCheckedRows] = useState<{
         [studentIndex: number]: { [activityIndex: number]: boolean };
-    }>({});
+    }>({}); */
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-    const handleCheckboxChange = (
-        studentIndex: number,
-        activityIndex: number
-    ) => {
-        setCheckedRows((prev) => ({
-            ...prev,
-            [studentIndex]: {
-                ...prev[studentIndex],
-                [activityIndex]: !prev[studentIndex]?.[activityIndex],
-            },
-        }));
+    const handleCheckboxChange = (activityId: number) => {
+        setSelectedIds((prevSelected) => {
+            if (prevSelected.includes(activityId)) {
+                // Uncheck (remove from array)
+                return prevSelected.filter((id) => id !== activityId);
+            } else {
+                // Check (add to array)
+                return [...prevSelected, activityId];
+            }
+        });
     };
+
 
     //-----------docs show modal
 
 
 
-    const handleSubmit = (studentIndex: number, student: any) => {
-        const selected = checkedRows[studentIndex] || {};
+    const handleSubmit = async () => {
+        console.log("selectedIds==>>", selectedIds)
+        await postApi("student/detailsVerified", { ids: selectedIds }).then((res) => {
+            console.log("res of verifiend:::", res)
+            toast.success(res?.message)
+        })
 
-        const selectedActivities = student.activities.filter(
-            (_: any, idx: number) => selected[idx]
-        );
-        console.log("Selected Activities:", selectedActivities);
-
-        // ✅ Update verifiedRows for this student
-        setVerifiedRows((prev) => ({
-            ...prev,
-            [studentIndex]: {
-                ...prev[studentIndex],
-                ...Object.fromEntries(
-                    Object.entries(selected).filter(([_, isChecked]) => isChecked)
-                ),
-            },
-        }));
-
-        // Optional: clear checkboxes
-        setCheckedRows((prev) => ({
-            ...prev,
-            [studentIndex]: {},
-        }));
-
-        toast.success("Activities Submitted and verified!", {
-            position: "top-right",
-            autoClose: 3000,
-        });
     };
     const [openDocsModal, setOpenDocsModal] = useState(false);
-    const [currentActivity, setCurrentActivity] = useState<Activity | null>(null);
+    const [currentActivity, setCurrentActivity] = useState<IndividualActivity | null>(null);
 
 
 
@@ -121,22 +97,78 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
     };
 
 
-    const handleDocsModal = (activity: Activity) => {
+    const handleDocsModal = (activity: IndividualActivity) => {
         setCurrentActivity(activity)
         setOpenDocsModal(!openDocsModal)
 
     };
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const handleDeleteActivity = (activity: individualActivity) => {
+
+
+    const handleDeleteActivity = (activity: IndividualActivity) => {
+        selectedActivityRef.current = activity;
         setShowDeleteModal(!showDeleteModal)
-        console.log("Delete activity", activity)
+        // console.log("Delete activity", activity)
     }
+    const handleConfirmDelete = async () => {
+        console.log("new delete")
+        const activity = selectedActivityRef.current;
+        if (!activity) return;
+
+        try {
+            const res = await postApi("student/detailsDelete", { id: activity?.id });
+            console.log(res);
+            toast.success(res.message)
+
+        } catch (err) {
+            console.error("Error:", err);
+        } finally {
+            setShowDeleteModal(false);
+            selectedActivityRef.current = null;
+        }
+
+
+
+    }
+
+
     const downloadIndividualReport = (individualReportdata: any) => {
         generateIndividualReportPDF(individualReportdata)
     }
 
-    const students = data
+
+    const students = data?.students;
+    const status = data?.stats
+    function splitAtNearestSpace(str:any, limit = 30) {
+        if (!str || str.length <= limit) return str;
+
+        const breakpoint = str.lastIndexOf(" ", limit);
+        if (breakpoint === -1) return str; // no space, don’t break
+        return (
+            str.substring(0, breakpoint) + "\n" + str.substring(breakpoint + 1)
+        );
+    }
+
+
+    //---------------------teacher university portal-------------------------------
+
+    const [credentials, setCredentials] = useState({
+        username: "",
+        password: "",
+    });
+
+    const handleChange = (e:any) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmitTeacherCredential = async(e:any) => {
+        e.preventDefault();
+        console.log("Submitted Credentials:", credentials);
+    await postApi("teacher/automateSubmit",{roll:credentials.username,password:credentials.password})
+    };
+
+
     return (
         <div>
             <Modal open={openDocsModal} onClose={handleClose}>
@@ -161,7 +193,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                                 marginRight: "32px", // For centering due to close icon
                             }}
                         >
-                            {`${currentActivity?.serialNo}. ${currentActivity?.name}`}
+                            {`${currentActivity?.activity_serial_no}. ${currentActivity?.activity_name}`}
 
                         </Typography>
 
@@ -179,9 +211,9 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
 
                     {/* Body */}
                     <Box sx={{ padding: "16px" }}>
-                        {currentActivity?.link ? (
+                        {currentActivity?.document_url ? (
                             <iframe
-                                src={currentActivity.link}
+                                src={currentActivity.document_url}
                                 style={{
                                     width: "100%",
                                     height: "80vh",
@@ -198,7 +230,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                     </Box>
                 </Box>
             </Modal>
-            <Dialog open={showDeleteModal}>
+            <Dialog open={showDeleteModal} >
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -208,14 +240,14 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                 <DialogActions>
                     <button
                         onClick={() => setShowDeleteModal(false)}
-                        className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+                        className="px-4 py-1 rounded-xs border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
                     >
                         Cancel
                     </button>
 
                     <button
-                        //onClick={handleDelete} // Replace with your actual delete function
-                        className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                        onClick={handleConfirmDelete} // Replace with your actual delete function
+                        className="px-4 py-1 rounded-xs bg-red-600 text-white hover:bg-red-700 transition"
                     >
                         Delete
                     </button>
@@ -231,36 +263,40 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-gray-700 max-w-[80%]">
                         {/* Submit & Remain */}
                         <div className="flex gap-2">
-                            <p className="text-green-600">Submit: 80</p>
-                            <p className="text-red-600">Remain: 20</p>
+                            <p className="text-green-600">Submit: {status?.totalSubmitted}</p>
+                            <p className="text-red-600">Remain: {status?.totalNotSubmitted}</p>
                         </div>
 
                         {/* Verified */}
                         <div className="flex items-center gap-1 text-green-600">
                             Verified:
                             <CheckCircleIcon sx={{ color: "green", fontSize: 18 }} />
-                            (20)
+                            ({status?.totalFullyVerified})
                         </div>
 
                         {/* Pending */}
                         <div className="flex items-center gap-1 text-red-600">
                             Pending:
                             <CancelIcon sx={{ color: "#c9352a", fontSize: 18 }} />
-                            (80)
+                            ({status!.totalStudents! - status!.totalFullyVerified!})
                         </div>
                     </div>
 
                     {/* Right side: download icon */}
-                    <div className="flex justify-end">
+                    <div className="flex justify-end cursor-pointer">
                         <Tooltip title="Download All Students Report">
-                            <img
+                            <IconButton onClick={() => generateAllReports(students ?? [], signature ?? "")}>
+                                <BsFileEarmarkPdfFill color="#cc3f35" size={25} />
+                            </IconButton>
+
+                            {/* <img
                                 onClick={() => generateAllReports(students, signature)}
                                 src={pdf}
                                 height={80}
                                 width={80}
                                 className="h-12 w-12 p-2 rounded-3xl transition-all duration-300 ease-in-out hover:bg-amber-100 cursor-pointer"
                                 alt="Download PDF"
-                            />
+                            /> */}
                         </Tooltip>
                     </div>
                 </div>
@@ -269,310 +305,378 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
 
 
 
-                <TableContainer component={Paper}>
-                    <Table sx={{ fontSize: "18px" }}>
-                        <TableHead>
-                            <TableRow
-                                sx={{ backgroundColor: "#2a4054", height: "30px" }}
-                            >
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Sr No
-                                </TableCell>
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Student Name
-                                </TableCell>
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Roll No
-                                </TableCell>
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Total Acquired Points
-                                </TableCell>
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Report
-                                </TableCell>
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Status
-                                </TableCell>
-                                <TableCell sx={superadminStyle.headerStyle}>
-                                    Action
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {students.map((student: any, index: any) => (
-                                <React.Fragment key={index}>
-                                    <TableRow
-                                        sx={{
-                                            background: index % 2 ? "#eceff1" : "white",
-                                        }}
-                                    >
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
-                                        >
-                                            {index + 1}
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
-                                        >
-                                            {student.name}
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
-                                        >
-                                            {student.rollNo}
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
-                                        >
-                                            {student.points}
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
-                                        >
-                                            <Tooltip title="Download Report">
-                                                <IconButton onClick={() => downloadIndividualReport(student)}>
-                                                    <BsFileEarmarkPdfFill color="#cc3f35" size={19} />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
-                                        >
-                                            {student.verified ? (
-                                                <CheckCircleIcon sx={{ color: "green", fontSize: "20px" }} />
-                                            ) : (
-                                                <CancelIcon sx={{ color: "#c9352a", fontSize: "20px" }} />
-                                            )}
 
-                                        </TableCell>
+                <Box sx={{ mx: "5px" }}>
+                    <TableContainer component={Paper} >
 
-                                        <TableCell
-                                            sx={{ ...superadminStyle.cellStyle, py: "4px" }}
+                        <Table sx={{ fontSize: "18px", }}
+                        >
+
+                            <TableHead>
+                                <TableRow
+                                    sx={{ backgroundColor: "#2a4054", height: "30px" }}
+                                >
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Sr No
+                                    </TableCell>
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Student Name
+                                    </TableCell>
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Roll No
+                                    </TableCell>
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Mobile No
+                                    </TableCell>
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Total Acquired Points
+                                    </TableCell>
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Report
+                                    </TableCell>
+                                    <TableCell sx={superadminStyle.headerStyle}>
+                                        Status
+                                    </TableCell>
+                                    <TableCell sx={{ ...superadminStyle.headerStyle, }}>
+                                        Expand
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            {students?.length ? <TableBody>
+                                {students?.map((student: any, index: any) => (
+                                    <React.Fragment key={index}>
+                                        <TableRow
+                                            sx={{
+                                                background: index % 2 ? "#e6e6e6" : "white",
+                                            }}
                                         >
-                                            <IconButton
-                                                size="small"
-                                                onClick={() =>
-                                                    setOpenIndex(
-                                                        openIndex === index ? null : index
-                                                    )
-                                                }
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle }}
                                             >
-                                                {openIndex === index ? (
-                                                    <KeyboardArrowUpIcon />
+                                                {index + 1}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
+                                            >
+                                                {student?.name}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
+                                            >
+                                                {student?.roll_no}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
+                                            >
+                                                {student?.mobile_no}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
+                                            >
+                                                {student?.activities?.reduce((total: number, item: IndividualActivity) => total + (item.point || 0), 0)}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
+                                            >
+                                                <Tooltip title="Download Report">
+                                                    <IconButton onClick={() => downloadIndividualReport(student)}>
+                                                        <BsFileEarmarkPdfFill color="#cc3f35" size={19} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
+                                            >
+                                                {student?.status ? (
+
+                                                    <CheckCircleIcon sx={{ color: "green", fontSize: "20px" }} />
+
                                                 ) : (
-                                                    <KeyboardArrowDownIcon />
+                                                    <CancelIcon sx={{ color: "#c9352a", fontSize: "20px" }} />
                                                 )}
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
 
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={6}
-                                            sx={{ paddingBottom: 0, paddingTop: 0 }}
-                                        >
-                                            <Collapse
-                                                in={openIndex === index}
-                                                timeout="auto"
-                                                unmountOnExit
+                                            </TableCell>
+
+                                            <TableCell
+                                                sx={{ ...superadminStyle.cellStyle, }}
                                             >
-                                                <Box margin={0.5}>
-                                                    <strong>Activities:</strong>
-                                                    {student.activities &&
-                                                        student.activities.length > 0 ? (
-                                                        <Box>
-                                                            <Table
-                                                                size="small"
-                                                                sx={{
-                                                                    mt: 1,
-                                                                    border: "1px solid #ccc",
-                                                                    fontSize: "20px",
-                                                                }}
-                                                            >
-                                                                <TableHead
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        setOpenIndex(
+                                                            openIndex === index ? null : index
+                                                        )
+                                                    }
+                                                >
+                                                    {openIndex === index ? (
+                                                        <KeyboardArrowUpIcon />
+                                                    ) : (
+                                                        <KeyboardArrowDownIcon />
+                                                    )}
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
 
+                                        <TableRow>
+                                            <TableCell
+                                                colSpan={8}
+                                                sx={{ paddingBottom: 0, paddingTop: 0 }}
+                                            >
+                                                <Collapse
+                                                    in={openIndex === index}
+                                                    timeout="auto"
+                                                    unmountOnExit
+                                                >
+                                                    <Box margin={0.25}>
+                                                        <strong>Activities:</strong>
+                                                        {student?.activities &&
+                                                            student?.activities?.length > 0 ? (
+                                                            <Box>
+                                                                <Table
+
+                                                                    sx={{
+                                                                        mt: 1,
+                                                                        border: "1px solid #ccc",
+                                                                        fontSize: "20px", width: "100%",
+                                                                    }}
                                                                 >
-                                                                    <TableRow sx={{ backgroundColor: "#00809D", height: "30px" }}>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Serial No.
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Activity Name
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Date
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Points
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Docs
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Verify
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            sx={{
-                                                                                ...superadminStyle.headerStyle,
-                                                                                py: "4px",
-                                                                            }}
-                                                                        >
-                                                                            Delete
-                                                                        </TableCell>
-                                                                    </TableRow>
-                                                                </TableHead>
-                                                                <TableBody>
-                                                                    {student.activities.map((activity: individualActivity, idx: number) => (
-                                                                        <TableRow
-                                                                            key={idx}
-                                                                            sx={{
-                                                                                background:
-                                                                                    idx % 2
-                                                                                        ? "#eceff1"
-                                                                                        : "white",
-                                                                            }}
-                                                                        >
+                                                                    <TableHead
+
+                                                                    >
+                                                                        <TableRow sx={{ backgroundColor: "#00809D", height: "30px" }}>
                                                                             <TableCell
                                                                                 sx={{
-                                                                                    ...superadminStyle.cellStyle,
+                                                                                    ...superadminStyle.headerStyle,
 
                                                                                 }}
                                                                             >
-                                                                                {activity.serialNo}
-                                                                            </TableCell>
-                                                                            {/* Repeat same for other cells like activity.name, date, etc. */}
-
-                                                                            <TableCell
-                                                                                sx={{
-                                                                                    ...superadminStyle.cellStyle,
-                                                                                    py: "4px",
-
-                                                                                }}
-                                                                            >
-                                                                                {activity.name}
+                                                                                Serial No.
                                                                             </TableCell>
                                                                             <TableCell
                                                                                 sx={{
-                                                                                    ...superadminStyle.cellStyle,
-                                                                                    py: "4px",
+                                                                                    ...superadminStyle.headerStyle,
 
                                                                                 }}
                                                                             >
-                                                                                {activity.date}
+                                                                                Activity Name
                                                                             </TableCell>
                                                                             <TableCell
                                                                                 sx={{
-                                                                                    ...superadminStyle.cellStyle,
-                                                                                    py: "4px",
+                                                                                    ...superadminStyle.headerStyle,
 
                                                                                 }}
                                                                             >
-                                                                                {activity.points}
-                                                                            </TableCell>
-                                                                            <TableCell
-                                                                                onClick={() => {
-                                                                                    handleDocsModal(
-                                                                                        activity
-                                                                                    );
-                                                                                }}
-                                                                                sx={{
-                                                                                    ...superadminStyle.cellStyle,
-                                                                                    py: "4px",
-                                                                                    color: "blue",
-                                                                                    cursor: "pointer",
-                                                                                    textDecoration:
-                                                                                        "underline",
-                                                                                }}
-                                                                            >
-                                                                                {activity.docs}
+                                                                                Date
                                                                             </TableCell>
                                                                             <TableCell
                                                                                 sx={{
-                                                                                    ...superadminStyle.cellStyle,
+                                                                                    ...superadminStyle.headerStyle,
 
                                                                                 }}
                                                                             >
-                                                                                <input
-                                                                                    className=" w-3 h-3 mt-0.5 accent-blue-600 "
-                                                                                    type="checkbox"
-                                                                                    checked={checkedRows[index]?.[idx] || false}
-                                                                                    onChange={() => handleCheckboxChange(index, idx)}
-                                                                                />
+                                                                                Points
                                                                             </TableCell>
                                                                             <TableCell
                                                                                 sx={{
-                                                                                    ...superadminStyle.cellStyle,
+                                                                                    ...superadminStyle.headerStyle,
 
                                                                                 }}
                                                                             >
-                                                                                <IconButton aria-label="delete" color="error" onClick={() => handleDeleteActivity(activity)}>
-                                                                                    <DeleteIcon sx={{ fontSize: "20px" }} />
-                                                                                </IconButton>
+                                                                                Docs
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.headerStyle,
+
+                                                                                }}
+                                                                            >
+                                                                                Verify
+                                                                            </TableCell>
+                                                                            <TableCell
+                                                                                sx={{
+                                                                                    ...superadminStyle.headerStyle,
+
+                                                                                }}
+                                                                            >
+                                                                                Delete
                                                                             </TableCell>
                                                                         </TableRow>
-                                                                    )
-                                                                    )}
-                                                                </TableBody>
-                                                            </Table>
-                                                            <div className="flex justify-end mt-1 ">
-                                                                <button
-                                                                    className="px-4 py-1 rounded-sm text-white bg-green-600 hover:bg-green-500 cursor-pointer"
-                                                                    onClick={() =>
-                                                                        handleSubmit(index, student)
-                                                                    }
-                                                                >
-                                                                    Submit
-                                                                </button>
-                                                            </div>
-                                                        </Box>
-                                                    ) : (
-                                                        <Typography
-                                                            variant="body2"
-                                                            color="textSecondary"
-                                                            sx={{ mt: 1 }}
-                                                        >
-                                                            There is no record.
-                                                        </Typography>
-                                                    )}
-                                                </Box>
-                                            </Collapse>
-                                        </TableCell>
-                                    </TableRow>
-                                </React.Fragment>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                                                    </TableHead>
+                                                                    <TableBody>
+                                                                        {student.activities.map((activity: IndividualActivity, idx: number) => (
+                                                                            <TableRow
+                                                                                key={idx}
+                                                                                sx={{
+
+                                                                                    background:
+                                                                                        idx % 2
+                                                                                            ? "#eceff1"
+                                                                                            : "white",
+                                                                                }}
+                                                                            >
+                                                                                <TableCell
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle, color: activity?.is_active === false ? "red" : "inherit", textDecoration: activity?.is_active === false ? "line-through" : "none",
+
+                                                                                    }}
+                                                                                >
+                                                                                    {activity?.activity_serial_no}
+                                                                                </TableCell>
+                                                                                {/* Repeat same for other cells like activity.name, date, etc. */}
+
+                                                                                <TableCell
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle, textDecoration: activity?.is_active === false ? "line-through" : "none",
+                                                                                        color: activity?.is_active === false ? "red" : "inherit", whiteSpace: "pre-line",
+
+                                                                                    }}
+                                                                                >
+                                                                                    {splitAtNearestSpace(activity?.activity_name)}
+                                                                                </TableCell>
+                                                                                <TableCell
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle,
+                                                                                        textDecoration: activity?.is_active === false ? "line-through" : "none",
+                                                                                        color: activity?.is_active === false ? "red" : "inherit",
+
+                                                                                    }}
+                                                                                >
+                                                                                    {activity?.activity_date
+                                                                                        ? dayjs(activity.activity_date).format("DD-MMM-YYYY")
+                                                                                        : dayjs().format("DD-MMM-YYYY")}
+
+                                                                                </TableCell>
+                                                                                <TableCell
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle,
+                                                                                        textDecoration: activity?.is_active === false ? "line-through" : "none",
+                                                                                        color: activity?.is_active === false ? "red" : "inherit",
+                                                                                    }}
+                                                                                >
+                                                                                    {activity?.point}
+                                                                                </TableCell>
+                                                                                <TableCell
+                                                                                    onClick={() => {
+                                                                                        handleDocsModal(activity);
+                                                                                    }}
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle,
+
+
+                                                                                        cursor: "pointer",
+
+                                                                                        color: activity?.is_active === false ? "red" : "blue", textDecoration: activity?.is_active === false ? "line-through" : "underline",
+                                                                                    }}
+                                                                                >
+                                                                                    {activity?.activity_name.length > 30
+                                                                                        ? `${activity.activity_name.slice(0, 30)}...`
+                                                                                        : activity.activity_name}
+                                                                                </TableCell>
+                                                                                <TableCell
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle,
+
+                                                                                    }}
+                                                                                >
+                                                                                    <input
+                                                                                        className=" w-3 h-3 mt-0.5 accent-blue-600 "
+                                                                                        type="checkbox"
+                                                                                        checked={selectedIds.includes(activity.id) || activity.is_verified}
+                                                                                        onChange={() => handleCheckboxChange(activity.id)}
+                                                                                    />
+                                                                                </TableCell>
+                                                                                <TableCell
+                                                                                    sx={{
+                                                                                        ...superadminStyle.cellStyle,
+
+                                                                                    }}
+                                                                                >
+                                                                                    <IconButton aria-label="delete" color="error" onClick={() => handleDeleteActivity(activity)}>
+                                                                                        {/*  <DeleteIcon sx={{ fontSize: "20px" }} /> */}
+                                                                                        <BsTrash size={18} />
+                                                                                    </IconButton>
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        )
+                                                                        )}
+                                                                    </TableBody>
+                                                                </Table>
+                                                                <div className="flex justify-end mt-1 ">
+                                                                    <button
+                                                                        className="px-4 py-1 rounded-xs text-white bg-[#00809D] hover:bg-[#669ba7] cursor-pointer"
+                                                                        onClick={() =>
+                                                                            handleSubmit()
+                                                                        }
+                                                                    >
+                                                                        Verify
+                                                                    </button>
+                                                                </div>
+                                                            </Box>
+                                                        ) : (
+                                                            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontStyle: "italic", fontSize: "14px", p: 1.5, fontFamily: "Calibri, sans-serif", display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}><strong>{student?.name}</strong> has not submitted any activity. Please contact at <PhoneCallIcon size={15} /><strong>{student?.mobile_no}</strong>.</Typography>
+
+
+                                                        )}
+                                                    </Box>
+                                                </Collapse>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
+                                ))}
+                            </TableBody> : <TableBody>
+                                <TableRow >
+                                    <TableCell colSpan={8} align="center" sx={{ py: 2, fontStyle: "italic", color: "gray" }}>
+                                        No Student Present!
+                                    </TableCell> </TableRow>
+
+                            </TableBody>}
+
+                        </Table>
+                    </TableContainer>
+                </Box>
+
+
+            </div>
+
+            <div className="max-w-sm mx-auto mt-10 p-6 bg-white shadow-md rounded-lg border border-gray-200">
+                <h2 className="text-xl font-semibold text-center text-gray-700 mb-6">
+                    Teacher University Credential
+                </h2>
+                <hr />
+                <form onSubmit={handleSubmitTeacherCredential} className="space-y-4">
+                    <div>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                            Username:
+                        </label>
+                        <input
+                            type="text"
+                            name="username"
+                            value={credentials.username}
+                            onChange={handleChange}
+                            required
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300  shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                            Password:
+                        </label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={credentials.password}
+                            onChange={handleChange}
+                            required
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300  shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-2 px-4  hover:bg-blue-700 transition"
+                    >
+                        Submit
+                    </button>
+                </form>
             </div>
         </div>
     )

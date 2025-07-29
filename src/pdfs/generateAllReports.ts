@@ -13,9 +13,12 @@ const getImageBase64FromUrl = async (url: string): Promise<string> => {
   });
 };
 
-export const generateAllReports = async (students: any[], teacherSignatureUrl: string) => {
+export const generateAllReports = async (
+  students: any[],
+  signature: string
+) => {
   const doc = new jsPDF();
-  const teacherSignature = await getImageBase64FromUrl(teacherSignatureUrl);
+  const teacherSignature = await getImageBase64FromUrl(signature);
 
   for (let i = 0; i < students.length; i++) {
     const student = students[i];
@@ -25,20 +28,32 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
     doc.text("Student Activity Report", 14, 20);
     doc.setFontSize(12);
     doc.text(`Name: ${student.name}`, 14, 30);
-    doc.text(`Roll No: ${student.rollNo}`, 14, 38);
-    doc.text(`Total Points: ${student.points}`, 14, 46);
-    doc.text(`Verified: ${student.verified ? "Yes" : "No"}`, 14, 54);
+    doc.text(`Roll No: ${student.roll_no}`, 14, 38);
+    doc.text(`Total Points: ${student.point}`, 14, 46);
+    doc.text(`Verified: ${student.status ? "Yes" : "No"}`, 14, 54);
 
     let finalY = 62;
+
+    // Table of student activities
     autoTable(doc, {
       startY: finalY,
-      head: [["S.No", "Activity", "Date", "Points", "Document"]],
-      body: student.activities.map((item: any) => [
-        item.serialNo,
-        item.name,
-        item.date,
-        item.points,
-        item.docs,
+      head: [
+        [
+          "Sr.No",
+          "Activity Serial No",
+          "Activity",
+          "Date",
+          "Points",
+          "Document",
+        ],
+      ],
+      body: student.activities.map((item: any, index: number) => [
+        index + 1,
+        item.activity_serial_no,
+        item.activity_name,
+        item.uploaded_at,
+        item.point,
+        item.document_url ?? "N/A",
       ]),
       theme: "striped",
       didDrawPage: (data) => {
@@ -46,17 +61,22 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
       },
     });
 
+    // Add each activity certificate if exists
     for (let j = 0; j < student.activities.length; j++) {
       const activity = student.activities[j];
       if (activity.link) {
         try {
           const imageData = await getImageBase64FromUrl(activity.link);
-          if (finalY > 250) {
+          if (finalY > 200) {
             doc.addPage();
             finalY = 20;
           }
           doc.setFontSize(11);
-          doc.text(`${activity.serialNo}. ${activity.name} - Certificate:`, 14, finalY + 10);
+          doc.text(
+            `${activity.serialNo ?? j + 1}. ${activity.name ?? activity.activity_name} - Certificate:`,
+            14,
+            finalY + 10
+          );
           doc.addImage(imageData, "PNG", 14, finalY + 14, 60, 40);
           finalY += 60;
         } catch (error) {
@@ -65,6 +85,7 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
       }
     }
 
+    // Add student signature if available
     if (student.signature) {
       try {
         const studentSignature = await getImageBase64FromUrl(student.signature);
@@ -73,17 +94,21 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
         const sigWidth = 50;
         const sigHeight = 25;
         const sigX = pageWidth - sigWidth - 20;
-        const sigY = pageHeight - sigHeight - 20;
+        const sigY = pageHeight - sigHeight - 40;
 
         doc.setFontSize(12);
         doc.text("Student Signature:", sigX, sigY - 5);
         doc.addImage(studentSignature, "PNG", sigX, sigY, sigWidth, sigHeight);
       } catch (error) {
-        console.warn(`Could not load student signature for ${student.name}`, error);
+        console.warn(
+          `Could not load student signature for ${student.name}`,
+          error
+        );
       }
     }
   }
 
+  // Final page with teacher signature
   doc.addPage();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -96,19 +121,18 @@ export const generateAllReports = async (students: any[], teacherSignatureUrl: s
   doc.text("Teacher Signature:", sigX, sigY - 10);
   doc.addImage(teacherSignature, "PNG", sigX, sigY, sigWidth, sigHeight);
 
-  // === Cross-browser safe download ===
+  // === Trigger download ===
   const pdfBlob = doc.output("blob");
-  const blobUrl = window.URL.createObjectURL(pdfBlob);
+  const blobUrl = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = blobUrl;
   a.download = "All_Students_Report.pdf";
-  a.style.display = "none";
-
   document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
 
+  // Clean up
   setTimeout(() => {
-    window.URL.revokeObjectURL(blobUrl);
-    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
   }, 100);
 };

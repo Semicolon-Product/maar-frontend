@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   initialStudentActivityFormData,
   type StudentActivityFormData,
@@ -29,7 +29,7 @@ const NewAllPoint = () => {
 
   //------------------------------Calculate Total Points-----------------------
   useEffect(() => {
-    let currentTotalPoints: number = 0; 
+    let currentTotalPoints: number = 0;
     const pointKeys: Array<keyof StudentActivityFormData> = [
       "moocs12Weeks",
       "moocs8Weeks",
@@ -68,7 +68,11 @@ const NewAllPoint = () => {
       // Access the value from formData.
       // We use `as string` because TypeScript knows `formData[key]` could be `File | null`
       // for some keys, but for the `pointKeys` we explicitly listed, it will be a string.
-      const value = parseInt(formData[key] as string);
+      const rawValue = formData[key];
+      const value = typeof rawValue === 'string' || typeof rawValue === 'number'
+        ? parseInt(rawValue.toString(), 10)
+        : 0; // or your fallback
+
 
       if (!isNaN(value)) {
         currentTotalPoints += value;
@@ -85,7 +89,13 @@ const NewAllPoint = () => {
   };
   const getRemainingPoints = (key: keyof StudentActivityFormData): number => {
     const max = maxPointsPerActivity[key] || 0; // Get max points, default to 0 if not configured
-    const selected = parseInt(formData[key] as string) || 0; // Get selected points, default to 0 if not selected/NaN
+    const rawValue = formData[key];
+
+    const selected =
+      typeof rawValue === 'string' || typeof rawValue === 'number'
+        ? parseInt(rawValue.toString(), 10) || 0
+        : 0;
+    // Get selected points, default to 0 if not selected/NaN
     return Math.max(0, max - selected); // Ensure remaining points is not negative
   };
   return (
@@ -269,10 +279,10 @@ const NewAllPoint = () => {
                     const isDisabled =
                       Number(activity[1].techFestOrganizer?.points) >
                       Number(activity[1].max) -
-                        (Number(
-                          activity[1].techFestOrganizer?.alreadyAcquired
-                        ) +
-                          Number(formData.techFestOrganizer));
+                      (Number(
+                        activity[1].techFestOrganizer?.alreadyAcquired
+                      ) +
+                        Number(formData.techFestOrganizer));
 
                     return (
                       <option

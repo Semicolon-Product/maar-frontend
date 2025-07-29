@@ -5,7 +5,7 @@ export interface Teacher {
   department: string;
   userId: string;
   password: string;
-  id?:number
+  id?: number
 }
 
 export interface CollegeInfo {
@@ -162,36 +162,61 @@ export interface Activity {
   already_acquired?: number;
   subpoints?: Subpoint[];
 }
- export interface StudentYearlyDetailsProps {
+export interface StudentYearlyDetailsProps {
   data: any; // Replace `any` with a proper type if available
-  currentyear: number;
+  currentyear?: number;
   year: number;
 }
-
-export type YearlyActivityList = Activity[];
-
-export interface individualActivity {
-  serialNo: string;      
-  name: string;          
-  date: string;          
-  points: number;        
-  docs: string;
-  link: string;          
-  status: boolean; 
+export interface IndividualActivity {
+  id: number;
+  student_id: number;
+  academic_year: number;
+  activity_serial_no: string;
+  activity_name: string;
+  activity_date: string | null;
+  document_url: string | null;
+  uploaded_at: string;
+  is_active: boolean;
+  is_verified: boolean;
+  point: number;
 }
 
-interface Student {
+export interface Student {
+  id: number;
   name: string;
-  rollNo: string;
-  points: number;
-  verified: boolean;
-  activities: individualActivity[];
+  roll_no: string;
+  mobile_no: string;
+  signature: string | null;
+  email: string;
+  admission_year: number;
+  activities: IndividualActivity[];
+  status: boolean;
+}
+
+export interface YearStats {
+  totalStudents: number;
+  totalSubmitted: number;
+  totalNotSubmitted: number;
+  totalFullyVerified: number;
+  totalNotVerified: number;
+}
+
+export interface YearData {
+  students: Student[];
+  stats: YearStats;
+}
+export interface BackendStudentDetails {
+  firstYear: YearData;
+  secondYear: YearData;
+  thirdYear: YearData;
+  fourthYear: YearData;
 }
 
 export interface TeacherVerifyTableProps {
-  data: Student[];
-  signature:string;
+  data?: YearData;
+  signature?: string | null;
 }
+
 
 export interface SuperAdminSignupFormData {
   email: string;
@@ -208,12 +233,198 @@ export interface SuperAdminSignupApiPayload {
 }
 
 export interface SuperAdminLoginForm {
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
 }
 export interface TeacherCreatePayload {
   name: string;
   dept: string;
   userId: string;
   password: string;
+}
+
+export interface SuperAdminSignupFormData {
+  name: string;
+  email: string;
+  password: string;
+  collegeName: string;
+  collegeCode: string;
+}
+export type SuperAdminFormErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+  collegeName?: string;
+  collegeCode?: string;
+  roll?: string;
+};
+
+
+export interface loginError {
+  roll?: string;
+  password?: string;
+  email?: string;
+  name?: string;
+  collegeName?: string;
+  collegeCode?: string;
+}
+
+
+
+
+export interface AllDetails {
+  superadmin: SuperAdmin;
+  institute: Institute;
+  payment: Payment;
+  teachers: Teacher[];
+}
+
+export interface SuperAdmin {
+  id: number;
+  name: string;
+  email: string;
+  hashed_password: string;
+}
+
+export interface Institute {
+  id: number;
+  name: string;
+  superadmin_id: number;
+  created_at: string; // ISO date string
+  institute_code: string;
+}
+
+export interface Payment {
+  id: number;
+  institute_id: number;
+  amount_paid: number;
+  student_quota: number;
+  students_registered: number;
+  paid_on: string; // ISO date string
+  valid_until: string; // ISO date string
+}
+
+export interface Teacher {
+  id?: number;
+  name: string;
+  email: string;
+  mobile_no: string | null;
+  password_hash: string;
+  signature: string | null;
+  superadmin_id: number;
+  department: string;
+}
+export type TeachersResponse = {
+  teachers: Teacher[];
+};
+
+
+export type StudentYearData = {
+  year: string;       // e.g. "1st Year", "2nd Year", etc.
+  count: number;      // total activities or points
+  submit: number;     // submitted count
+  remain: number;     // remaining count
+};
+export type StudentYearDataArray = StudentYearData[];
+
+export type StudentBasicInfo = {
+  id: number;
+  name: string;
+  roll_no: string;
+  email: string;
+  admission_year: number;
+  mobile_no: string;
+  created_at: string; // ISO timestamp format
+};
+
+export type YearlyStudentData = {
+  [year: string]: StudentBasicInfo[];
+};
+export interface TeacherSideBarProps {
+  id: number;
+  name: string;
+  email: string;
+  mobile_no: string;
+  department: string;
+  password_hash: string;
+  signature: string | null;
+  superadmin_id: number;
+}
+
+export type teacherGetDetails = {
+  teacher: TeacherSideBarProps;
+  studentData: StudentYearDataArray
+};
+export interface SuperadminSidebarData {
+  id?: number;
+  name?: string;
+  email?: string;
+}
+
+
+export type StudentPointData = {
+  uploaded: number;
+  approved: number;
+};
+
+export type StudentData = {
+  name: string;
+  roll_no: string;
+  mobile_no: string;
+  signature: string | null;
+  admission_year: number;
+  email: string;
+  current_year: number;
+  points: {
+    "1st Year": StudentPointData;
+    "2nd Year": StudentPointData;
+    "3rd Year": StudentPointData;
+    "4th Year": StudentPointData;
+  };
+};
+
+export type StudentResponseofGetDetails= {
+  name:string;roll_no:string;
+  current_year:number;
+  data: StudentData;
+  
+};
+
+
+
+// Subpoint inside an activity (if any)
+export interface ActivitySubpoint {
+  name: string;
+  point_per_activity: number;
+  max?: number;
+  remain?: number;
+  already_acquired?: number;
+}
+
+// Activity definition for each year
+export interface YearActivity {
+  name: string;
+  point_per_activity?: number;
+  max?: number;
+  remain?: number;
+  already_acquired?: number;
+  subpoints?: ActivitySubpoint[];
+}
+
+// Structure holding all four years
+export interface YearWiseActivityStructure {
+  firstyear: YearActivity[];
+  secondyear: YearActivity[];
+  thirdyear: YearActivity[];
+  fourthyear: YearActivity[];
+}
+
+
+export interface PaymentPlan {
+  id: number;
+  plan_name: string;
+  total_students: number;
+  amount_per_student: string; // from database as string (NUMERIC)
+  total_amount: string;       // from database as string (NUMERIC)
+  created_at: string;         // ISO timestamp as string
 }
