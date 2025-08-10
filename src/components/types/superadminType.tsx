@@ -268,7 +268,12 @@ export interface loginError {
   collegeName?: string;
   collegeCode?: string;
 }
-
+export type Department = {
+  id: number;
+  dept_code: string;
+  name: string;
+  created_at: string; // ISO string
+};
 
 
 

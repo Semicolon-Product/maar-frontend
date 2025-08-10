@@ -7,11 +7,11 @@ import { FaChalkboardTeacher } from 'react-icons/fa';
 import { superadminStyle } from '../styles/style';
 import { getApi, postApi } from '@/api';
 import { toast } from 'react-toastify';
-import type{ StudentBasicInfo, StudentYearData, StudentYearDataArray, Teacher, YearlyStudentData } from '../types/superadminType';
+import type { StudentBasicInfo, StudentYearData, StudentYearDataArray, Teacher, YearlyStudentData } from '../types/superadminType';
 
 
-const TeacherDetails = (teacherDetails:any) => {
-    
+const TeacherDetails = (teacherDetails: any) => {
+
     //console.log("from props::",teacherDetails.data.studentData)
 
 
@@ -27,8 +27,8 @@ const TeacherDetails = (teacherDetails:any) => {
 
 
     //const [year, setYear] = useState("1");
-   // const [excelFile, setExcelFile] = useState<File | null>(null);
-    //const [signatureFile, setSignatureFile] = useState<File | null>(null);
+    // const [excelFile, setExcelFile] = useState<File | null>(null);
+    const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
     /* const handleSubmit = async (e) => {
         e.preventDefault();
@@ -60,11 +60,11 @@ const TeacherDetails = (teacherDetails:any) => {
     const [students, setStudents] = useState<YearlyStudentData>();
 
 
-    const handleChange = (e:any) => {
+    const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmitStudent = async (e:any) => {
+    const handleSubmitStudent = async (e: any) => {
         e.preventDefault();
 
         console.log("submit data::", formData)
@@ -95,18 +95,33 @@ const TeacherDetails = (teacherDetails:any) => {
     const [selectedYear, setSelectedYear] = useState<string>("");
 
     // Extract years from object keys like 1, 2, 3, 4
-    const availableYears = Object.keys(students ?? {}).sort((a:any, b:any) => a - b);
+    const availableYears = Object.keys(students ?? {}).sort((a: any, b: any) => a - b);
 
 
     // Optional: convert 1 → 1st Year, 2 → 2nd Year, etc.
-    const formatYear = (year:number) => {
+    const formatYear = (year: number) => {
         const suffix = ["th", "st", "nd", "rd", "th"];
         const v = year % 100;
         return `${year}${suffix[(v - 20) % 10] || suffix[v] || suffix[0]} Year`;
     };
     console.log("students all", students)
     console.log("students all", typeof (students))
-    console.log("selected::::",typeof(selectedYear))
+    console.log("selected::::", typeof (selectedYear))
+
+    const [fileError, setFileError] = useState(false);
+    const handleSignatureUpload = async () => {
+        if (!signatureFile) {
+            setFileError(true)
+            return;
+        }
+        const formData = new FormData();
+        formData.append('signature', signatureFile);
+        await postApi("/upload-signature", formData).then((res)=>{
+            console.log("res of upload==>>",res)
+        })
+
+        console.log("signatureFile==>>>>", signatureFile)
+    }
     return (
         <div>
             <div className="p-4 space-y-8 bg-gray-50 min-h-screen">
@@ -123,34 +138,54 @@ const TeacherDetails = (teacherDetails:any) => {
                         </div>
 
                         {/* Column 2: Signature */}
-                        <div className="flex flex-col items-center md:items-end gap-2">
-                            <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white" style={{ height: "100px", width: "300px" }}>
+                        <div className="flex flex-col items-center md:items-end gap-3">
+                            {/* Signature Preview Box */}
+                            <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white shadow-sm" style={{ height: "100px", width: "300px" }}>
                                 {teacherDataApi?.signature ? (
                                     <img
                                         src={teacherDataApi.signature}
                                         alt="Signature"
-                                        style={{ height: "100%", width: "100%", objectFit: "contain" }}
+                                        className="h-full w-full object-contain"
                                     />
                                 ) : (
-                                    <span className="text-gray-500 text-sm">Please Upload Signature</span>
+                                    <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                                        Please Upload Signature
+                                    </div>
                                 )}
                             </div>
 
-                            {/* Signature Upload Field */}
-                            <input
-                                id="signatureUpload"
-                                type="file"
-                                accept="image/*"
-                                //onChange={(e) => setSignatureFile(e.target.files[0])}
-                                className="mt-2 w-full md:w-auto text-sm file:bg-green-500 file:text-white file:rounded file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-1"
-                            />
+                            {/* Upload Input + Button */}
+                            <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                                <input
+                                    id="signatureUpload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setSignatureFile(e.target.files[0])}
+                                    className="text-sm file:bg-green-600 file:text-white file:rounded file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-1 w-full sm:w-auto"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={handleSignatureUpload}
+                                    className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded shadow"
+                                >
+                                    Upload
+                                </button>
+
+                            </div>
+                            {fileError && !signatureFile && (
+                                <span className='text-red-500 text-[15px]'>Please Select File!</span>
+                            )}
+
+
                         </div>
+
                     </div>
                 </div>
 
                 {/* Student Info Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto ">
-                    {studentData?.map((item:StudentYearData, index:number) => (
+                    {studentData?.map((item: StudentYearData, index: number) => (
                         <div key={index} className="bg-blue-50 rounded-xl shadow p-4 text-center space-y-2 border-1 border-blue-300">
                             <h3 className="text-lg font-semibold text-gray-800">{item.year}</h3>
                             <p className="text-2xl font-bold text-blue-700">{item.count}</p>
@@ -307,30 +342,30 @@ const TeacherDetails = (teacherDetails:any) => {
                     )}
                     {selectedYear && students?.[selectedYear] && (
                         <TableContainer component={Paper}>
-                        <Table  sx={{ fontSize: "22px" }}>
-                            <TableHead >
-                                <TableRow sx={{ backgroundColor: "#2a4054", height: "30px" }}>
-                                    <TableCell  sx={superadminStyle.headerStyle}>Name</TableCell>
-                                    <TableCell  sx={superadminStyle.headerStyle}>Email</TableCell>
-                                    <TableCell  sx={superadminStyle.headerStyle}>Roll No</TableCell>
-                                    <TableCell  sx={superadminStyle.headerStyle}>Mobile No</TableCell>
-                                    <TableCell  sx={superadminStyle.headerStyle}>Year</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {students[selectedYear]?.map((student:StudentBasicInfo, index:number) => (
-                                    <TableRow key={index}  sx={{
+                            <Table sx={{ fontSize: "22px" }}>
+                                <TableHead >
+                                    <TableRow sx={{ backgroundColor: "#2a4054", height: "30px" }}>
+                                        <TableCell sx={superadminStyle.headerStyle}>Name</TableCell>
+                                        <TableCell sx={superadminStyle.headerStyle}>Email</TableCell>
+                                        <TableCell sx={superadminStyle.headerStyle}>Roll No</TableCell>
+                                        <TableCell sx={superadminStyle.headerStyle}>Mobile No</TableCell>
+                                        <TableCell sx={superadminStyle.headerStyle}>Year</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {students[selectedYear]?.map((student: StudentBasicInfo, index: number) => (
+                                        <TableRow key={index} sx={{
                                             background: index % 2 ? "#eceff1" : "white",
                                         }}>
-                                        <TableCell  sx={{ ...superadminStyle.cellStyle, py:{ xs: "10px",sm: "4px",} }}>{student.name}</TableCell>
-                                        <TableCell  sx={{ ...superadminStyle.cellStyle, py:{ xs: "10px",sm: "4px",} }}>{student.email}</TableCell>
-                                        <TableCell  sx={{ ...superadminStyle.cellStyle, py:{ xs: "10px",sm: "4px",} }}>{student.roll_no}</TableCell>
-                                        <TableCell  sx={{ ...superadminStyle.cellStyle, py:{ xs: "10px",sm: "4px",} }}>{student.mobile_no}</TableCell>
-                                        <TableCell  sx={{ ...superadminStyle.cellStyle, py:{ xs: "10px",sm: "4px",} }}>{student.admission_year}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.name}</TableCell>
+                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.email}</TableCell>
+                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.roll_no}</TableCell>
+                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.mobile_no}</TableCell>
+                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.admission_year}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </TableContainer>)}
 
                 </div>

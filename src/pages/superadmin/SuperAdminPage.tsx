@@ -21,7 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { superadminStyle } from '@/components/styles/style';
 import Close from '@mui/icons-material/Close';
-import type { AllDetails, PaymentPlan, SuperadminSidebarData, Teacher, } from '@/components/types/superadminType';
+import type { AllDetails, PaymentPlan, SuperadminSidebarData, Teacher, Department } from '@/components/types/superadminType';
 import { X, Zap } from 'lucide-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
 import { getLoggedInSuperadminId } from '@/utils/auth';
@@ -32,6 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import { HiOutlineUserGroup, HiUserGroup } from "react-icons/hi2";
 import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
 import { deleteApi, getApi, postApi } from '@/api';
+import Select from "react-select";
 interface SidebarContentProps {
   details?: SuperadminSidebarData;
   selectedSection: string;
@@ -252,20 +253,44 @@ const SuperAdminPage = () => {
   console.log("payment details::", paymentDetails)
 
   const handleCreatePayment = async (amount: string | undefined) => {
-  console.log("amount", amount, typeof amount);
-  try {
-    const res = await postApi("superadmin/createPayment", { amount });
-    console.log("payment status::", res);
+    console.log("amount", amount, typeof amount);
+    try {
+      const res = await postApi("superadmin/createPayment", { amount });
+      console.log("payment status::", res);
 
-    if (res?.payUrl) {
-      window.open(res.payUrl, "_blank");
-    } else {
-      console.error("Payment URL not found");
+      if (res?.payUrl) {
+        window.open(res.payUrl, "_blank");
+      } else {
+        console.error("Payment URL not found");
+      }
+    } catch (error) {
+      console.error("Payment creation failed", error);
     }
-  } catch (error) {
-    console.error("Payment creation failed", error);
+  };
+
+  const [deptList, setDeptList] = useState<Department[]>();
+  const getAllDept = async () => {
+    await getApi("superadmin/getAllDepartments").then((res) => {
+      console.log("dept", res.data);
+      setDeptList(res?.data);
+    })
   }
-};
+
+
+  useEffect(() => {
+
+    getAllDept();
+  }, [])
+
+
+
+  const deptOptions = deptList?.map((dept) => ({
+    label: dept.name,
+    value: dept.name,
+  }));
+
+
+
   return (
 
     <div
@@ -323,7 +348,7 @@ const SuperAdminPage = () => {
             </Box>
 
             {/* Content */}
-            <Box sx={{ p: 3, overflowY: "auto", minHeight: "40vh" }}>
+            <Box sx={{ p: 3, overflowY: "auto", minHeight: "50vh" }}>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Teacher Name */}
@@ -336,7 +361,7 @@ const SuperAdminPage = () => {
                       onChange={(e) =>
                         setTeacherData((prev) => ({ ...prev, name: e.target.value }))
                       }
-                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.name ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.name ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
                         }`}
                     />
 
@@ -345,15 +370,41 @@ const SuperAdminPage = () => {
                   {/* Department */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                    <input
+                    {/* <input
                       type="text"
                       name="dept"
                       value={teacherData.dept}
                       onChange={(e) =>
                         setTeacherData((prev) => ({ ...prev, dept: e.target.value }))
                       }
-                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.dept ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                      className={`w-full px-4 py-2 border focus:outline-none focus:ring-1 ${errors.dept ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
                         }`}
+                    /> */}
+                    <Select
+                      name="dept"
+                      options={deptOptions}
+                      value={deptOptions?.find((opt) => opt.value === teacherData.dept) || null}
+                      onChange={(selectedOption) =>
+                        setTeacherData((prev) => ({ ...prev, dept: selectedOption?.value || "" }))
+                      }
+                      classNamePrefix="react-select"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          padding: "2px",
+                          borderRadius: "0.25rem",
+                          border: errors.dept ? "1px solid #f87171" : "1px solid #d1d5db", // red-500 or gray-300
+                          boxShadow: state.isFocused
+                            ? errors.dept
+                              ? "0 0 0 1px #f87171"
+                              : "0 0 0 1px #3b82f6"
+                            : "none", // blue-500 ring
+                          "&:hover": {
+                            borderColor: errors.dept ? "#f87171" : "#3b82f6",
+                          },
+                        }),
+                      }}
+                      isSearchable
                     />
                   </div>
 
@@ -367,7 +418,7 @@ const SuperAdminPage = () => {
                       onChange={(e) =>
                         setTeacherData((prev) => ({ ...prev, email: e.target.value }))
                       }
-                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
                         }`}
                     />
                   </div>
@@ -382,7 +433,7 @@ const SuperAdminPage = () => {
                       onChange={(e) =>
                         setTeacherData((prev) => ({ ...prev, password: e.target.value }))
                       }
-                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
                         }`}
                     />
                   </div>
@@ -397,7 +448,7 @@ const SuperAdminPage = () => {
                       onChange={(e) =>
                         setTeacherData((prev) => ({ ...prev, mobileNo: e.target.value }))
                       }
-                      className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 ${errors.mobileNo ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.mobileNo ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
                         }`}
                     />
                   </div>
@@ -555,7 +606,7 @@ const SuperAdminPage = () => {
                   </div>
                   <div className="w-full max-w-7xl mx-auto px-4 py-12">
                     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
-                      <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[520px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
+                      <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
                         <div>
                           <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">{paymentDetails && paymentDetails[0]?.plan_name} Plan</h4>
                           <div className="flex items-center gap-2 mb-3">
@@ -576,7 +627,7 @@ const SuperAdminPage = () => {
                       </div>
 
 
-                      <div className="bg-gradient-to-br from-[#fff9db] via-[#fff4bf] to-[#fef08a] shadow-2xl border-3 border-yellow-400 rounded-2xl p-6 flex flex-col h-[560px] justify-between scale-105 z-10 hover:scale-[1.07] transition-transform duration-300">
+                      <div className="bg-gradient-to-br from-[#fff9db] via-[#fff4bf] to-[#fef08a] shadow-2xl border-3 border-yellow-400 rounded-2xl p-6 flex flex-col h-[350px] justify-between scale-105 z-10 hover:scale-[1.07] transition-transform duration-300">
                         <div>
                           <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">{paymentDetails && paymentDetails[1]?.plan_name} Plan</h4>
                           <div className="flex items-center gap-2 mb-3">
@@ -592,18 +643,18 @@ const SuperAdminPage = () => {
                           <p className="text-sm text-gray-500 line-through">₹54,000/year</p>
                           <p className="text-3xl font-bold text-yellow-700">₹{paymentDetails && paymentDetails[1]?.total_amount}/year</p>
                         </div>
-                        <img
+                       {/*  <img
                           src={premium}
                           alt="Premium Plan"
                           className="w-full h-48 object-contain my-4"
-                        />
+                        /> */}
                         <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[1]?.total_amount)} className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
                           Choose Premium
                         </button>
                       </div>
 
 
-                      <div className="bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] shadow-lg border border-yellow-300 rounded-2xl p-6 flex flex-col h-[520px] justify-between hover:scale-105 hover:rotate-y-3 transition-transform duration-300">
+                      <div className="bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] shadow-lg border border-yellow-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:rotate-y-3 transition-transform duration-300">
                         <div>
                           <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">{paymentDetails && paymentDetails[2]?.plan_name} Plan</h4>
                           <div className="flex items-center gap-2 mb-3">
@@ -634,7 +685,7 @@ const SuperAdminPage = () => {
                     </div>
 
                     {/* Auto Submission Add-on */}
-                    <div className="mt-8">
+                    <div className="mt-8 cursor-pointer" onClick={()=>handleCreatePayment(5000)}>
                       <div className="bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] border border-orange-300 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
                         <div className="flex items-center gap-3">
                           <Zap className="h-6 w-6 text-orange-500" />
