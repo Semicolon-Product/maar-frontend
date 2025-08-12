@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 
 import { superadminStyle } from '../styles/style';
-import { getApi, postApi } from '@/api';
+import { FileUpload, getApi, postApi } from '@/api';
 import { toast } from 'react-toastify';
 import type { StudentBasicInfo, StudentYearData, StudentYearDataArray, Teacher, YearlyStudentData } from '../types/superadminType';
 
@@ -114,14 +114,20 @@ const TeacherDetails = (teacherDetails: any) => {
             setFileError(true)
             return;
         }
-        const formData = new FormData();
-        formData.append('signature', signatureFile);
-        await postApi("/upload-signature", formData).then((res)=>{
-            console.log("res of upload==>>",res)
-        })
-
         console.log("signatureFile==>>>>", signatureFile)
+
+        const formData = new FormData();
+        formData.append('signature', signatureFile); // field name must match multer's .single('signature')
+
+        await FileUpload("teacher/uploadSignature", formData).then((res) => {
+            console.log("res of upload==>>", res);
+        });
+
+
     }
+    const [previewUrl, setPreviewUrl] = useState(null);
+
+    console.log("teacherDataApi?.signature",teacherDataApi?.signature)
     return (
         <div>
             <div className="p-4 space-y-8 bg-gray-50 min-h-screen">
@@ -141,12 +147,10 @@ const TeacherDetails = (teacherDetails: any) => {
                         <div className="flex flex-col items-center md:items-end gap-3">
                             {/* Signature Preview Box */}
                             <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white shadow-sm" style={{ height: "100px", width: "300px" }}>
-                                {teacherDataApi?.signature ? (
-                                    <img
-                                        src={teacherDataApi.signature}
-                                        alt="Signature"
-                                        className="h-full w-full object-contain"
-                                    />
+                                {previewUrl ? (
+                                    <img src={previewUrl} alt="Signature Preview" className="h-full w-full object-contain" />
+                                ) : teacherDataApi?.signature ? (
+                                    <img src={teacherDataApi.signature} alt="Signature" className="h-full w-full object-contain" />
                                 ) : (
                                     <div className="flex items-center justify-center h-full text-gray-500 text-sm">
                                         Please Upload Signature
@@ -160,8 +164,14 @@ const TeacherDetails = (teacherDetails: any) => {
                                     id="signatureUpload"
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => setSignatureFile(e.target.files[0])}
-                                    className="text-sm file:bg-green-600 file:text-white file:rounded file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-1 w-full sm:w-auto"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            setSignatureFile(file);
+                                            setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                                        }
+                                    }}
+                                   className="text-sm file:bg-green-600 file:text-white file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-0 w-full sm:w-auto"
                                 />
 
                                 <button

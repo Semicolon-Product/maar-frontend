@@ -120,6 +120,9 @@ export const generateAllReports = async (
   doc.setFontSize(14);
   doc.text("Teacher Signature:", sigX, sigY - 10);
   doc.addImage(teacherSignature, "PNG", sigX, sigY, sigWidth, sigHeight);
+  const todayDate = new Date().toLocaleDateString(); // e.g. "8/11/2025"
+doc.setFontSize(12);
+doc.text(`Date: ${todayDate}`, sigX, sigY + sigHeight + 10);
 
   // === Trigger download ===
   const pdfBlob = doc.output("blob");

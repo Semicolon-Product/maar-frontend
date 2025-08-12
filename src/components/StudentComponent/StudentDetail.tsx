@@ -1,4 +1,5 @@
-import  { useEffect, useState } from "react";
+import { FileUpload, postApi } from "@/api";
+import { useEffect, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
 
 type StudentPointsByYear = {
@@ -21,28 +22,47 @@ type StudentData = {
     "4th Year": StudentPointsByYear;
   };
 };
+type ChildProps = {
+  student: any;
+  onYearSelect: (year: string) => void;
+};
+
+const StudentDetail: React.FC<ChildProps> = (student: any, onYearSelect) => {
+  const [studentData, setStudentData] = useState<StudentData>();
+  useEffect(() => {
+    setStudentData(student.student)
+  }, [student])
+  //console.log("student data apo::", student.student);
+
+  const totalUploaded = Object.values(studentData?.points || {}).reduce(
+    (acc, year) => acc + (year?.uploaded || 0),
+    0
+  );
+
+  const totalApproved = Object.values(studentData?.points || {}).reduce(
+    (acc, year) => acc + (year?.approved || 0),
+    0
+  );
 
 
-const StudentDetail = (student:any) => {
-  const [studentData,setStudentData]=useState<StudentData>();
-  useEffect(()=>{
-setStudentData(student.student)
-  },[student])
-  console.log("student data apo::",student.student);
 
- const totalUploaded = Object.values(studentData?.points || {}).reduce(
-  (acc, year) => acc + (year?.uploaded || 0),
-  0
-);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
-const totalApproved = Object.values(studentData?.points || {}).reduce(
-  (acc, year) => acc + (year?.approved || 0),
-  0
-);
+  const handleSignatureUpload = async () => {
+    const formData = new FormData();
+    formData.append("signature", signatureFile);
 
+    await FileUpload("student/uploadSignature", formData).then((res) => {
+      console.log("res in upload==>>", res)
+    })
 
+  }
 
-  
+  const handleClick=(year)=>{
+console.log("year=>>",year)
+  }
+
 
   return (
     <div className="p-4 max-w-5xl mx-auto bg-gray-50 min-h-screen">
@@ -62,6 +82,9 @@ const totalApproved = Object.values(studentData?.points || {}).reduce(
             <div>
               <span className="font-semibold">Roll No:</span> {studentData?.roll_no}
             </div>
+            <div>
+              <span className="font-semibold">Institute:</span> {studentData?.institute?.name}
+            </div>
           </div>
 
           {/* Column 2 */}
@@ -75,37 +98,82 @@ const totalApproved = Object.values(studentData?.points || {}).reduce(
             <div>
               <span className="font-semibold">Total Approved Points:</span> {totalApproved}
             </div>
+            <div>
+              <span className="font-semibold">Code:</span> {studentData?.institute?.institute_code}
+            </div>
           </div>
 
           {/* Column 3 - Signature */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="border-2 border-dotted border-green-400 p-2 rounded w-full bg-white flex justify-center items-center mb-2">
-              <img
-                src={studentData?.signature || "https://www.shutterstock.com/image-vector/signature-vector-hand-drawn-autograph-600nw-2387543207.jpg"}
-                alt="Signature"
-                className="max-h-20 object-contain"
-                style={{ aspectRatio: "auto" }}
-              />
+          <div className="flex flex-col items-center md:items-end gap-3">
+            {/* Signature Preview Box */}
+            <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white shadow-sm" style={{ height: "100px", width: "300px" }}>
+              {previewUrl ? (
+                <img src={previewUrl} alt="Signature Preview" className="h-full w-full object-contain" />
+              ) : studentData?.signature ? (
+                <img src={studentData.signature} alt="Signature" className="h-full w-full object-contain" />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                  Please Upload Signature
+                </div>
+              )}
             </div>
-            {/* Upload input */}
-            <label className="block w-full">
-              <span className="text-sm text-gray-600">Upload Signature</span>
-              <input
-                id="signatureUpload"
-                type="file"
-                accept="image/*"
-                //onChange={(e) => setSignatureFile(e.target.files[0])}
-                className="mt-2 w-full md:w-auto text-sm file:bg-green-500 file:text-white file:rounded file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-1"
-              />
-            </label>
+
+            {/* Upload Input + Button */}
+
+            {!studentData?.signature &&
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                <input
+                  id="signatureUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const maxSizeMB = 1;
+                      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+                      if (file.size > maxSizeBytes) {
+                        alert(`File size should not exceed ${maxSizeMB} MB`);
+                        e.target.value = ""; // reset input
+                        return;
+                      }
+
+                      setSignatureFile(file);
+                      setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                    }
+                  }}
+                  className="text-sm file:bg-green-600 file:text-white file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-0 w-full sm:w-auto"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleSignatureUpload}
+                  className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded shadow cursor-pointer"
+                >
+                  Upload
+                </button>
+
+              </div>
+            }
+
+
+
+            {/* {fileError && !signatureFile && (
+                                <span className='text-red-500 text-[15px]'>Please Select File!</span>
+                            )} */}
+
+
           </div>
         </div>
       </div>
 
       {/* Year-wise Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-pointer">
         {Object.entries(studentData?.points || {}).map(([year, data]) => (
-          <div key={year} className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition">
+          <div key={year}
+             onClick={() => handleClick(year)}
+            className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition"
+          >
             <h3 className="text-lg font-semibold text-red-700 mb-2">{year}</h3>
             <p className="text-sm text-gray-800">
               <strong>Uploaded:</strong> {data?.uploaded}

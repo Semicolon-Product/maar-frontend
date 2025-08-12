@@ -54,8 +54,9 @@ const StudentDetails = () => {
         localStorage.removeItem("token");
         navigate("/");
     }
-    console.log(studentDetails)
-    console.log("activity detail ", studentdata)
+    //console.log(studentDetails)
+    //console.log("activity detail ", studentdata)
+    console.log("selectedYear",selectedYear)
 
     return (
         <div className="flex h-[100vh] overflow-hidden"  >
@@ -109,27 +110,27 @@ const StudentDetails = () => {
                 <div className="p-0  mt-0">{/* <p>You are in {selectedYear} year</p> */}
 
                     {selectedYear === "details" && <div>
-                        <StudentDetail student={studentDetails} />
+                        <StudentDetail student={studentDetails}    onYearSelect={(year) => setSelectedYear(year)}/>
                     </div>}
 
 
-                    {selectedYear === "first" &&
+                    {selectedYear === "1st" &&
                         <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
 
                             <StudentYearlyDetails data={studentdata?.firstyear} currentyear={studentDetails?.current_year} year={1} />
                         </div>
                     }
-                    {selectedYear === "second" &&
+                    {selectedYear === "2nd" &&
                         <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
                             <StudentYearlyDetails data={studentdata?.secondyear} currentyear={studentDetails?.current_year} year={2} />
                         </div>
                     }
-                    {selectedYear === "third" &&
+                    {selectedYear === "3rd" &&
                         <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
                             <StudentYearlyDetails data={studentdata?.thirdyear} currentyear={studentDetails?.current_year} year={3} />
                         </div>
                     }
-                    {selectedYear === "fourth" &&
+                    {selectedYear === "4th" &&
                         <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
                             <StudentYearlyDetails data={studentdata?.fourthyear} currentyear={studentDetails?.current_year} year={4} />
                         </div>
@@ -141,7 +142,7 @@ const StudentDetails = () => {
 };
 
 const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelectedYear, student }) => {
-    console.log("Student in SidebarContent:", student);
+    //console.log("Student in SidebarContent:", student);
 
     return (
         <>
@@ -169,7 +170,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ selectedYear, setSelect
                         Details
                     </li>
 
-                    {["first", "second", "third", "fourth"].map((year, idx) => {
+                    {["1st", "2nd", "3rd", "4th"].map((year, idx) => {
                         const icons = [
                             <BookOpen className="w-4 h-4" />,
                             <CalendarCheck2 className="w-4 h-4" />,

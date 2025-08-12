@@ -56,7 +56,7 @@ const TeacherPage = () => {
         navigate("/");
     }
   //console.log("in page ::",teacherDetails)
-  console.log("backendAllStudentDetails",backendAllStudentDetails)
+  console.log("backendAllStudentDetails",backendAllStudentDetails?.teacherSignature)
   console.log("teacjer deital::",teacherDetails)
   
   return (
@@ -150,28 +150,28 @@ const TeacherPage = () => {
             {selectedSection === "first" && (
               <TeacherVerifyTable
                 data={backendAllStudentDetails?.firstYear}
-                signature={allStudentDetails.teacherSignature}
+                signature={backendAllStudentDetails?.teacherSignature}
               />
             )}
 
             {selectedSection === "second" && (
               <TeacherVerifyTable
                  data={backendAllStudentDetails?.secondYear}
-                signature={allStudentDetails.teacherSignature}
+                signature={backendAllStudentDetails?.teacherSignature}
               />
             )}
 
             {selectedSection === "third" && (
               <TeacherVerifyTable
                 data={backendAllStudentDetails?.thirdYear}
-                signature={allStudentDetails.teacherSignature}
+                signature={backendAllStudentDetails?.teacherSignature}
               />
             )}
 
             {selectedSection === "four" && (
               <TeacherVerifyTable
                 data={backendAllStudentDetails?.fourthYear}
-                signature={allStudentDetails.teacherSignature}
+                signature={backendAllStudentDetails?.teacherSignature}
               />
             )}
 

@@ -57,6 +57,35 @@ export const postApi = async (
 
     return response.data;
 };
+export const FileUpload = async (
+    endpoint: string,
+    payload?: ApiPayload,
+    requireAuth: boolean = true
+) => {
+    const url = `${BASE_URL}${endpoint}`;
+    const headers: Record<string, string> = {
+        "Content-Type": "multipart/form-data",
+    };
+
+    if (requireAuth) {
+        const token = localStorage.getItem('token');
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+    }
+
+    const response = await axios.post(url, payload, { headers });
+
+    if (response.data?.data?.token) {
+        localStorage.setItem('token', response.data.data.token);
+    }
+
+    console.log("in postApi token:", response.data?.data?.token);
+    console.log("in postApi response:", response);
+
+    return response.data;
+};
+
 
 
 
