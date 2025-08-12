@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-800 px-6 py-4 flex justify-between items-center text-white">
+    <nav className="bg-gray-800 px-6 py-2 flex justify-between items-center text-white">
       <div className="text-xl font-semibold">Administrator Page</div>
 
       <div className="relative" ref={dropdownRef}>

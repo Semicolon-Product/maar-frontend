@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelect }) => {
   };
 
   return (
-    <div className={`bg-gray-900 text-white h-[calc(100vh-4rem)] fixed top-16 left-0 z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'} flex flex-col justify-between shadow-md`}>
+    <div className={`bg-gray-900 text-white h-[calc(100vh-3rem)] fixed top-14 left-0 z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'} flex flex-col justify-between shadow-md`}>
       <ul className="space-y-1 px-2 mt-4">
         {navItems.map(({ name, icon: Icon }) => (
           <li
