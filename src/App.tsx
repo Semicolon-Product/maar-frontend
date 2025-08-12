@@ -6,7 +6,7 @@ import Automate from './pages/Automate';
 import SuperAdminPage from './pages/superadmin/SuperAdminPage';
 import TeacherPage from './pages/teacher/TeacherPage';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import Index from './pages/administrator';
 function App() {
   return (
     <Routes>
@@ -14,26 +14,34 @@ function App() {
       <Route
         path="/student"
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <StudentDetails />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }
       />
       <Route path="/automate" element={<Automate />} />
       <Route
         path="/superadmin"
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <SuperAdminPage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }
       />
       <Route
         path="/teacher"
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <TeacherPage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/administrator"
+        element={
+          // <ProtectedRoute>
+            <Index />
+          // </ProtectedRoute>
         }
       />
     </Routes>
