@@ -1,58 +1,98 @@
-import React from "react";
+import { FileUpload } from "@/api";
+import { useEffect, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
+import type { Institute } from "../types/superadminType";
 
-const studentData = {
-  name: "Sayak Khan",
-  email: "sayak@example.com",
-  rollNo: "UNI2023001",
-  phone: "9876543210",
-  points: {
-    "1st Year": { uploaded: 25, approved: 20 },
-    "2nd Year": { uploaded: 30, approved: 28 },
-    "3rd Year": { uploaded: 40, approved: 35 },
-    "4th Year": { uploaded: 45, approved: 40 },
-  },
+type StudentPointsByYear = {
+  uploaded: number;
+  approved: number;
 };
 
-const StudentDetail = () => {
-  const totalUploaded = Object.values(studentData.points).reduce(
-    (acc, year) => acc + year.uploaded,
-    0
-  );
-  const totalApproved = Object.values(studentData.points).reduce(
-    (acc, year) => acc + year.approved,
-    0
-  );
-  const handleSignatureUpload = (e) => {
-    const file = e.target.files[0];
-    // Preview or upload logic here
+type StudentData = {
+  name: string;
+  roll_no: string;
+  mobile_no: string;
+  signature: string | null;
+  admission_year: number;
+  email: string;
+  institute:Institute
+  current_year: number;
+  points: {
+    "1st Year": StudentPointsByYear;
+    "2nd Year": StudentPointsByYear;
+    "3rd Year": StudentPointsByYear;
+    "4th Year": StudentPointsByYear;
   };
+};
+type ChildProps = {
+  student: any;
+  onYearSelect: (year: string) => void;
+};
+
+const StudentDetail: React.FC<ChildProps> = (student: any,) => {
+  const [studentData, setStudentData] = useState<StudentData>();
+  useEffect(() => {
+    setStudentData(student.student)
+  }, [student])
+  //console.log("student data apo::", student.student);
+
+  const totalUploaded = Object.values(studentData?.points || {}).reduce(
+    (acc, year) => acc + (year?.uploaded || 0),
+    0
+  );
+
+  const totalApproved = Object.values(studentData?.points || {}).reduce(
+    (acc, year) => acc + (year?.approved || 0),
+    0
+  );
+
+
+
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [signatureFile, setSignatureFile] = useState<File | null>(null);
+
+  const handleSignatureUpload = async () => {
+    const formData = new FormData();
+    formData.append("signature", signatureFile ?? new Blob());
+
+    await FileUpload("student/uploadSignature", formData).then((res) => {
+      console.log("res in upload==>>", res)
+    })
+
+  }
+
+ /*  const handleClick=(year:any)=>{
+console.log("year=>>",year)
+  } */
 
 
   return (
     <div className="p-4 max-w-5xl mx-auto bg-gray-50 min-h-screen">
       {/* Student Info */}
       <div className="bg-white shadow-md rounded-xl p-6 mb-8 border border-green-300">
-        <h2 className="text-2xl font-semibold mb-6 text-green-800 border-b pb-2 flex gap-0.5"><FaGraduationCap className="mt-1" /> Student Profile</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-green-800  pb-2 flex gap-0.5 left-content"><FaGraduationCap className="mt-1" /> Student Profile</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-sm text-gray-800">
           {/* Column 1 */}
-          <div className="space-y-3">
+          <div className="space-y-3 left-content">
             <div>
-              <span className="font-semibold">Name:</span> {studentData.name}
+              <span className="font-semibold">Name:</span> {studentData?.name}
             </div>
             <div>
-              <span className="font-semibold">Email:</span> {studentData.email}
+              <span className="font-semibold">Email:</span> {studentData?.email}
             </div>
             <div>
-              <span className="font-semibold">Roll No:</span> {studentData.rollNo}
+              <span className="font-semibold">Roll No:</span> {studentData?.roll_no}
+            </div>
+            <div>
+              <span className="font-semibold">Institute:</span> {studentData?.institute?.name}
             </div>
           </div>
 
           {/* Column 2 */}
-          <div className="space-y-3">
+          <div className="space-y-3 right-content">
             <div>
-              <span className="font-semibold">Phone:</span> {studentData.phone}
+              <span className="font-semibold">Phone:</span> {studentData?.mobile_no}
             </div>
             <div>
               <span className="font-semibold">Total Uploaded Points:</span> {totalUploaded}
@@ -60,47 +100,95 @@ const StudentDetail = () => {
             <div>
               <span className="font-semibold">Total Approved Points:</span> {totalApproved}
             </div>
+            <div>
+              <span className="font-semibold">Code:</span> {studentData?.institute?.institute_code}
+            </div>
           </div>
 
           {/* Column 3 - Signature */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="border-2 border-dotted border-green-400 p-2 rounded w-full bg-white flex justify-center items-center mb-2">
-              <img
-                src={studentData.signature || "https://www.shutterstock.com/image-vector/signature-vector-hand-drawn-autograph-600nw-2387543207.jpg"}
-                alt="Signature"
-                className="max-h-20 object-contain"
-                style={{ aspectRatio: "auto" }}
-              />
+          <div className="flex flex-col items-center md:items-end gap-3 mt-[-20px]">
+            {/* Signature Preview Box */}
+            <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white shadow-sm" style={{ height: "100px", width: "300px" }}>
+              {previewUrl ? (
+                <img src={previewUrl} alt="Signature Preview" className="h-full w-full object-contain" />
+              ) : studentData?.signature ? (
+                <img src={studentData.signature} alt="Signature" className="h-full w-full object-contain" />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                  Please Upload Signature
+                </div>
+              )}
             </div>
-            {/* Upload input */}
-            <label className="block w-full">
-              <span className="text-sm text-gray-600">Upload Signature</span>
-              <input
-                id="signatureUpload"
-                type="file"
-                accept="image/*"
-                //onChange={(e) => setSignatureFile(e.target.files[0])}
-                className="mt-2 w-full md:w-auto text-sm file:bg-green-500 file:text-white file:rounded file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-1"
-              />
-            </label>
+
+            {/* Upload Input + Button */}
+
+            {!studentData?.signature &&
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                <input
+                  id="signatureUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    if (file) {
+                      const maxSizeMB = 1;
+                      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+                      if (file.size > maxSizeBytes) {
+                        alert(`File size should not exceed ${maxSizeMB} MB`);
+                        e.target.value = ""; // reset input
+                        return;
+                      }
+
+                      setSignatureFile(file);
+                      setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                    }
+                  }}
+                  className="text-sm file:bg-green-600 file:text-white file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-0 w-full sm:w-auto"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleSignatureUpload}
+                  className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded shadow cursor-pointer"
+                >
+                  Upload
+                </button>
+
+              </div>
+            }
+
+
+
+            {/* {fileError && !signatureFile && (
+                                <span className='text-red-500 text-[15px]'>Please Select File!</span>
+                            )} */}
+
+
           </div>
         </div>
       </div>
 
       {/* Year-wise Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {Object.entries(studentData.points).map(([year, data]) => (
-          <div key={year} className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition">
-            <h3 className="text-lg font-semibold text-red-700 mb-2">{year}</h3>
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-pointer ">
+        {Object.entries(studentData?.points || {}).map(([year, data]) => (
+          <div key={year}
+             onClick={() => handleClick(year)}
+            className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition "
+          >
+            <div className="">
+               <h3 className="text-lg font-semibold text-red-700 mb-2">{year}</h3>
             <p className="text-sm text-gray-800">
-              <strong>Uploaded:</strong> {data.uploaded}
+              <strong>Uploaded:</strong> {data?.uploaded}
             </p>
             <p className="text-sm text-gray-800">
-              <strong>Approved:</strong> {data.approved}
+              <strong>Approved:</strong> {data?.approved}
             </p>
+            </div>
+           
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Year-wise Suggestions */}
       <div className="mt-8 bg-white border border-blue-200 rounded-xl shadow p-6">
@@ -108,7 +196,7 @@ const StudentDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-gray-800">
           {/* First Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition left-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">First Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Enroll in short-term MOOCs (2–4 weeks)</li>
@@ -120,7 +208,7 @@ const StudentDetail = () => {
           </div>
 
           {/* Second Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition right-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">Second Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Complete 4–8 week MOOCs</li>
@@ -132,7 +220,7 @@ const StudentDetail = () => {
           </div>
 
           {/* Third Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition left-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">Third Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Take 8–12 week MOOCs (NPTEL, SWAYAM)</li>
@@ -144,7 +232,7 @@ const StudentDetail = () => {
           </div>
 
           {/* Fourth Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition right-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">Fourth Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Enroll in 12-week MOOCs</li>
