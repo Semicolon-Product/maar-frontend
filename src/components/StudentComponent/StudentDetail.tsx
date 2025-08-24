@@ -1,6 +1,7 @@
-import { FileUpload, postApi } from "@/api";
+import { FileUpload } from "@/api";
 import { useEffect, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
+import type { Institute } from "../types/superadminType";
 
 type StudentPointsByYear = {
   uploaded: number;
@@ -14,6 +15,7 @@ type StudentData = {
   signature: string | null;
   admission_year: number;
   email: string;
+  institute:Institute
   current_year: number;
   points: {
     "1st Year": StudentPointsByYear;
@@ -27,7 +29,7 @@ type ChildProps = {
   onYearSelect: (year: string) => void;
 };
 
-const StudentDetail: React.FC<ChildProps> = (student: any, onYearSelect) => {
+const StudentDetail: React.FC<ChildProps> = (student: any,) => {
   const [studentData, setStudentData] = useState<StudentData>();
   useEffect(() => {
     setStudentData(student.student)
@@ -46,12 +48,12 @@ const StudentDetail: React.FC<ChildProps> = (student: any, onYearSelect) => {
 
 
 
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
   const handleSignatureUpload = async () => {
     const formData = new FormData();
-    formData.append("signature", signatureFile);
+    formData.append("signature", signatureFile ?? new Blob());
 
     await FileUpload("student/uploadSignature", formData).then((res) => {
       console.log("res in upload==>>", res)
@@ -59,20 +61,20 @@ const StudentDetail: React.FC<ChildProps> = (student: any, onYearSelect) => {
 
   }
 
-  const handleClick=(year)=>{
+ /*  const handleClick=(year:any)=>{
 console.log("year=>>",year)
-  }
+  } */
 
 
   return (
     <div className="p-4 max-w-5xl mx-auto bg-gray-50 min-h-screen">
       {/* Student Info */}
       <div className="bg-white shadow-md rounded-xl p-6 mb-8 border border-green-300">
-        <h2 className="text-2xl font-semibold mb-6 text-green-800 border-b pb-2 flex gap-0.5"><FaGraduationCap className="mt-1" /> Student Profile</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-green-800  pb-2 flex gap-0.5 left-content"><FaGraduationCap className="mt-1" /> Student Profile</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-sm text-gray-800">
           {/* Column 1 */}
-          <div className="space-y-3">
+          <div className="space-y-3 left-content">
             <div>
               <span className="font-semibold">Name:</span> {studentData?.name}
             </div>
@@ -88,7 +90,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Column 2 */}
-          <div className="space-y-3">
+          <div className="space-y-3 right-content">
             <div>
               <span className="font-semibold">Phone:</span> {studentData?.mobile_no}
             </div>
@@ -104,7 +106,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Column 3 - Signature */}
-          <div className="flex flex-col items-center md:items-end gap-3">
+          <div className="flex flex-col items-center md:items-end gap-3 mt-[-20px]">
             {/* Signature Preview Box */}
             <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white shadow-sm" style={{ height: "100px", width: "300px" }}>
               {previewUrl ? (
@@ -127,7 +129,7 @@ console.log("year=>>",year)
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    const file = e.target.files[0];
+                    const file = e.target.files?.[0] ?? null;
                     if (file) {
                       const maxSizeMB = 1;
                       const maxSizeBytes = maxSizeMB * 1024 * 1024;
@@ -168,22 +170,25 @@ console.log("year=>>",year)
       </div>
 
       {/* Year-wise Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-pointer">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-pointer ">
         {Object.entries(studentData?.points || {}).map(([year, data]) => (
           <div key={year}
              onClick={() => handleClick(year)}
-            className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition"
+            className="bg-white rounded-xl border border-red-300 shadow-sm p-4 text-center hover:shadow-md transition "
           >
-            <h3 className="text-lg font-semibold text-red-700 mb-2">{year}</h3>
+            <div className="">
+               <h3 className="text-lg font-semibold text-red-700 mb-2">{year}</h3>
             <p className="text-sm text-gray-800">
               <strong>Uploaded:</strong> {data?.uploaded}
             </p>
             <p className="text-sm text-gray-800">
               <strong>Approved:</strong> {data?.approved}
             </p>
+            </div>
+           
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Year-wise Suggestions */}
       <div className="mt-8 bg-white border border-blue-200 rounded-xl shadow p-6">
@@ -191,7 +196,7 @@ console.log("year=>>",year)
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-gray-800">
           {/* First Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition left-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">First Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Enroll in short-term MOOCs (2–4 weeks)</li>
@@ -203,7 +208,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Second Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition right-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">Second Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Complete 4–8 week MOOCs</li>
@@ -215,7 +220,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Third Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition left-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">Third Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Take 8–12 week MOOCs (NPTEL, SWAYAM)</li>
@@ -227,7 +232,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Fourth Year */}
-          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 shadow-sm hover:shadow-md transition right-content">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">Fourth Year</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Enroll in 12-week MOOCs</li>

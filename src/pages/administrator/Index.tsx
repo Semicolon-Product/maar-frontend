@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Navbar from '@/components/Administrator/Navbar';
 import Sidebar from '@/components/Administrator/Sidebar'; // Adjust path as needed
 import { useState } from 'react';
@@ -10,7 +10,7 @@ import Students from './Tabs/Students';
 import StudentActivities from './Tabs/StudentActivities';
 import PaymentPlans from './Tabs/PaymentPlans';
 import Payments from './Tabs/Payments';
-const Index = () => {
+const Administrator = () => {
   const [selectedSection, setSelectedSection] = useState('SuperAdmins');
    const renderSection = () => {
     switch (selectedSection) {
@@ -55,4 +55,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Administrator;

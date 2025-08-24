@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaStar } from "react-icons/fa";
@@ -30,7 +30,7 @@ import { PiCurrencyInrBold } from "react-icons/pi";
 
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineUserGroup, HiUserGroup } from "react-icons/hi2";
-import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
+//import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
 import { deleteApi, getApi, postApi } from '@/api';
 import Select from "react-select";
 interface SidebarContentProps {
@@ -252,7 +252,7 @@ const SuperAdminPage = () => {
 
   console.log("payment details::", paymentDetails)
 
-  const handleCreatePayment = async (amount: string | undefined) => {
+  const handleCreatePayment = async (amount: number) => {
     console.log("amount", amount, typeof amount);
     try {
       const res = await postApi("superadmin/createPayment", { amount });
@@ -621,7 +621,13 @@ const SuperAdminPage = () => {
                           <p className="text-sm text-gray-400 line-through">₹24,000/year</p>
                           <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[0]?.total_amount}/year</p>
                         </div>
-                        <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[0]?.total_amount)} className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition">
+                        <button onClick={() => {
+                          const amount = paymentDetails?.[0]?.total_amount;
+                          if (typeof amount === "number") {
+                            handleCreatePayment(amount);
+                          }
+                        }}
+                          className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition">
                           Choose Standard
                         </button>
                       </div>
@@ -643,12 +649,17 @@ const SuperAdminPage = () => {
                           <p className="text-sm text-gray-500 line-through">₹54,000/year</p>
                           <p className="text-3xl font-bold text-yellow-700">₹{paymentDetails && paymentDetails[1]?.total_amount}/year</p>
                         </div>
-                       {/*  <img
+                        {/*  <img
                           src={premium}
                           alt="Premium Plan"
                           className="w-full h-48 object-contain my-4"
                         /> */}
-                        <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[1]?.total_amount)} className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
+                        <button onClick={() => {
+                          const amount = paymentDetails?.[1]?.total_amount;
+                          if (typeof amount === "number") {
+                            handleCreatePayment(amount);
+                          }
+                        }} className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
                           Choose Premium
                         </button>
                       </div>
@@ -670,7 +681,12 @@ const SuperAdminPage = () => {
                           <p className="text-sm text-gray-400 line-through">₹75,000/year</p>
                           <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[2]?.total_amount}/year</p>
                         </div>
-                        <button onClick={() => handleCreatePayment(paymentDetails && paymentDetails[2]?.total_amount)} className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
+                        <button onClick={() => {
+                          const amount = paymentDetails?.[2]?.total_amount;
+                          if (typeof amount === "number") {
+                            handleCreatePayment(amount);
+                          }
+                        }} className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
                           Choose Enterprise
                         </button>
                       </div>
@@ -685,7 +701,7 @@ const SuperAdminPage = () => {
                     </div>
 
                     {/* Auto Submission Add-on */}
-                    <div className="mt-8 cursor-pointer" onClick={()=>handleCreatePayment(5000)}>
+                    <div className="mt-8 cursor-pointer" onClick={() => handleCreatePayment(5000)}>
                       <div className="bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] border border-orange-300 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
                         <div className="flex items-center gap-3">
                           <Zap className="h-6 w-6 text-orange-500" />

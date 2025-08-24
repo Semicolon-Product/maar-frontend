@@ -9,7 +9,7 @@ import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 import { teacherPageModalStyle } from "@/components/styles/style";
 
-import { allStudentDetails } from "@/components/data/data";
+//import { allStudentDetails } from "@/components/data/data";
 import { X } from "lucide-react";
 //import { studentdata } from "@/components/data/data";
 import { getApi } from "@/api";

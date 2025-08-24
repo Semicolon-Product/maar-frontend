@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+
 import {
   Table,
   TableBody,
@@ -65,7 +65,7 @@ const StudentActivities = () => {
               <TableCell sx={{color:"white"}}><strong>Date</strong></TableCell>
               <TableCell sx={{color:"white"}}><strong>Document URL</strong></TableCell>
               <TableCell sx={{color:"white"}}><strong>Uploaded At</strong></TableCell>
-              <TableCell sx={{color:"white"}} align="center" sx={{color:"white"}}><strong>Actions</strong></TableCell>
+              <TableCell sx={{color:"white"}} align="center"><strong>Actions</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

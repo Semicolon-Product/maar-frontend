@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   initialStudentActivityFormData,
@@ -9,7 +9,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Save } from "lucide-react";
 import './tableStyle.css'
-import { postApi } from "@/api";
+import { FileUpload, postApi } from "@/api";
+import CloseIcon from "../CloseIcon";
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
@@ -17,27 +18,12 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
   const [validationMessage, setValidationMessage] = useState('');
   const [showValidationPopup, setShowValidationPopup] = useState(false);
 
- 
-  
+
+
   const [formData, setFormData] = useState<StudentActivityFormData>(
     initialStudentActivityFormData
   );
 
-  const handleChange = (e: any) => {
-    const { name, value, files, type } = e.target;
-
-    if (type === "file") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0], // Store the actual File object
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: Number(value),
-      }));
-    }
-  };
 
   //------------------------------Calculate Total Points-----------------------
   useEffect(() => {
@@ -308,14 +294,86 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     // Add your form submission logic here
 
   };
+  console.log("year and current >>>", year, currentyear)
 
+  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+
+  const uploadActivityFileToS3 = async (fieldName: string, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fieldName", fieldName);
+
+    try {
+      const res = await FileUpload("student/individualFile", formData);
+      console.log("upload success:", res);
+
+      if (res.success && res.fileUrl) {
+        // Replace the visible filename with fileUrl
+        setFormData((prev: any) => ({
+          ...prev,
+          [fieldName]: res.fileUrl,
+        }));
+      }
+    } catch (err) {
+      console.error("Upload failed", err);
+    }
+  };
+
+  // Delete from S3 + clear state
+  const handleClearFile = async (fieldName: string) => {
+    console.log("field name in clear", fieldName)
+    try {
+      const fileUrl = formData[fieldName as keyof StudentActivityFormData];
+
+      if (fileUrl) {
+        await postApi("student/deleteFile", { fieldName, fileUrl }); // 🔥 call your backend delete route
+      }
+    } catch (err) {
+      console.error("Error deleting file:", err);
+    }
+
+    // Clear from state
+    setFormData((prev: any) => ({
+      ...prev,
+      [fieldName]: null,
+    }));
+
+    // Clear actual input
+    if (fileInputRefs.current[fieldName]) {
+      fileInputRefs.current[fieldName]!.value = "";
+    }
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, type, value } = e.target;
+
+    if (type === "file" && e.target instanceof HTMLInputElement && e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      // Show filename instantly
+      setFormData((prev: any) => ({
+        ...prev,
+        [name]: file.name,
+      }));
+
+      // Upload to S3 in background
+      uploadActivityFileToS3(name, file);
+    } else {
+      setFormData((prev: any) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  console.log("Form data:::l", formData)
   return (
     <div className="">
 
-       {showValidationPopup && (
+      {showValidationPopup && (
         <div className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 ">
           <div className="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-md border-t-4 border-red-600 relative animate-fade-in border ">
-          
+
             <div className="flex items-center justify-center mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -331,10 +389,10 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
               </svg>
             </div>
 
-           
+
             <p className="text-center text-gray-800 font-medium">{validationMessage}</p>
 
-           
+
             <button
               onClick={() => setShowValidationPopup(false)}
               className="mt-6 w-full bg-red-600 hover:bg-red-700 transition-colors text-white font-semibold py-2 rounded-lg"
@@ -343,7 +401,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
             </button>
           </div>
         </div>
-      )} 
+      )}
 
 
       <Dialog open={open} onClose={handleClose}>
@@ -388,8 +446,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
           <div className="max-h-[88vh] lg:max-h-[88vh] overflow-y-auto myForm">
             <ToastContainer position="top-right" />
 
-            <form>
-              <table className="table-auto border border-black w-full text-sm ">
+            <form className="border border-[#ccc]">
+              <table className="table-auto border w-full text-sm ">
                 <thead className="bgHead font-semibold text-center top-0 sticky mythead">
                   <tr className="">
                     <th className="border border-black border-t-0 border-r px-2 py-1 ">
@@ -422,7 +480,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1 ">
+                    <td className=" px-2 py-1 flex flex-wrap">
                       a. For 12 weeks duration/40 Hours
                       <select
                         name="moocs12Weeks"
@@ -434,14 +492,28 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="20">20</option>
                         <option value="40">40</option>
                       </select>
-                      <input
-                        id="moocs12WeeksFile"
-                        type="file"
-                        /* className="text-[12px] file:bg-gray-500 file:text-white file:text-center file:px-2 file:py-0.5 border-rounded file:border-0 file:cursor-pointer" */
-                        className="fileInputBox"
-                        name="moocs12WeeksFile"
-                        onChange={handleChange}
-                      />
+                   
+                        <input
+                          id="moocs12WeeksFile"
+                          ref={(el) => {
+                            fileInputRefs.current["moocs12WeeksFile"] = el;
+                          }}
+                          type="file"
+                          //className="text-[11px] file:bg-gray-500 file:text-white file:text-center file:px-2 file:py-0.4 border-rounded file:border-0 file:cursor-pointer" 
+                          className="fileInputBox"
+                          name="moocs12WeeksFile"
+                          onChange={handleChange}
+                        />
+                        {formData.moocs12WeeksFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("moocs12WeeksFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}
+
+
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[0]?.point_per_activity}
@@ -458,7 +530,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     </td>{" "}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black  px-2 py-1 flex flex-wrap">
                       b. For 8 weeks duration/30 Hours
                       <select
                         name="moocs8Weeks"
@@ -470,20 +542,34 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="15">15</option>
                         <option value="30">30</option>
                       </select>
-                      <input
-                        id="moocs8WeeksFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="moocs8WeeksFile"
-                        onChange={handleChange}
-                      />
+                      
+                        <input
+                          id="moocs8WeeksFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="moocs8WeeksFile"
+                          ref={(el) => {
+                            fileInputRefs.current["moocs8WeeksFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+
+                        {formData.moocs8WeeksFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("moocs8WeeksFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}
+                    
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[1]?.point_per_activity}
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       c. For 4 weeks duration/20 Hours
                       <select
                         name="moocs4Weeks"
@@ -495,13 +581,29 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="moocs4WeeksFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="moocs4WeeksFile"
-                        onChange={handleChange}
-                      />
+                      
+
+
+                        <input
+                          id="moocs4WeeksFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="moocs4WeeksFile"
+                          ref={(el) => {
+                            fileInputRefs.current["moocs4WeeksFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.moocs4WeeksFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("moocs4WeeksFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}
+
+                      
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[2]?.point_per_activity}
@@ -509,7 +611,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* <td className="border border-black text-center">{getRemainingPoints('moocs4Weeks')}</td> Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       d. For 2 weeks duration/10 Hours
                       <select
                         name="moocs2Weeks"
@@ -527,13 +629,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="35">35</option>
                         <option value="40">40</option>
                       </select>
-                      <input
-                        id="moocs2WeeksFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="moocs2WeeksFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="moocs2WeeksFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="moocs2WeeksFile"
+                          onChange={handleChange}
+                          ref={(el) => {
+                            fileInputRefs.current["moocs2WeeksFile"] = el;
+                          }}
+                        />
+                        {formData.moocs2WeeksFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("moocs2WeeksFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[3]?.point_per_activity}
@@ -542,13 +656,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Tech Fest/Fest/Teachers Day/Fresher’s Welcome */}
                   <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border border-black px-2 py-1 text-center">
+                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
                       2. Tech Fest/Fest/Teachers Day/Fresher’s Welcome
                     </td>{" "}
                     {/* Colspan adjusted */}
                   </tr>
                   <tr>
-                    <td className="border  border-black px-2 py-1">
+                    <td className="border-t  border-black px-2 py-1 flex flex-wrap">
                       a. Organizer
                       <select
                         name="techFestOrganizer"
@@ -560,13 +674,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="5">5</option>
                         <option value="10">10</option>
                       </select>
-                      <input
-                        id="techFestOrganizerFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="techFestOrganizerFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="techFestOrganizerFile"
+                          type="file"
+                          ref={(el) => {
+                            fileInputRefs.current["techFestOrganizerFile"] = el;
+                          }}
+                          className="fileInputBox"
+                          name="techFestOrganizerFile"
+                          onChange={handleChange}
+                        />
+                        {formData.techFestOrganizerFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("techFestOrganizerFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[1]?.subpoints[0]?.point_per_activity}
@@ -582,7 +708,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       b. Participant
                       <select
                         name="techFestParticipant"
@@ -594,13 +720,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="3">3</option>
                         <option value="6">6</option>
                       </select>
-                      <input
-                        id="techFestParticipantFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="techFestParticipantFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          ref={(el) => {
+                            fileInputRefs.current["techFestParticipantFile"] = el;
+                          }}
+                          id="techFestParticipantFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="techFestParticipantFile"
+                          onChange={handleChange}
+                        />
+                        {formData.techFestParticipantFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("techFestParticipantFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[1]?.subpoints[1]?.point_per_activity}
@@ -618,8 +756,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
 
                   {/* Rural Reporting */}
-                  <tr className=" font-semibold">
-                    <td className="border border-black px-2 py-1 ">
+                  <tr className="">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       3. Rural Reporting
                       <select
                         name="ruralReporting"
@@ -631,13 +769,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="5">5</option>
                         <option value="10">10</option>
                       </select>
-                      <input
-                        id="ruralReportingFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="ruralReportingFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="ruralReportingFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="ruralReportingFile"
+                          ref={(el) => {
+                            fileInputRefs.current["ruralReportingFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.ruralReportingFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("ruralReportingFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[2]?.point_per_activity}
@@ -655,8 +805,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
 
                   {/* Tree Plantation */}
-                  <tr className=" font-semibold">
-                    <td className="border border-black px-2 py-1">
+                  <tr className="">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       4. Tree plantation and Up-keeping (per tree)
                       <select
                         name="treePlantation"
@@ -676,13 +826,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="9">9</option>
                         <option value="10">10</option>
                       </select>
-                      <input
-                        id="treePlantationFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="treePlantationFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="treePlantationFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="treePlantationFile"
+                          ref={(el) => {
+                            fileInputRefs.current["treePlantationFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.treePlantationFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("treePlantationFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[3]?.point_per_activity}
@@ -701,13 +863,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Relief/Charitable Activities */}
                   <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border border-black px-2 py-1 text-center">
+                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
                       5. Relief/Charitable Activities
                     </td>{" "}
                     {/* Colspan adjusted */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       a. Collection of fund/materials for the Relief Camp or
                       Charitable Trusts
                       <select
@@ -726,13 +888,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="35">35</option>
                         <option value="40">40</option>
                       </select>
-                      <input
-                        id="reliefFundCollectionFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="reliefFundCollectionFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="reliefFundCollectionFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="reliefFundCollectionFile"
+                          ref={(el) => {
+                            fileInputRefs.current["reliefFundCollectionFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.reliefFundCollectionFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("reliefFundCollectionFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[4]?.subpoints[0]?.point_per_activity}
@@ -749,7 +923,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       b. To be a part of the Relief Work Team
                       <select
                         name="reliefWorkTeam"
@@ -761,13 +935,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="20">20</option>
                         <option value="40">40</option>
                       </select>
-                      <input
-                        id="reliefWorkTeamFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="reliefWorkTeamFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="reliefWorkTeamFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="reliefWorkTeamFile"
+                          ref={(el) => {
+                            fileInputRefs.current["reliefWorkTeamFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.reliefWorkTeamFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("reliefWorkTeamFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[4]?.subpoints[1]?.point_per_activity}
@@ -777,7 +963,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Participation in Arts/Performing Arts */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       6. Participation in Debate/Group Discussion/Workshop/Tech
                       quiz/Music/Dance/Drama/Elocution/Quiz/Seminar
                       <br />
@@ -792,13 +978,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="participationInArtsFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="participationInArtsFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="participationInArtsFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="participationInArtsFile"
+                          ref={(el) => {
+                            fileInputRefs.current["participationInArtsFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.participationInArtsFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("participationInArtsFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[5]?.point_per_activity}
@@ -817,7 +1015,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Publication */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       7. Publication in News Paper, Magazine, Wall Magazine &
                       Blogs
                       <select
@@ -830,13 +1028,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="publicationFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="publicationFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="publicationFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="publicationFile"
+                          ref={(el) => {
+                            fileInputRefs.current["publicationFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.publicationFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("publicationFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[6]?.point_per_activity}
@@ -855,7 +1065,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Research Publication */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       8. Research Publication (per publication)
                       <select
                         name="researchPublication"
@@ -867,13 +1077,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="15">15</option>
                         <option value="30">30</option>
                       </select>
-                      <input
-                        id="researchPublicationFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="researchPublicationFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="researchPublicationFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="researchPublicationFile"
+                          ref={(el) => {
+                            fileInputRefs.current["researchPublicationFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.researchPublicationFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("researchPublicationFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[7]?.point_per_activity}
@@ -892,7 +1114,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Innovative Projects */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       9. Innovative Projects (other than course curriculum)
                       <select
                         name="innovativeProjects"
@@ -904,13 +1126,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="30">30</option>
                         <option value="60">60</option>
                       </select>
-                      <input
-                        id="innovativeProjectsFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="innovativeProjectsFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="innovativeProjectsFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="innovativeProjectsFile"
+                          ref={(el) => {
+                            fileInputRefs.current["innovativeProjectsFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.innovativeProjectsFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("innovativeProjectsFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[8]?.point_per_activity}
@@ -929,7 +1163,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Blood Donation */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       10. Blood donation
                       <select
                         name="bloodDonation"
@@ -941,13 +1175,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="8">8</option>
                         <option value="16">16</option>
                       </select>
-                      <input
-                        id="bloodDonationFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="bloodDonationFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="bloodDonationFile"
+                          type="file"
+                          className="fileInputBox"
+                          ref={(el) => {
+                            fileInputRefs.current["bloodDonationFile"] = el;
+                          }}
+                          name="bloodDonationFile"
+                          onChange={handleChange}
+                        />
+                        {formData.bloodDonationFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("bloodDonationFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[9]?.subpoints[0].point_per_activity}
@@ -964,7 +1210,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       Blood Donation Camp Organization
                       <select
                         name="bloodDonationCampOrganization"
@@ -976,13 +1222,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="bloodDonationCampOrganizationFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="bloodDonationCampOrganizationFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="bloodDonationCampOrganizationFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="bloodDonationCampOrganizationFile"
+                          ref={(el) => {
+                            fileInputRefs.current["bloodDonationCampOrganizationFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.bloodDonationCampOrganizationFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("bloodDonationCampOrganizationFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[9]?.subpoints[1].point_per_activity}
@@ -1001,13 +1259,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Sports/Games/Adventure Sports/Trekking/Yoga Camp */}
                   <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border border-black px-2 py-1 text-center">
+                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
                       11. Sports/Games/Adventure Sports/Trekking/Yoga Camp
                     </td>{" "}
                     {/* Colspan adjusted */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       a. Personal Level
                       <select
                         name="sportsPersonal"
@@ -1019,13 +1277,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="sportsPersonalFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="sportsPersonalFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="sportsPersonalFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="sportsPersonalFile"
+                          ref={(el) => {
+                            fileInputRefs.current["sportsPersonalFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.sportsPersonalFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("sportsPersonalFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[0].point_per_activity}
@@ -1042,7 +1312,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       b. College Level
                       <select
                         name="sportsCollege"
@@ -1054,13 +1324,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="5">5</option>
                         <option value="10">10</option>
                       </select>
-                      <input
-                        id="sportsCollegeFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="sportsCollegeFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="sportsCollegeFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="sportsCollegeFile"
+                          ref={(el) => {
+                            fileInputRefs.current["sportsCollegeFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.sportsCollegeFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("sportsCollegeFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[1].point_per_activity}
@@ -1077,7 +1359,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       c. University Level
                       <select
                         name="sportsUniversity"
@@ -1089,13 +1371,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="sportsUniversityFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="sportsUniversityFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="sportsUniversityFile"
+                          type="file"
+                          className="fileInputBox"
+                          ref={(el) => {
+                            fileInputRefs.current["sportsUniversityFile"] = el;
+                          }}
+                          name="sportsUniversityFile"
+                          onChange={handleChange}
+                        />
+                        {formData.sportsUniversityFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("sportsUniversityFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[2].point_per_activity}
@@ -1112,7 +1406,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       d. District Level
                       <select
                         name="sportsDistrict"
@@ -1124,13 +1418,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="12">12</option>
                         <option value="24">24</option>
                       </select>
-                      <input
-                        id="sportsDistrictFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="sportsDistrictFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="sportsDistrictFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="sportsDistrictFile"
+                          ref={(el) => {
+                            fileInputRefs.current["sportsDistrictFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.sportsDistrictFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("sportsDistrictFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[3].point_per_activity}
@@ -1147,7 +1453,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       e. State Level
                       <select
                         name="sportsState"
@@ -1159,13 +1465,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="15">15</option>
                         <option value="30">30</option>
                       </select>
-                      <input
-                        id="sportsStateFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="sportsStateFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="sportsStateFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="sportsStateFile"
+                          ref={(el) => {
+                            fileInputRefs.current["sportsStateFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.sportsStateFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("sportsStateFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[4].point_per_activity}
@@ -1182,7 +1500,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       f. National/International Level
                       <select
                         name="sportsNationalInternational"
@@ -1194,13 +1512,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="20">20</option>
                         <option value="40">40</option>
                       </select>
-                      <input
-                        id="sportsNationalInternationalFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="sportsNationalInternationalFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="sportsNationalInternationalFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="sportsNationalInternationalFile"
+                          ref={(el) => {
+                            fileInputRefs.current["sportsNationalInternationalFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.sportsNationalInternationalFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("sportsNationalInternationalFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[5].point_per_activity}
@@ -1219,7 +1549,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Activities in a Professional Society/Student Chapter */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       12. Activities in a Professional Society/Student Chapter
                       <select
                         name="professionalSocietyActivities"
@@ -1231,13 +1561,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="professionalSocietyActivitiesFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="professionalSocietyActivitiesFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="professionalSocietyActivitiesFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="professionalSocietyActivitiesFile"
+                          ref={(el) => {
+                            fileInputRefs.current["professionalSocietyActivitiesFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.professionalSocietyActivitiesFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("professionalSocietyActivitiesFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[11]?.point_per_activity}
@@ -1256,7 +1598,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Relevant Industry Visit & Report/Hotel-Event Management Training & Report */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       13. Relevant Industry Visit & Report/Hotel-Event
                       Management Training & Report (Minimum 3 days with
                       submitted report)
@@ -1270,13 +1612,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="industryVisitFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="industryVisitFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="industryVisitFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="industryVisitFile"
+                          ref={(el) => {
+                            fileInputRefs.current["industryVisitFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.industryVisitFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("industryVisitFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[12]?.point_per_activity}
@@ -1295,7 +1649,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Community Service & Allied Activities */}
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       14. Community Service & Allied Activities like: Caring for
                       the Senior Citizens, Under-privileged/Street Children/
                       Animal Care etc/ Training to Differently Able
@@ -1309,13 +1663,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="communityServiceFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="communityServiceFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="communityServiceFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="communityServiceFile"
+                          ref={(el) => {
+                            fileInputRefs.current["communityServiceFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.communityServiceFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("communityServiceFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[13]?.point_per_activity}
@@ -1334,13 +1700,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
                   {/* Self-Entrepreneurship Programme */}
                   <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border border-black px-2 py-1 text-center">
+                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
                       15. Self-Entrepreneurship Programme
                     </td>{" "}
                     {/* Colspan adjusted */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       a. To organise entrepreneurship programmes and workshops
                       <select
                         name="entrepreneurshipOrganize"
@@ -1352,13 +1718,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="entrepreneurshipOrganizeFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="entrepreneurshipOrganizeFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="entrepreneurshipOrganizeFile"
+                          type="file"
+                          className="fileInputBox"
+                          ref={(el) => {
+                            fileInputRefs.current["entrepreneurshipOrganizeFile"] = el;
+                          }}
+                          name="entrepreneurshipOrganizeFile"
+                          onChange={handleChange}
+                        />
+                        {formData.entrepreneurshipOrganizeFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("entrepreneurshipOrganizeFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[0].point_per_activity}
@@ -1375,7 +1753,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       b. To take part in entrepreneurship workshop and get
                       certificate
                       <select
@@ -1388,13 +1766,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="5">5</option>
                         <option value="10">10</option>
                       </select>
-                      <input
-                        id="entrepreneurshipParticipateFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="entrepreneurshipParticipateFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="entrepreneurshipParticipateFile"
+                          type="file"
+                          className="fileInputBox"
+                          ref={(el) => {
+                            fileInputRefs.current["entrepreneurshipParticipateFile"] = el;
+                          }}
+                          name="entrepreneurshipParticipateFile"
+                          onChange={handleChange}
+                        />
+                        {formData.entrepreneurshipParticipateFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("entrepreneurshipParticipateFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[1].point_per_activity}
@@ -1411,7 +1801,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       c. Video film making on entrepreneurship
                       <select
                         name="entrepreneurshipVideo"
@@ -1423,13 +1813,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="entrepreneurshipVideoFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="entrepreneurshipVideoFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="entrepreneurshipVideoFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="entrepreneurshipVideoFile"
+                          ref={(el) => {
+                            fileInputRefs.current["entrepreneurshipVideoFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.entrepreneurshipVideoFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("entrepreneurshipVideoFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[2].point_per_activity}
@@ -1446,7 +1848,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       d. Submit business plan on any project
                       <select
                         name="entrepreneurshipBusinessPlan"
@@ -1458,13 +1860,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      <input
-                        id="entrepreneurshipBusinessPlanFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="entrepreneurshipBusinessPlanFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="entrepreneurshipBusinessPlanFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="entrepreneurshipBusinessPlanFile"
+                          ref={(el) => {
+                            fileInputRefs.current["entrepreneurshipBusinessPlanFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.entrepreneurshipBusinessPlanFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("entrepreneurshipBusinessPlanFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
+                          />
+                        )}</div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[3].point_per_activity}
@@ -1481,7 +1895,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     {/* Remaining Points */}
                   </tr>
                   <tr>
-                    <td className="border border-black px-2 py-1">
+                    <td className="border-t border-black px-2 py-1 flex flex-wrap">
                       e. To work for start-up/as entrepreneur
                       <select
                         name="entrepreneurshipWorkForStartup"
@@ -1493,13 +1907,26 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="20">20</option>
                         <option value="40">40</option>
                       </select>
-                      <input
-                        id="entrepreneurshipWorkForStartupFile"
-                        type="file"
-                        className="fileInputBox"
-                        name="entrepreneurshipWorkForStartupFile"
-                        onChange={handleChange}
-                      />
+                      <div className="flex">
+                        <input
+                          id="entrepreneurshipWorkForStartupFile"
+                          type="file"
+                          className="fileInputBox"
+                          name="entrepreneurshipWorkForStartupFile"
+                          ref={(el) => {
+                            fileInputRefs.current["entrepreneurshipWorkForStartupFile"] = el;
+                          }}
+                          onChange={handleChange}
+                        />
+                        {formData.entrepreneurshipWorkForStartupFile && (
+                          <CloseIcon
+                            size={19}
+                            color="white"
+                            onClick={() => handleClearFile("entrepreneurshipWorkForStartupFile")}
+                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold hover:bg-green-500"
+                          />
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[4].point_per_activity}
@@ -1522,9 +1949,10 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
           </div>
           <button
             type="submit"
-            disabled={totalPoint === 0}
+            disabled={year < (currentyear ?? 0) || totalPoint == 0}
+
             onClick={handleSubmit}
-            className={`mt-4 flex justify-center items-center gap-2 px-4 py-2 text-center rounded w-full transition-colors duration-200 ${totalPoint === 0
+            className={`mt-4 flex justify-center items-center gap-2 px-4 py-2 text-center rounded w-full transition-colors duration-200 ${year < (currentyear ?? 0) || totalPoint == 0
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
               }`}

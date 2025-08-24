@@ -677,7 +677,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({ data, signature
                         Submit
                     </button>
                 </form>
-            </div>
+            </div> 
         </div>
     )
 }

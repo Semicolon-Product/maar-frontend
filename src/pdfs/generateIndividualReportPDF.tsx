@@ -32,16 +32,36 @@ export const generateIndividualReportPDF = async (data: any) => {
 
   // Table
   let finalY = 62;
+  const wrapText = (text: string, limit: number) => {
+  if (!text) return "";
+  if (text.length <= limit) return text;
+
+  let result = "";
+  let line = "";
+
+  text.split(" ").forEach(word => {
+    if ((line + word).length <= limit) {
+      line += (line ? " " : "") + word;
+    } else {
+      result += (result ? "\n" : "") + line;
+      line = word;
+    }
+  });
+
+  if (line) result += (result ? "\n" : "") + line;
+  return result;
+};
+
   autoTable(doc, {
     startY: finalY,
-    head: [["Sr.No", "Activity Serial No", "Activity", "Date", "Points", "Document"]],
-    body: data.activities.map((item: any, index: number) => [
-      index,
+    head: [[ "ActivityNo", "Activity", "Date", "Points", ]],
+    body: data.activities.map((item: any, ) => [
+      //index,
       item.activity_serial_no,
-      item.activity_name,
-      item.uploaded_at,
+      wrapText(item.activity_name, 39),
+      item.uploaded_at.split("T")[0],
       item.point,
-      item.document_url,
+      //item.document_url,
     ]),
     theme: "striped",
     didDrawPage: (data) => {
@@ -53,25 +73,50 @@ export const generateIndividualReportPDF = async (data: any) => {
   for (let i = 0; i < data.activities.length; i++) {
     const activity = data.activities[i];
 
-    if (activity.link) {
-      try {
-        const imageData = await getImageBase64FromUrl(activity.link);
+    if (activity.document_url) {
+      // Add page break if needed
+      if (finalY > 250) {
+        doc.addPage();
+        finalY = 20;
+      }
 
-        // Check space; add page if needed
-        if (finalY > 250) {
-          doc.addPage();
-          finalY = 20;
+      doc.setFontSize(11);
+      doc.text(
+        `${activity.activity_serial_no}. ${activity.activity_name} - Document:`,
+        14,
+        finalY
+      );
+
+      // If it's an image (png/jpg) → embed
+      if (
+        activity.document_url.endsWith(".png") ||
+        activity.document_url.endsWith(".jpg") ||
+        activity.document_url.endsWith(".jpeg")
+      ) {
+        try {
+          const imageData = await getImageBase64FromUrl(activity.document_url);
+          doc.addImage(imageData, "PNG", 14, finalY + 6, 60, 40);
+          finalY += 55;
+        } catch (error) {
+          console.warn(`Image load failed for ${activity.activity_name}`);
+          doc.setTextColor(255, 0, 0);
+          doc.text("Image failed to load", 14, finalY + 6);
+          doc.setTextColor(0, 0, 0);
+          finalY += 12;
         }
-
-        doc.setFontSize(11);
-        doc.text(`${activity.serialNo}. ${activity.name} - Certificate:`, 14, finalY + 10);
-        doc.addImage(imageData, "PNG", 14, finalY + 14, 60, 40);
-        finalY += 60;
-      } catch (error) {
-        console.warn(`Image load failed for ${activity.name}`);
+      } else {
+        // For PDF or other docs → just show a clickable link
+        doc.setTextColor(0, 0, 255);
+        doc.textWithLink("Open Document", 14, finalY + 6, {
+          url: activity.document_url,
+        });
+        doc.setTextColor(0, 0, 0);
+        finalY += 15;
       }
     }
   }
+
+  
 
   // === Signature Section ===
   if (data.signature) {

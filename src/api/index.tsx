@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-export const BASE_URL = "http://192.168.238.9:5000/api/";
+export const BASE_URL = "http://localhost:5000/api/";
 
 //export const BASE_URL = "MY UAT LINK";
 
@@ -75,7 +75,7 @@ export const FileUpload = async (
     }
 
     const response = await axios.post(url, payload, { headers });
-
+console.log("upload payload::",payload)
     if (response.data?.data?.token) {
         localStorage.setItem('token', response.data.data.token);
     }

@@ -125,7 +125,7 @@ const TeacherDetails = (teacherDetails: any) => {
 
 
     }
-    const [previewUrl, setPreviewUrl] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     console.log("teacherDataApi?.signature",teacherDataApi?.signature)
     return (
@@ -165,7 +165,9 @@ const TeacherDetails = (teacherDetails: any) => {
                                     type="file"
                                     accept="image/*"
                                     onChange={(e) => {
-                                        const file = e.target.files[0];
+                                        //const file = e.target.files[0] ?? null;
+                                        const file = e.target.files?.[0] ?? null;
+
                                         if (file) {
                                             setSignatureFile(file);
                                             setPreviewUrl(URL.createObjectURL(file)); // preview without upload

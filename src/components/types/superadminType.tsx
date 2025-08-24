@@ -210,6 +210,7 @@ export interface BackendStudentDetails {
   secondYear: YearData;
   thirdYear: YearData;
   fourthYear: YearData;
+  teacherSignature:string,
 }
 
 export interface TeacherVerifyTableProps {
@@ -430,6 +431,6 @@ export interface PaymentPlan {
   plan_name: string;
   total_students: number;
   amount_per_student: string; // from database as string (NUMERIC)
-  total_amount: string;       // from database as string (NUMERIC)
+  total_amount: number;       // from database as string (NUMERIC)
   created_at: string;         // ISO timestamp as string
 }
