@@ -12,12 +12,12 @@ export const superadminStyle = {
   },
 
   cellStyle: {
-    fontSize: "0.6em",
+    fontSize: "0.68em",
     textAlign: "center",
     color: "black",
-    paddingX: "6px",
+    paddingX: "4px",
     paddingY: "0px",
-    borderRight: "1px solid #ccc",
+    borderRight: "1px solid #ccc",whiteSpace: "nowrap",
   },
 
   button: {

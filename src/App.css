@@ -64,7 +64,7 @@ select.pointsDropdown {
   background: none;
   font-size: 12px;
   padding: 0 4px;
-  background-color: rgba(254, 154, 236, 0.227);
+ // background-color: rgba(254, 154, 236, 0.227);
 }
 
 select.pointsDropdown:focus {
@@ -82,5 +82,60 @@ select.pointsDropdown:focus {
   padding: 0 1px;
   font-size: 12px;
   cursor: pointer;
-  background-color: rgba(125, 242, 0, 0.227);
+  
 }
+
+
+.page {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-content {
+  animation: slideInFromLeft 1s ease-out forwards;
+}
+
+.right-content {
+  animation: slideInFromRight 1s ease-out forwards;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.fade-in {
+   opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+

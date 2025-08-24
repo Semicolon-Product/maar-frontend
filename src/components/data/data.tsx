@@ -1,4 +1,4 @@
-import type { YearlyActivityList } from "../types/superadminType";
+//import type { YearlyActivityList } from "../types/superadminType";
 
 export const teachers = [
   { name: "Dr. Rajeev", department: "CSE", userId: "T001", password: "pass123" },
@@ -347,6 +347,7 @@ export const studentdata =
    firstyear:[
     
   {
+    
     name: "MOOCS",
     max: 40,
     remain: 40,
@@ -1238,24 +1239,7 @@ export const studentdata =
      "signature":"https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png" ,
       "verified": false,
       "activities": [
-        {
-          "serialNo": "1",
-          "name": "Python Workshop",
-          "date": "2025-01-15",
-          "points": 10,
-          "docs": "python_workshop_cert.pdf",
-          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
-          "status": false
-        },
-        {
-          "serialNo": "2",
-          "name": "AI Bootcamp",
-          "date": "2025-02-10",
-          "points": 15,
-          "docs": "ai_bootcamp_proof.pdf",
-          "link": "https://photutorial.com/wp-content/uploads/2023/04/Featured-image-AI-image-generators-by-Midjourney.png",
-          "status": false
-        }
+        
       ]
     },
     {
