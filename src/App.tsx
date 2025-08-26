@@ -8,11 +8,13 @@ import TeacherPage from './pages/teacher/TeacherPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Administrator from './pages/administrator/Index';
 import LoginAdministrator from './pages/administrator/LoginAdministrator';
+import Home from './pages/Landing/Home';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Home />} />
       <Route
         path="/student"
         element={
