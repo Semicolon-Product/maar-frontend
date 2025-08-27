@@ -1917,4 +1917,111 @@ export const dummyStudents = [
     year: "2021",
   },
 ];
+export const pricing = [
+        {
+            title: "Free Trial",
+            subtitle: "Try for 100 students",
+            price: "₹0",
+            btnText: "Start Free",
+            href: "/login",
+            bg: "bg-[#FDF5AA]",
+            textColor: "text-[#113F67]",
+            subColor: "text-[#34699A]",
+            btnBg: "bg-[#34699A]",
+            btnHover: "hover:bg-[#113F67] hover:text-white",
+        },
+        {
+            title: "Premium",
+            subtitle: "For Colleges",
+            price: "₹499/mo",
+            btnText: "Subscribe",
+            href: "/login",
+            bg: "bg-[#FDF5AA]",
+            textColor: "text-[#113F67]",
+            subColor: "text-[#34699A]",
+            btnBg: "bg-[#34699A]",
+            btnHover: "hover:bg-[#113F67] hover:text-white",
+        },
+        {
+            title: "Enterprise",
+            subtitle: "Custom solutions for universities",
+            price: "Contact Us",
+            btnText: "Get in Touch",
+            href: "login",
+            bg: "bg-[#FDF5AA]",
+            textColor: "text-[#113F67]",
+            subColor: "text-[#34699A]",
+            btnBg: "bg-[#34699A]",
+            btnHover: "hover:bg-[#113F67] hover:text-white",
+        },
+    ]
+    
+    export const blogs = [
+        {
+            id: 1,
+            title: "5 Tips to Boost Productivity",
+            desc: "Discover practical ways to save time and work smarter every day.",
+            image: "https://i.pravatar.cc/100?img=3",
+            link: "#",
+        },
+        {
+            id: 2,
+            title: "Why UI/UX Matters",
+            desc: "A deep dive into how design impacts user experience and retention.",
+            image: "https://i.pravatar.cc/100?img=2",
+            link: "#",
+        },
+        {
+            id: 3,
+            title: "Scaling Your Startup",
+            desc: "Learn strategies to take your business from 0 to 1M users.",
+            image: "https://i.pravatar.cc/100?img=4",
+            link: "#",
+        },
+    ];
+
+export const reviews = [
+  {
+    id: 1,
+    review: "This platform made activity submissions super easy!",
+    name: "Amit Sharma",
+    role: "Student",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    id: 2,
+    review: "Managing student records became so smooth!",
+    name: "Priya Sen",
+    role: "Teacher",
+    image: "https://randomuser.me/api/portraits/women/45.jpg",
+  },
+  {
+    id: 3,
+    review: "I love the user-friendly design records became so smooth!.",
+    name: "Ravi Kumar",
+    role: "Parent",
+    image: "https://randomuser.me/api/portraits/men/56.jpg",
+  },
+  {
+    id: 4,
+    review: "The best way to track and verify activities.",
+    name: "Neha Gupta",
+    role: "Teacher",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+  {
+    id: 5,
+    review: "This saved us hours of manual work.",
+    name: "Arjun Patel",
+    role: "Admin",
+    image: "https://randomuser.me/api/portraits/men/22.jpg",
+  },
+  {
+    id: 6,
+    review: "The submission process is seamless.",
+    name: "Sneha Das",
+    role: "Student",
+    image: "https://randomuser.me/api/portraits/women/36.jpg",
+  },
+];
 
