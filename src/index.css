@@ -119,3 +119,13 @@
     
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3,p,span,h4,a {
+  font-family: 'EB Garamond', serif;
+}

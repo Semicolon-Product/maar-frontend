@@ -64,7 +64,7 @@ select.pointsDropdown {
   background: none;
   font-size: 12px;
   padding: 0 4px;
- // background-color: rgba(254, 154, 236, 0.227);
+ /*  background-color: rgba(254, 154, 236, 0.227); */
 }
 
 select.pointsDropdown:focus {
