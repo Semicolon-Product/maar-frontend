@@ -1930,7 +1930,7 @@ export const pricing = [
             btnBg: "bg-[#34699A]",
             btnHover: "hover:bg-[#113F67] hover:text-white",
         },
-        {
+        /* {
             title: "Premium",
             subtitle: "For Colleges",
             price: "₹499/mo",
@@ -1941,10 +1941,10 @@ export const pricing = [
             subColor: "text-[#34699A]",
             btnBg: "bg-[#34699A]",
             btnHover: "hover:bg-[#113F67] hover:text-white",
-        },
+        }, */
         {
             title: "Enterprise",
-            subtitle: "Custom solutions for universities",
+            subtitle: "Custom solutions for Institutes",
             price: "Contact Us",
             btnText: "Get in Touch",
             href: "login",

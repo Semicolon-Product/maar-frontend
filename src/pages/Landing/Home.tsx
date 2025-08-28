@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BiFolder } from "react-icons/bi";
-import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaLightbulb, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
 import { GrSecure } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
 import { FaArrowRightLong } from "react-icons/fa6";
@@ -12,21 +12,31 @@ import { blogs } from "@/components/data/data";
 export default function Home() {
     const features = [
         {
-            icon: <BiFolder className="text-2xl text-white" />,
+            icon: <BiFolder className="text-xl text-[#34699A]" />,
             title: "Centralized Data",
             desc: "All certificates and documents in one place.",
+            label: "", // empty
         },
         {
-            icon: <GrSecure className="text-2xl text-white" />,
+            icon: <GrSecure className="text-xl text-[#34699A]" />,
             title: "Secure Authentication",
             desc: "Login for students, teachers, and admins.",
+            label: "", // empty
         },
         {
-            icon: <FaUniversity className="text-2xl text-white" />,
+            icon: <FaLightbulb className="text-xl text-[#34699A]" />,
+            title: "Year-wise Suggestions",
+            desc: "Students receive suggestions and guidance based on their year of study.",
+            label: "", // empty
+        },
+        {
+            icon: <FaUniversity className="text-xl text-[#34699A]" />,
             title: "University Ready",
             desc: "Verified data easily uploaded to MAKAUT portal.",
+            label: "Coming Soon", // show label
         },
     ];
+
 
     const stats = [
         {
@@ -158,7 +168,7 @@ export default function Home() {
 
             {/* Mobile Dropdown */}
             {menuOpen && (
-                <div className="md:hidden bg-[#58A0C8] shadow-lg px-6 py-4 space-y-4 absolute top-16 left-0 w-full z-40">
+                <div className="md:hidden fixed bg-[rgba(88,160,200,0.85)] shadow-lg px-6 py-4 space-y-4 top-16 left-0 w-full z-40">
                     <a
                         href="#features"
                         className="block text-[#113F67] hover:text-[#FDF5AA]"
@@ -189,7 +199,7 @@ export default function Home() {
                     </a>
                     <a
                         href="/login"
-                        className="block px-4 py-2 bg-[#34699A] text-[#FDF5AA] rounded-lg font-semibold hover:bg-[#113F67] hover:text-white text-center"
+                        className="block px-4 py-2 bg-[#34699A] text-[#FDF5AA] rounded font-semibold hover:bg-[#113F67] hover:text-white text-center"
                         onClick={() => setMenuOpen(false)}
                     >
                         Login
@@ -197,18 +207,19 @@ export default function Home() {
                 </div>
             )}
 
+
             {/* Hero */}
             <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 pt-28 pb-16 gap-12 min-h-screen">
                 {/* Left Content */}
                 <div className="max-w-lg text-center md:text-left">
                     {/* Animated Attention Button */}
                     <div className="mb-6 flex  justify-center md:justify-start">
-                        <button className="relative px-4 py-[2px] flex items-center justify-center font-semibold text-[#113F67] rounded-full group overflow-hidden">
+                        <button className="relative px-4 py-[4px] flex items-center justify-center font-semibold text-[#113F67] rounded-full group overflow-hidden">
                             {/* Animated border */}
                             <span className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-green-400 via-[#FDF5AA] to-purple-600 animate-border"></span>
 
                             {/* Button text */}
-                            <span className="relative z-10 text-xs text-center">
+                            <span className="relative z-10 text-xs text-center whitespace-nowrap">
                                 Where MAKAUT Students & Teachers Connect
                             </span>
 
@@ -238,19 +249,25 @@ export default function Home() {
                     <h2 className="text-3xl md:text-5xl font-bold text-[#113F67] mb-4">
                         Simplify Student Activity <span className="text-blue-600">Submissions</span>
                     </h2>
-
+                    {/* <div className="h-20 w-20 relative z-50">
+                        <img src="/VectorGroup.png" alt="" className="rotate-140" />
+                    </div> */}
                     <p className="text-[#34699A] mb-6 text-lg">
                         MakautStudents.help centralizes extra-curricular data uploads,
                         letting teachers and students securely submit and verify documents — no more scattered WhatsApp/Google Forms mess.
                     </p>
 
+
+
                     <a
                         href="/login"
                         className="group inline-flex items-center gap-2 px-6 py-2 bg-[#34699A] text-[#FDF5AA] font-medium rounded-sm shadow-md hover:bg-[#113F67] transition-colors duration-300"
                     >
+
                         <span>Get Started</span>
                         <FaArrowRightLong className="transform transition-transform duration-300 group-hover:translate-x-1" />
                     </a>
+
                 </div>
 
                 {/* Right Stats */}
@@ -286,25 +303,34 @@ export default function Home() {
                     Features
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {features.map((feature, index) => (
                         <div
                             key={index}
-                            className="p-6 rounded-2xl shadow-md hover:shadow-xl  border-black transition bg-gradient-to-br from-white to-[#FDF5AA] text-white"
+                            className="relative p-6 rounded-xl shadow-md hover:shadow-xl border-black transition bg-gradient-to-br from-white to-[#FDF5AA] text-white"
                         >
-                            {/* Icon wrapper with bg */}
-                            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#113F67] mb-4 ">
-                                {feature.icon}
-                            </div>
+                            {/* Top-right label */}
+                            {feature.label && (
+                                <span className="absolute top-3 right-3 bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-full">
+                                    {feature.label}
+                                </span>
+                            )}
 
-                            {/* Title */}
-                            <h4 className="font-bold text-xl mb-2 text-[#113F67]" >{feature.title}</h4>
+                            {/* Icon wrapper with bg */}
+                            <div className="flex">
+                                <div className="w-8 h-8 flex items-center justify-center rounded-full  bg-[#34699A]/10 mb-4">
+                                    {feature.icon}
+                                </div>
+
+                                {/* Title */}
+                                <h4 className="font-bold text-m p-1 text-[#113F67] text-center justify-center  q">{feature.title}</h4></div>
 
                             {/* Description */}
                             <p className="text-l opacity-90 text-[#113F67]">{feature.desc}</p>
                         </div>
                     ))}
                 </div>
+
             </section>
 
             {/* How It Works */}
@@ -314,7 +340,6 @@ export default function Home() {
                         How It Works
                     </h2>
 
-                    {/* Steps Array */}
                     {(() => {
                         const steps = [
                             {
@@ -326,32 +351,52 @@ export default function Home() {
                                 desc: "Teachers check & approve submissions quickly.",
                             },
                             {
+                                title: "Download Reports",
+                                desc: "Teachers can download individual or yearly student reports easily.",
+                            },
+                            {
                                 title: "Upload to University",
                                 desc: "Verified data is uploaded directly to Makaut portal.",
                             },
                         ];
 
+                        // condition → use your actual cardsPerView value here
+                        const isVertical = cardsPerView === 1 || cardsPerView === 2;
+
                         return (
                             <div className="relative">
-                                {/* Mobile vertical line (sticks from 1st to last step) */}
-                                <div className="absolute left-6 top-6 bottom-6 w-1 bg-[#113F67] md:hidden"></div>
+                                {/* Line based on layout */}
+                                {isVertical ? (
+                                    <div className="absolute left-4 top-0 bottom-0 w-[2px] bg-[#113F67]"></div>
+                                ) : (
+                                    <div className="absolute top-4 left-6 right-6 h-[2px] bg-[#113F67] z-0"></div>
+                                )}
 
-                                <div className="flex flex-col md:flex-row md:items-center md:justify-between relative">
-                                    {/* Desktop horizontal line (sticks from 1st to last step) */}
-                                    <div className="hidden md:block absolute top-6 left-6 right-6 h-1 bg-[#113F67] z-0"></div>
-
+                                <div
+                                    className={`flex relative ${isVertical
+                                        ? "flex-col items-start" // vertical layout
+                                        : "flex-row items-center justify-between" // horizontal layout
+                                        }`}
+                                >
                                     {steps.map((step, index) => (
                                         <div
                                             key={index}
-                                            className="relative z-10 flex items-start md:flex-col md:items-center w-full md:w-1/3 mb-12 md:mb-0"
+                                            className={`relative z-10 flex ${isVertical
+                                                ? "items-center mb-12" // vertical step
+                                                : "flex-col items-center w-full mb-0" // horizontal step
+                                                }`}
                                         >
                                             {/* Circle */}
-                                            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#34699A] text-[#FDF5AA] font-bold shadow-lg relative z-10 md:mb-4">
+                                            <div className="w-8 aspect-square shrink-0 rounded-full flex items-center justify-center bg-[#34699A] text-[#FDF5AA] font-bold shadow-lg z-10 md:mb-4">
                                                 {index + 1}
                                             </div>
+
                                             {/* Text */}
-                                            <div className="ml-6 md:ml-0">
-                                                <p className="mt-2 text-lg text-center font-semibold text-[#113F67]">
+                                            <div
+                                                className={`${isVertical ? "ml-4" : "mt-2 text-center"
+                                                    }`}
+                                            >
+                                                <p className="text-lg font-semibold text-[#113F67]">
                                                     {step.title}
                                                 </p>
                                                 <p className="text-[#113F67] text-sm mt-1">{step.desc}</p>
@@ -364,6 +409,8 @@ export default function Home() {
                     })()}
                 </div>
             </section>
+
+
 
 
 
