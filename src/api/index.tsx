@@ -1,8 +1,8 @@
 
 import axios from 'axios';
-export const BASE_URL = "http://localhost:5000/api/";
+//export const BASE_URL = "http://localhost:5000/api/";
 
-//export const BASE_URL = "MY UAT LINK";
+export const BASE_URL = "https://api.makautstudents.help/api/";
 
 interface ApiPayload {
     [key: string]: any;
