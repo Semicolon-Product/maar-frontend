@@ -85,7 +85,10 @@ select.pointsDropdown:focus {
   
 }
 
-
+.bold{
+  font-size: x-large;
+  font-weight: 800;
+}
 .page {
   display: flex;
   justify-content: space-between;
@@ -135,7 +138,9 @@ select.pointsDropdown:focus {
     opacity: 1;
   }
 }
-
+.custom{
+  font-weight: bold;
+}
 
 
 

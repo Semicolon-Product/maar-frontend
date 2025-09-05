@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BiFolder } from "react-icons/bi";
-import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaLightbulb, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaLightbulb, FaStar, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
 import { GrSecure } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
 import { FaArrowRightLong } from "react-icons/fa6";
@@ -219,7 +219,7 @@ export default function Home() {
                             <span className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-green-400 via-[#FDF5AA] to-purple-600 animate-border"></span>
 
                             {/* Button text */}
-                            <span className="relative z-10 text-xs text-center whitespace-nowrap">
+                            <span className="relative z-10 text-xs text-center whitespace-nowrap ">
                                 Where MAKAUT Students & Teachers Connect
                             </span>
 
@@ -246,9 +246,12 @@ export default function Home() {
                     </div>
 
                     {/* Main Heading */}
-                    <h2 className="text-3xl md:text-5xl font-bold text-[#113F67] mb-4">
-                        Simplify Student Activity <span className="text-blue-600">Submissions</span>
-                    </h2>
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-[#113F67]">
+  Simplify Student Activity <span className="text-blue-600">Submissions</span>
+</h2>
+
+                    <h1 className="text-3xl" style={{ "fontWeight": "1000" }}>hii</h1>
+
                     {/* <div className="h-20 w-20 relative z-50">
                         <img src="/VectorGroup.png" alt="" className="rotate-140" />
                     </div> */}
@@ -460,21 +463,36 @@ export default function Home() {
                                         key={item.id}
                                         className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-4"
                                     >
-                                        <div className="p-6 rounded-2xl shadow-md bg-gradient-to-br from-white to-[#FDF5AA] text-left h-full">
-                                            <p className="text-gray-600 mb-4">“{item.review}”</p>
-                                            <div className="flex items-center gap-4">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="w-12 h-12 rounded-full object-cover"
-                                                />
+                                        <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-white to-[#FFF8E1] text-left h-full flex flex-col justify-between border border-yellow-100 hover:shadow-xl transition-all duration-300">
+
+                                            {/* Star Rating */}
+                                            <div className="flex mb-3 text-yellow-500">
+                                                {Array.from({ length: 5 }).map((_, index) => (
+                                                    <svg
+                                                        key={index}
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="w-5 h-5 fill-current"
+                                                        viewBox="0 0 20 20"
+                                                    >
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.39 2.463a1 1 0 00-.364 1.118l1.287 3.974c.3.922-.755 1.688-1.54 1.118l-3.39-2.463a1 1 0 00-1.176 0l-3.39 2.463c-.785.57-1.84-.196-1.54-1.118l1.287-3.974a1 1 0 00-.364-1.118L2.044 9.402c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.975z" />
+                                                    </svg>
+                                                ))}
+                                            </div>
+
+                                            {/* Review Text */}
+                                            <p className="text-gray-700 mb-4 flex-grow italic leading-relaxed">“{item.review}”</p>
+
+                                            {/* Reviewer Info */}
+                                            <div className="flex items-center mt-4">
                                                 <div>
-                                                    <h4 className="font-semibold">{item.name}</h4>
+                                                    <h4 className="font-semibold text-gray-900 text-lg">{item.name}</h4>
                                                     <p className="text-sm text-gray-500">{item.role}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+
                                 ))}
                             </div>
                         </div>
