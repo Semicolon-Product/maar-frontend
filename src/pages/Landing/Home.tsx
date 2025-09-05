@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BiFolder } from "react-icons/bi";
-import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaLightbulb, FaStar, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaLightbulb, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
 import { GrSecure } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
 import { FaArrowRightLong } from "react-icons/fa6";
