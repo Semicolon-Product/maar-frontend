@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { BiFolder } from "react-icons/bi";
+import { useContext, useEffect, useState } from "react";
+import { BiFolder, BiLogoTelegram } from "react-icons/bi";
 import { FaArrowLeft, FaArrowRight, FaBell, FaGraduationCap, FaLightbulb, FaTasks, FaUniversity, FaUsers, FaWhatsapp } from "react-icons/fa";
 import { GrSecure } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
@@ -9,7 +9,15 @@ import CountUp from "react-countup";
 import { reviews } from "@/components/data/data";
 import { pricing } from "@/components/data/data";
 import { blogs } from "@/components/data/data";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
+import { IoReorderThreeOutline } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
+import { ThemeContext } from "@/contexts/themeContext";
+
+
 export default function Home() {
+    const { theme } = useContext(ThemeContext);
+    console.log("theme::", theme)
     const features = [
         {
             icon: <BiFolder className="text-xl text-[#34699A]" />,
@@ -116,8 +124,9 @@ export default function Home() {
         }
     };
 
+
     return (
-        <div className="min-h-screen flex flex-col text-[#113F67] bg-[#FDF5AA]">
+        <div className="min-h-screen flex flex-col text-[#113F67] ">
             {/* Navbar */}
             <header
                 className="fixed top-0 left-0 w-full flex justify-between items-center
@@ -125,27 +134,32 @@ export default function Home() {
                 bg-[rgba(88,160,200,0.85)] text-white
                 backdrop-blur-sm"
             >
-                <h1 className="text-xl md:text-2xl font-bold text-[#113F67]">
-                    makautstudents.help
+                <h1 className="text-xl md:text-2xl font-bold text-white flex gap-3">
+                    <img src="/Brand.svg" alt="" className="h-8 w-10" />
+                    <span>makautstudents.help</span>
+                    {menuOpen && (
+                        <ThemeToggleButton />
+                    )}
                 </h1>
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex space-x-6 justify-center items-center">
-                    <a href="#features" className="hover:text-[#FDF5AA] text-[#113F67] text-xl">
+                    <a href="#features" className="hover:text-[#113F67] text-white text-xl">
                         Features
                     </a>
-                    <a href="#how" className="hover:text-[#FDF5AA] text-[#113F67] text-xl">
+                    <a href="#how" className="hover:text-[#113F67] text-white text-xl">
                         How It Works
                     </a>
-                    <a href="#pricing" className="hover:text-[#FDF5AA] text-[#113F67] text-xl">
+                    <a href="#pricing" className="hover:text-[#113F67] text-white text-xl">
                         Pricing
                     </a>
-                    <a href="#contact" className="hover:text-[#FDF5AA] text-[#113F67] text-xl">
+                    <a href="#contact" className="hover:text-[#113F67] text-white text-xl">
                         Contact
                     </a>
+                    <ThemeToggleButton />
                     <a
                         href="/login"
-                        className="px-4 py-1 bg-[#34699A] text-[#FDF5AA] font-semibold rounded-sm hover:bg-[#113F67] transition"
+                        className="px-4 py-1 bg-[#34699A] text-white   hover:bg-[#113F67] transition"
                     >
                         Login
                     </a>
@@ -156,7 +170,7 @@ export default function Home() {
                     className="md:hidden text-[#113F67] focus:outline-none"
                     onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    {menuOpen ? "✖" : "☰"}
+                    {menuOpen ? <RxCross2 className="h-6 w-6" /> : <IoReorderThreeOutline className="h-6 w-6" />}
                 </button>
             </header>
             <div className="fixed  top-[60px] left-0 w-full h-[4px] bg-[rgba(88,160,200,0.85)] z-50">
@@ -171,35 +185,35 @@ export default function Home() {
                 <div className="md:hidden fixed bg-[rgba(88,160,200,0.85)] shadow-lg px-6 py-4 space-y-4 top-16 left-0 w-full z-40">
                     <a
                         href="#features"
-                        className="block text-[#113F67] hover:text-[#FDF5AA]"
+                        className="block text-white hover:text-[#113F67]"
                         onClick={() => setMenuOpen(false)}
                     >
                         Features
                     </a>
                     <a
                         href="#how"
-                        className="block text-[#113F67] hover:text-[#FDF5AA]"
+                        className="block text-white hover:text-[#113F67]"
                         onClick={() => setMenuOpen(false)}
                     >
                         How It Works
                     </a>
                     <a
                         href="#pricing"
-                        className="block text-[#113F67] hover:text-[#FDF5AA]"
+                        className="block text-white hover:text-[#113F67]"
                         onClick={() => setMenuOpen(false)}
                     >
                         Pricing
                     </a>
                     <a
                         href="#contact"
-                        className="block text-[#113F67] hover:text-[#FDF5AA]"
+                        className="block text-white hover:text-[#113F67]"
                         onClick={() => setMenuOpen(false)}
                     >
                         Contact
                     </a>
                     <a
                         href="/login"
-                        className="block px-4 py-2 bg-[#34699A] text-[#FDF5AA] rounded font-semibold hover:bg-[#113F67] hover:text-white text-center"
+                        className="block px-4 py-2 bg-[#34699A] text-white rounded-sm font-semibold hover:bg-[#113F67] hover:text-white text-center"
                         onClick={() => setMenuOpen(false)}
                     >
                         Login
@@ -209,7 +223,8 @@ export default function Home() {
 
 
             {/* Hero */}
-            <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 pt-28 pb-16 gap-12 min-h-screen">
+            <section className="relative flex flex-col md:flex-row items-center justify-between px-6 md:px-20 pt-28 pb-16 gap-12 overflow-hidden">
+                {/* Background SVG with light opacity */}
                 {/* Left Content */}
                 <div className="max-w-lg text-center md:text-left">
                     {/* Animated Attention Button */}
@@ -219,7 +234,7 @@ export default function Home() {
                             <span className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-green-400 via-[#FDF5AA] to-purple-600 animate-border"></span>
 
                             {/* Button text */}
-                            <span className="relative z-10 text-xs text-center whitespace-nowrap ">
+                            <span className={`relative z-10 text-xs text-center whitespace-nowrap ${theme === 'dark' ? 'text-blue-100' : 'text-[#113F67]'}`}>
                                 Where MAKAUT Students & Teachers Connect
                             </span>
 
@@ -246,16 +261,16 @@ export default function Home() {
                     </div>
 
                     {/* Main Heading */}
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-[#113F67]">
-  Simplify Student Activity <span className="text-blue-600">Submissions</span>
-</h2>
+                    <h2 className={`text-3xl md:text-5xl font-extrabold ${theme === 'dark' ? 'text-white' : 'text-[#113F67]'}`}>
+                        Simplify Student Activity <span className="text-blue-600">Submissions</span>
+                    </h2>
 
-                    <h1 className="text-3xl" style={{ "fontWeight": "1000" }}>hii</h1>
+
 
                     {/* <div className="h-20 w-20 relative z-50">
                         <img src="/VectorGroup.png" alt="" className="rotate-140" />
                     </div> */}
-                    <p className="text-[#34699A] mb-6 text-lg">
+                    <p className="text-[#34699A] mb-6 text-lg dark:text-blue-200">
                         MakautStudents.help centralizes extra-curricular data uploads,
                         letting teachers and students securely submit and verify documents — no more scattered WhatsApp/Google Forms mess.
                     </p>
@@ -264,7 +279,7 @@ export default function Home() {
 
                     <a
                         href="/login"
-                        className="group inline-flex items-center gap-2 px-6 py-2 bg-[#34699A] text-[#FDF5AA] font-medium rounded-sm shadow-md hover:bg-[#113F67] transition-colors duration-300"
+                        className="group inline-flex items-center gap-2 px-6 py-2 bg-[#34699A] text-white font-medium rounded-sm shadow-md hover:bg-[#113F67] transition-colors duration-300"
                     >
 
                         <span>Get Started</span>
@@ -278,20 +293,21 @@ export default function Home() {
                     {stats.map((stat, index) => (
                         <div
                             key={index}
-                            className="flex flex-col rounded-xl bg-gradient-to-br from-white to-[#FDF5AA] p-6 shadow-md hover:shadow-lg transition dark:bg-gray-800 dark:text-white/70"
+                            className="flex border border-blue-200 dark:border-blue-400 flex-col rounded-xl bg-gradient-to-br from-white to-blue-200 p-6 shadow-md hover:shadow-lg transition dark:bg-gradient-to-br dark:from-gray-700 dark:to-gray-900 dark:text-white/70"
+
                         >
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#34699A]/10">
+                                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#34699A]/10 dark:bg-blue-200">
                                     {stat.icon}
                                 </div>
                                 <div className="flex items-baseline gap-2">
-                                    <h1 className="text-xl md:text-2xl font-bold text-black/80 dark:text-white">
+                                    <h1 className={`text-xl md:text-2xl font-bold text-blue-800 dark:text-white`}>
                                         <CountUp end={stat.value} suffix={stat.suffix} duration={2.5} separator=" " />
                                     </h1>
-                                    <p className="text-base md:text-lg font-semibold text-[#113F67]">{stat.title}</p>
+                                    <p className=" dark:text-blue-200 text-base md:text-lg font-semibold text-[#113F67]">{stat.title}</p>
                                 </div>
                             </div>
-                            <p className="mt-2 text-m text-[#34699A]">{stat.desc}</p>
+                            <p className="mt-2 text-m text-[#34699A] dark:text-blue-100">{stat.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -302,7 +318,7 @@ export default function Home() {
             {/* Features */}
 
             <section id="features" className="px-6 md:px-20 py-12 ">
-                <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#113F67]">
+                <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#113F67] dark:text-blue-100">
                     Features
                 </h3>
 
@@ -310,26 +326,26 @@ export default function Home() {
                     {features.map((feature, index) => (
                         <div
                             key={index}
-                            className="relative p-6 rounded-xl shadow-md hover:shadow-xl border-black transition bg-gradient-to-br from-white to-[#FDF5AA] text-white"
+                            className="relative p-6 border border-blue-200 dark:border-blue-400 rounded-xl shadow-md hover:shadow-xl  transition bg-gradient-to-br from-white to-blue-200 text-white  dark:from-gray-700 dark:to-gray-900"
                         >
                             {/* Top-right label */}
                             {feature.label && (
-                                <span className="absolute top-3 right-3 bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-full">
+                                <span className="absolute top-3 right-3 bg-blue-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                                     {feature.label}
                                 </span>
                             )}
 
                             {/* Icon wrapper with bg */}
                             <div className="flex">
-                                <div className="w-8 h-8 flex items-center justify-center rounded-full  bg-[#34699A]/10 mb-4">
+                                <div className="w-8 h-8 flex items-center justify-center rounded-full  bg-[#34699A]/10 dark:bg-blue-300 mb-4">
                                     {feature.icon}
                                 </div>
 
                                 {/* Title */}
-                                <h4 className="font-bold text-m p-1 text-[#113F67] text-center justify-center  q">{feature.title}</h4></div>
+                                <h4 className="font-bold text-m p-1 text-[#113F67] text-center justify-center dark:text-blue-100">{feature.title}</h4></div>
 
                             {/* Description */}
-                            <p className="text-l opacity-90 text-[#113F67]">{feature.desc}</p>
+                            <p className="text-l opacity-90 text-[#113F67] dark:text-blue-300">{feature.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -339,7 +355,7 @@ export default function Home() {
             {/* How It Works */}
             <section id="how" className="py-20">
                 <div className="max-w-6xl mx-auto px-6">
-                    <h2 className="text-3xl font-bold mb-12 text-center text-[#113F67]">
+                    <h2 className="text-3xl font-bold mb-12 text-center text-[#113F67] dark:text-blue-100">
                         How It Works
                     </h2>
 
@@ -390,7 +406,7 @@ export default function Home() {
                                                 }`}
                                         >
                                             {/* Circle */}
-                                            <div className="w-8 aspect-square shrink-0 rounded-full flex items-center justify-center bg-[#34699A] text-[#FDF5AA] font-bold shadow-lg z-10 md:mb-4">
+                                            <div className="w-8 aspect-square shrink-0 rounded-full flex items-center justify-center bg-[#34699A] text-white font-bold shadow-lg z-10 md:mb-4">
                                                 {index + 1}
                                             </div>
 
@@ -399,10 +415,10 @@ export default function Home() {
                                                 className={`${isVertical ? "ml-4" : "mt-2 text-center"
                                                     }`}
                                             >
-                                                <p className="text-lg font-semibold text-[#113F67]">
+                                                <p className="text-lg font-semibold text-[#113F67] dark:text-blue-100">
                                                     {step.title}
                                                 </p>
-                                                <p className="text-[#113F67] text-sm mt-1">{step.desc}</p>
+                                                <p className="text-[#113F67] text-sm mt-1 dark:text-blue-300">{step.desc}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -419,7 +435,7 @@ export default function Home() {
 
             {/* Pricing */}
             <section id="pricing" className="px-6 md:px-20 py-12">
-                <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#113F67]">
+                <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#113F67] dark:text-blue-100">
                     Pricing
                 </h3>
 
@@ -428,16 +444,16 @@ export default function Home() {
                     {pricing.map((plan, index) => (
                         <div
                             key={index}
-                            className={`p-6 border border-[#34699A] rounded-xl shadow w-72 md:w-80 text-center hover:shadow-lg transition ${plan.bg}`}
+                            className={`p-6 border border-blue-200 rounded-xl shadow w-72 md:w-80 text-center  transition bg-gradient-to-br from-white to-blue-200  dark:from-gray-700 dark:to-gray-900`}
                         >
-                            <h4 className={`font-bold mb-2 ${plan.textColor}`}>{plan.title}</h4>
-                            <p className={`mb-4 ${plan.subColor}`}>{plan.subtitle}</p>
-                            <p className={`text-2xl font-bold mb-4 ${plan.textColor}`}>
+                            <h4 className={`font-bold mb-2 dark:text-blue-100 ${plan.textColor}`}>{plan.title}</h4>
+                            <p className={`mb-4 dark:text-blue-300 ${plan.subColor}`}>{plan.subtitle}</p>
+                            <p className={`text-2xl font-bold mb-4 dark:text-white ${plan.textColor}`}>
                                 {plan.price}
                             </p>
                             <a
                                 href={plan.href}
-                                className={`px-4 py-[7px] rounded transition ${plan.btnBg} ${plan.btnHover} text-[#FDF5AA]`}
+                                className={`px-4 py-[7px] rounded transition ${plan.btnBg} ${plan.btnHover} text-white`}
                             >
                                 {plan.btnText}
                             </a>
@@ -448,7 +464,7 @@ export default function Home() {
             <div className="px-6 py-16 space-y-20">
                 {/* Reviews Section */}
                 <section className="text-center px-4 md:px-10">
-                    <h2 className="text-3xl font-bold mb-10">What Our Customers Say</h2>
+                    <h2 className="text-3xl font-bold mb-10 dark:text-blue-100">What Our Partners Say</h2>
                     <div className="relative w-full max-w-6xl mx-auto">
                         {/* Cards wrapper */}
                         <div className="overflow-hidden">
@@ -463,7 +479,7 @@ export default function Home() {
                                         key={item.id}
                                         className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-4"
                                     >
-                                        <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-white to-[#FFF8E1] text-left h-full flex flex-col justify-between border border-yellow-100 hover:shadow-xl transition-all duration-300">
+                                        <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-white to-blue-200 text-left h-full flex flex-col justify-between border border-blue-200 dark:border-blue-400 hover:shadow-xl transition-all duration-300  dark:from-gray-700 dark:to-gray-900">
 
                                             {/* Star Rating */}
                                             <div className="flex mb-3 text-yellow-500">
@@ -480,13 +496,13 @@ export default function Home() {
                                             </div>
 
                                             {/* Review Text */}
-                                            <p className="text-gray-700 mb-4 flex-grow italic leading-relaxed">“{item.review}”</p>
+                                            <p className="text-gray-700 dark:text-blue-200 mb-4 flex-grow italic leading-relaxed">“{item.review}”</p>
 
                                             {/* Reviewer Info */}
                                             <div className="flex items-center mt-4">
                                                 <div>
-                                                    <h4 className="font-semibold text-gray-900 text-lg">{item.name}</h4>
-                                                    <p className="text-sm text-gray-500">{item.role}</p>
+                                                    <h4 className="font-semibold text-gray-900 text-lg dark:text-blue-100">{item.name}</h4>
+                                                    <p className="text-sm text-gray-500 ">{item.role}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -517,12 +533,12 @@ export default function Home() {
 
                 {/* Blogs Section */}
                 <section className="text-center">
-                    <h2 className="text-3xl font-bold mb-10">Latest Blogs</h2>
+                    <h2 className="text-3xl font-bold mb-10 dark:text-blue-100">Latest Blogs</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         {blogs.map((item) => (
                             <div
                                 key={item.id}
-                                className="rounded-2xl shadow-md overflow-hidden bg-white text-left"
+                                className="rounded-2xl shadow-md overflow-hidden bg-gradient-to-br from-white to-blue-100 text-left  dark:from-gray-700 dark:to-gray-900"
                             >
                                 <img
                                     src={item.image}
@@ -530,8 +546,8 @@ export default function Home() {
                                     className="w-full h-48 object-cover"
                                 />
                                 <div className="p-5">
-                                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                                    <p className="text-gray-600 mb-4">{item.desc}</p>
+                                    <h3 className="text-xl font-semibold mb-2 dark:text-blue-100">{item.title}</h3>
+                                    <p className="text-gray-600 mb-4 dark:text-blue-300">{item.desc}</p>
                                     <a
                                         href={item.link}
                                         className="text-blue-600 font-medium hover:underline"
@@ -545,10 +561,18 @@ export default function Home() {
                 </section>
             </div>
             <div className="fixed bottom-5 right-5 flex flex-col items-end space-y-2 z-50">
-                {/* <span className="mb-1 text-sm bg-black text-white px-2 py-1 rounded opacity-80">
-                    Chat with us
-                </span> */}
+                 <a
+                 title="Give Feedback"
+                    href="https://wa.me/916296446556"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
+                >
+                    <BiLogoTelegram size={28} />
+                </a>
+                
                 <a
+                title="Contact Us"
                     href="https://wa.me/916296446556"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -561,7 +585,7 @@ export default function Home() {
 
 
             {/* Footer */}
-            <footer className="rounded-t-3xl bg-[rgba(88,160,200,0.85)] text-[#113F67] px-6 md:px-20 py-10">
+            <footer className="rounded-t-3xl bg-blue-100 dark:bg-gray-800 text-[#113F67] dark:text-blue-200 px-6 md:px-20 py-10">
                 <div className="max-w-6xl mx-auto">
                     {/* Top Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
@@ -571,17 +595,17 @@ export default function Home() {
                             <p className="flex justify-center md:justify-start gap-2 items-center font-medium mb-4">
                                 <MdEmail className="text-lg" /> support@makautstudents.help
                             </p>
-                            <div className="flex justify-center md:justify-start gap-4 text-[#113F67]">
-                                <a href="#" className="hover:text-white transition">
+                            <div className="flex justify-center md:justify-start gap-4 text-[#113F67] dark:text-blue-200">
+                                <a href="#" className="hover:text-blue-500 transition">
                                     <FaFacebookF size={18} />
                                 </a>
-                                <a href="#" className="hover:text-white transition">
+                                <a href="#" className="hover:text-blue-500 transition">
                                     <FaTwitter size={18} />
                                 </a>
-                                <a href="#" className="hover:text-white transition">
+                                <a href="#" className="hover:text-blue-500 transition">
                                     <FaLinkedinIn size={18} />
                                 </a>
-                                <a href="#" className="hover:text-white transition">
+                                <a href="#" className="hover:text-blue-500 transition">
                                     <FaGithub size={18} />
                                 </a>
                             </div>
@@ -591,10 +615,10 @@ export default function Home() {
                         <div className="text-center">
 
                             <ul className="space-y-2">
-                                <li><a href="#features" className="hover:text-white transition">Features</a></li>
-                                <li><a href="#how-it-works" className="hover:text-white transition">How It Works</a></li>
-                                <li><a href="#pricing" className="hover:text-white transition">Pricing</a></li>
-                                <li><a href="#contact" className="hover:text-white transition">Contact</a></li>
+                                <li><a href="#features" className="hover:text-blue-500 transition">Features</a></li>
+                                <li><a href="#how-it-works" className="hover:text-blue-500 transition">How It Works</a></li>
+                                <li><a href="#pricing" className="hover:text-blue-500 transition">Pricing</a></li>
+                                <li><a href="#contact" className="hover:text-blue-500 transition">Contact</a></li>
                             </ul>
                         </div>
 
@@ -607,9 +631,9 @@ export default function Home() {
                                     const message = (e.currentTarget.elements.namedItem("message") as HTMLTextAreaElement).value;
                                     alert(`Email: ${email}\nMessage: ${message}`);
                                 }}
-                                className="bg-[#FDF5AA] shadow-md rounded-lg p-5 border border-[#34699A]"
+                                className="bg-white dark:bg-gray-700 shadow-md rounded-lg p-5 border border-blue-200"
                             >
-                                <h3 className="text-lg font-semibold mb-3 text-[#113F67]">
+                                <h3 className="text-lg font-semibold mb-3 text-[#113F67] dark:text-blue-100">
                                     Send us a message
                                 </h3>
                                 <input
@@ -617,18 +641,18 @@ export default function Home() {
                                     name="email"
                                     required
                                     placeholder="Your Email"
-                                    className="w-full px-3 py-2 border rounded-lg mb-2 text-[#113F67] focus:outline-none focus:ring-2 focus:ring-[#34699A]"
+                                    className="w-full px-3 py-2 border rounded-lg mb-2 dark:bg-gray-800 text-[#113F67] dark:text-blue-200 focus:outline-none focus:ring-2 focus:ring-[#34699A]"
                                 />
                                 <textarea
                                     name="message"
                                     required
                                     placeholder="Your Message"
                                     rows={3}
-                                    className="w-full px-3 py-2 border rounded-lg mb-3 text-[#113F67] focus:outline-none focus:ring-2 focus:ring-[#34699A]"
+                                    className="w-full px-3 py-2 border rounded-lg mb-3 dark:bg-gray-800 text-[#113F67]  dark:text-blue-200 focus:outline-none focus:ring-2 focus:ring-[#34699A]"
                                 />
                                 <button
                                     type="submit"
-                                    className="w-full bg-[#34699A] text-[#FDF5AA] py-2 rounded font-semibold hover:bg-[#113F67] hover:text-white transition"
+                                    className="w-full bg-[#34699A] text-white py-2 rounded font-semibold hover:bg-[#113F67] hover:text-white transition"
                                 >
                                     Send
                                 </button>
@@ -637,7 +661,7 @@ export default function Home() {
                     </div>
 
                     {/* Bottom Section */}
-                    <div className="mt-10 border-t border-[#34699A]/40 pt-4 text-center text-sm text-white">
+                    <div className="mt-10 border-t border-[#34699A]/40 pt-4 text-center text-sm text-[#34699A] dark:text-blue-200 font-semibold">
                         © {new Date().getFullYear()} MakautStudents.help · All rights reserved
                     </div>
                 </div>

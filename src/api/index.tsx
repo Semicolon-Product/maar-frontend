@@ -1,8 +1,8 @@
 
 import axios from 'axios';
-//export const BASE_URL = "http://localhost:5000/api/";
+export const BASE_URL = "http://localhost:5000/api/";
 
-export const BASE_URL = "https://api.makautstudents.help/api/";
+//export const BASE_URL = "https://api.makautstudents.help/api/";
 
 interface ApiPayload {
     [key: string]: any;
@@ -32,6 +32,8 @@ export const getApi = async (endpoint: string) => {
 export const postApi = async (
     endpoint: string,
     payload?: ApiPayload,
+
+    
     requireAuth: boolean = true
 ) => {
     const url = `${BASE_URL}${endpoint}`;
@@ -53,7 +55,8 @@ export const postApi = async (
     }
 
     console.log("in postApi token:", response.data?.data?.token);
-    console.log("in postApi response:", response);
+   console.log("in postApi response:", response);
+   
 
     return response.data;
 };

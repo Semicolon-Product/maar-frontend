@@ -127,7 +127,7 @@ console.log("year=>>",year)
                 <input
                   id="signatureUpload"
                   type="file"
-                  accept="image/*"
+                 accept="image/*,application/pdf"
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
                     if (file) {
