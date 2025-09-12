@@ -9,11 +9,16 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Administrator from './pages/administrator/Index';
 import LoginAdministrator from './pages/administrator/LoginAdministrator';
 import Home from './pages/Landing/Home';
+import { ToastContainer } from 'react-toastify';
+import BlogDetails from './components/BlogDetails';
 
 
 function App() {
   return (
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
     <Routes>
+      <Route path="/blog/:title" element={<BlogDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Home />} />
      
@@ -57,7 +62,7 @@ function App() {
            </ProtectedRoute>
         }
       />
-    </Routes>
+    </Routes></>
   );
 }
 

@@ -1957,28 +1957,32 @@ export const pricing = [
     ]
     
     export const blogs = [
-        {
-            id: 1,
-            title: "5 Tips to Boost Productivity",
-            desc: "Discover practical ways to save time and work smarter every day.",
-            image: "https://i.pravatar.cc/100?img=3",
-            link: "#",
-        },
-        {
-            id: 2,
-            title: "Why UI/UX Matters",
-            desc: "A deep dive into how design impacts user experience and retention.",
-            image: "https://i.pravatar.cc/100?img=2",
-            link: "#",
-        },
-        {
-            id: 3,
-            title: "Scaling Your Startup",
-            desc: "Learn strategies to take your business from 0 to 1M users.",
-            image: "https://i.pravatar.cc/100?img=4",
-            link: "#",
-        },
-    ];
+  {
+    id: 1,
+    title: "5 Tips to Boost Productivity",
+    desc: "Discover practical ways to save time and work smarter every day.",
+    bigDec: "In this article, we cover five actionable tips that will help you streamline your workflow, avoid distractions, and maximize your efficiency at work. Whether you're managing tasks, setting priorities, or using productivity tools, these tips will help you stay focused and achieve more.",
+    image: "https://i.pravatar.cc/100?img=3",
+    link: "#",
+  },
+  {
+    id: 2,
+    title: "Why UI/UX Matters",
+    desc: "A deep dive into how design impacts user experience and retention.",
+    bigDec: "Good UI/UX design is essential for keeping users engaged. This article explores why intuitive design, responsive layouts, and clear navigation significantly impact user retention and satisfaction. Learn the principles behind great design and how it influences customer decisions.",
+    image: "https://i.pravatar.cc/100?img=2",
+    link: "#",
+  },
+  {
+    id: 3,
+    title: "Scaling Your Startup",
+    desc: "Learn strategies to take your business from 0 to 1M users.",
+    bigDec: "Scaling a startup involves more than just increasing the number of users. It requires strategic planning, infrastructure upgrades, team expansion, and a strong product-market fit. This piece provides key strategies for managing growth efficiently while keeping costs under control.",
+    image: "https://i.pravatar.cc/100?img=4",
+    link: "#",
+  },
+];
+
 
 export const reviews = [
   {
@@ -1987,6 +1991,7 @@ export const reviews = [
     name: "Amit Sharma",
     role: "Institute of Engineering & Management (IEM), Kolkata",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
+    rating:5,
   },
   {
     id: 2,
@@ -1994,6 +1999,7 @@ export const reviews = [
     name: "Priya Sen",
     role: "Heritage Institute of Technology (HIT), Kolkata",
     image: "https://randomuser.me/api/portraits/women/45.jpg",
+    rating:4,
   },
   {
     id: 3,
@@ -2001,6 +2007,7 @@ export const reviews = [
     name: "Ravi Kumar",
     role: "Brainware University, Barasat",
     image: "https://randomuser.me/api/portraits/men/56.jpg",
+    rating:5,
   },
   {
     id: 4,
@@ -2008,6 +2015,7 @@ export const reviews = [
     name: "Neha Gupta",
     role: "Kalyani Government Engineering College (KGEC), Kalyani",
     image: "https://randomuser.me/api/portraits/women/12.jpg",
+    rating:2,
   },
   {
     id: 5,
@@ -2015,6 +2023,7 @@ export const reviews = [
     name: "Arjun Patel",
     role: "AHaldia Institute of Technology (HIT), Haldia",
     image: "https://randomuser.me/api/portraits/men/22.jpg",
+    rating:5,
   },
   {
     id: 6,
@@ -2022,6 +2031,7 @@ export const reviews = [
     name: "Sneha Das",
     role: "Government College of Engineering and Textile Technology (GCETT), Serampore",
     image: "https://randomuser.me/api/portraits/women/36.jpg",
+    rating:3,
   },
 ];
 

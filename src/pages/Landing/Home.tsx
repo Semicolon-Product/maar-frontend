@@ -13,10 +13,40 @@ import ThemeToggleButton from "@/components/ThemeToggleButton";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { ThemeContext } from "@/contexts/themeContext";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 
 export default function Home() {
     const { theme } = useContext(ThemeContext);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    const [feedbackData, setFeedbackData] = useState({
+        rating: 0,
+        name: '',
+        institute: '',
+        feedbackText: '',
+    });
+
+    const handleChange = (field: string, value: any) => {
+        setFeedbackData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const handleSubmit = () => {
+        const { rating, name, institute, feedbackText } = feedbackData;
+
+        if (!rating || !name.trim() || !institute.trim() || !feedbackText.trim()) {
+            alert('Please fill in all fields and provide a rating!');
+            return;
+        }
+        console.log(feedbackData);
+        toast.success('Feedback submitted successfully!');
+
+        setShowFeedbackModal(false);
+        setFeedbackData({ rating: 0, name: '', institute: '', feedbackText: '' });
+    };
     console.log("theme::", theme)
     const features = [
         {
@@ -127,16 +157,17 @@ export default function Home() {
 
     return (
         <div className="min-h-screen flex flex-col text-[#113F67] ">
+
             {/* Navbar */}
             <header
                 className="fixed top-0 left-0 w-full flex justify-between items-center
                 px-6 py-4 shadow border-[#34699A]/50 z-50
-                bg-[rgba(88,160,200,0.85)] text-white
+                bg-[rgba(88,160,200,0.85)] dark:bg-gray-800 text-white
                 backdrop-blur-sm"
             >
                 <h1 className="text-xl md:text-2xl font-bold text-white flex gap-3">
-                    <img src="/Brand.svg" alt="" className="h-8 w-10" />
-                    <span>makautstudents.help</span>
+                    <img src="/Brand.svg" alt="" className="h-8 w-10" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+                    <span onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="cursor-pointer">makautstudents.help</span>
                     {menuOpen && (
                         <ThemeToggleButton />
                     )}
@@ -144,22 +175,22 @@ export default function Home() {
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex space-x-6 justify-center items-center">
-                    <a href="#features" className="hover:text-[#113F67] text-white text-xl">
+                    <a href="#features" className="hover:text-[#113F67] text-white text-xl dark:hover:text-blue-200">
                         Features
                     </a>
-                    <a href="#how" className="hover:text-[#113F67] text-white text-xl">
+                    <a href="#how" className="hover:text-[#113F67] text-white text-xl dark:hover:text-blue-200">
                         How It Works
                     </a>
-                    <a href="#pricing" className="hover:text-[#113F67] text-white text-xl">
+                    <a href="#pricing" className="hover:text-[#113F67] text-white text-xl dark:hover:text-blue-200">
                         Pricing
                     </a>
-                    <a href="#contact" className="hover:text-[#113F67] text-white text-xl">
+                    <a href="#footer" className="hover:text-[#113F67] text-white text-xl dark:hover:text-blue-200">
                         Contact
                     </a>
                     <ThemeToggleButton />
                     <a
                         href="/login"
-                        className="px-4 py-1 bg-[#34699A] text-white   hover:bg-[#113F67] transition"
+                        className="px-4 py-1 bg-[#34699A] text-white rounded  hover:bg-[#113F67] transition"
                     >
                         Login
                     </a>
@@ -170,10 +201,10 @@ export default function Home() {
                     className="md:hidden text-[#113F67] focus:outline-none"
                     onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    {menuOpen ? <RxCross2 className="h-6 w-6" /> : <IoReorderThreeOutline className="h-6 w-6" />}
+                    {menuOpen ? <RxCross2 className="h-6 w-6 dark:text-blue-100" /> : <IoReorderThreeOutline className="h-6 w-6 dark:text-blue-100" />}
                 </button>
             </header>
-            <div className="fixed  top-[60px] left-0 w-full h-[4px] bg-[rgba(88,160,200,0.85)] z-50">
+            <div className="fixed  top-[60px] left-0 w-full h-[4px] bg-[rgba(88,160,200,0.85)] dark:bg-gray-800 z-50">
                 <div
                     className="h-full bg-[#34699A] transition-all duration-150"
                     style={{ width: `${scrollProgress}%` }}
@@ -182,7 +213,7 @@ export default function Home() {
 
             {/* Mobile Dropdown */}
             {menuOpen && (
-                <div className="md:hidden fixed bg-[rgba(88,160,200,0.85)] shadow-lg px-6 py-4 space-y-4 top-16 left-0 w-full z-40">
+                <div className="md:hidden fixed dark:bg-gray-800 bg-[rgba(88,161,200,0.94)] shadow-lg px-6 py-4 space-y-4 top-16 left-0 w-full z-40">
                     <a
                         href="#features"
                         className="block text-white hover:text-[#113F67]"
@@ -205,7 +236,7 @@ export default function Home() {
                         Pricing
                     </a>
                     <a
-                        href="#contact"
+                        href="#footer"
                         className="block text-white hover:text-[#113F67]"
                         onClick={() => setMenuOpen(false)}
                     >
@@ -231,11 +262,13 @@ export default function Home() {
                     <div className="mb-6 flex  justify-center md:justify-start">
                         <button className="relative px-4 py-[4px] flex items-center justify-center font-semibold text-[#113F67] rounded-full group overflow-hidden">
                             {/* Animated border */}
-                            <span className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-green-400 via-[#FDF5AA] to-purple-600 animate-border"></span>
+                            <span className="absolute inset-0 rounded-full border-1 border-transparent bg-gradient-to-r from-green-400 via-[#FDF5AA] to-purple-600 animate-border"></span>
 
                             {/* Button text */}
-                            <span className={`relative z-10 text-xs text-center whitespace-nowrap ${theme === 'dark' ? 'text-blue-100' : 'text-[#113F67]'}`}>
+                            <span className={` flex gap-2 relative z-10 text-xs text-center whitespace-nowrap ${theme === 'dark' ? 'text-blue-100' : 'text-[#113F67]'}`}>
+
                                 Where MAKAUT Students & Teachers Connect
+
                             </span>
 
                             <style>{`
@@ -246,7 +279,7 @@ export default function Home() {
         linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      animation: borderMove 2s linear infinite;
+      animation: borderMove 3s steps(4, end) infinite;
     }
 
     @keyframes borderMove {
@@ -261,9 +294,9 @@ export default function Home() {
                     </div>
 
                     {/* Main Heading */}
-                    <h2 className={`text-3xl md:text-5xl font-extrabold ${theme === 'dark' ? 'text-white' : 'text-[#113F67]'}`}>
+                    <h1 className={` text-4xl md:text-5xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#113F67]'}`}>
                         Simplify Student Activity <span className="text-blue-600">Submissions</span>
-                    </h2>
+                    </h1>
 
 
 
@@ -477,13 +510,13 @@ export default function Home() {
                                 {reviews.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-4"
+                                        className="w-full sm:w-1/2 md:w-2/3 lg:w-1/4 flex-shrink-0 p-4"
                                     >
                                         <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-white to-blue-200 text-left h-full flex flex-col justify-between border border-blue-200 dark:border-blue-400 hover:shadow-xl transition-all duration-300  dark:from-gray-700 dark:to-gray-900">
 
                                             {/* Star Rating */}
                                             <div className="flex mb-3 text-yellow-500">
-                                                {Array.from({ length: 5 }).map((_, index) => (
+                                                {Array.from({ length: item.rating }).map((_, index) => (
                                                     <svg
                                                         key={index}
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -548,12 +581,13 @@ export default function Home() {
                                 <div className="p-5">
                                     <h3 className="text-xl font-semibold mb-2 dark:text-blue-100">{item.title}</h3>
                                     <p className="text-gray-600 mb-4 dark:text-blue-300">{item.desc}</p>
-                                    <a
-                                        href={item.link}
+                                    <Link
+                                    state={{ blogData: item }}  
+                                        to={`/blog/${item.title.replace(/\s+/g, '-').toLowerCase()}`}
                                         className="text-blue-600 font-medium hover:underline"
                                     >
                                         Read More →
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         ))}
@@ -561,18 +595,16 @@ export default function Home() {
                 </section>
             </div>
             <div className="fixed bottom-5 right-5 flex flex-col items-end space-y-2 z-50">
-                 <a
-                 title="Give Feedback"
-                    href="https://wa.me/916296446556"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <a
+                    title="Give Feedback"
+                    onClick={() => setShowFeedbackModal(true)}
                     className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
                 >
                     <BiLogoTelegram size={28} />
                 </a>
-                
+
                 <a
-                title="Contact Us"
+                    title="Contact Us"
                     href="https://wa.me/916296446556"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -585,7 +617,7 @@ export default function Home() {
 
 
             {/* Footer */}
-            <footer className="rounded-t-3xl bg-blue-100 dark:bg-gray-800 text-[#113F67] dark:text-blue-200 px-6 md:px-20 py-10">
+            <footer id="footer" className="rounded-t-3xl bg-blue-100 dark:bg-gray-800 text-[#113F67] dark:text-blue-200 px-6 md:px-20 py-10">
                 <div className="max-w-6xl mx-auto">
                     {/* Top Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
@@ -618,7 +650,7 @@ export default function Home() {
                                 <li><a href="#features" className="hover:text-blue-500 transition">Features</a></li>
                                 <li><a href="#how-it-works" className="hover:text-blue-500 transition">How It Works</a></li>
                                 <li><a href="#pricing" className="hover:text-blue-500 transition">Pricing</a></li>
-                                <li><a href="#contact" className="hover:text-blue-500 transition">Contact</a></li>
+                                <li><a href="#footer" className="hover:text-blue-500 transition">Contact</a></li>
                             </ul>
                         </div>
 
@@ -629,7 +661,7 @@ export default function Home() {
                                     e.preventDefault();
                                     const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
                                     const message = (e.currentTarget.elements.namedItem("message") as HTMLTextAreaElement).value;
-                                    alert(`Email: ${email}\nMessage: ${message}`);
+                                    console.log("email", email, message)
                                 }}
                                 className="bg-white dark:bg-gray-700 shadow-md rounded-lg p-5 border border-blue-200"
                             >
@@ -666,6 +698,98 @@ export default function Home() {
                     </div>
                 </div>
             </footer>
+            {showFeedbackModal && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md relative">
+
+                        {/* Modal Header with Cross Icon */}
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Share Your Feedback</h2>
+                            <button
+                                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                                onClick={() => setShowFeedbackModal(false)}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Star Rating */}
+                        <div className="flex space-x-2 mb-4">
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <svg
+                                    key={index}
+
+                                    onClick={() => handleChange('rating', index + 1)}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className={`w-8 h-8 cursor-pointer ${feedbackData.rating > index
+                                            ? 'text-yellow-400 fill-current'
+                                            : 'text-gray-300 fill-none'
+                                        }`}
+                                    viewBox="0 0 20 20"
+                                    stroke="currentColor"
+                                >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.39 2.463a1 1 0 00-.364 1.118l1.287 3.974c.3.922-.755 1.688-1.54 1.118l-3.39-2.463a1 1 0 00-1.176 0l-3.39 2.463c-.785.57-1.84-.196-1.54-1.118l1.287-3.974a1 1 0 00-.364-1.118L2.044 9.402c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.975z" />
+                                </svg>
+                            ))}
+                        </div>
+
+
+                        {/* Name Input */}
+                        <input
+                            required={true}
+                            type="text"
+                            placeholder="Your Name"
+                            className="w-full p-2 mb-4 border rounded bg-gray-50 dark:bg-gray-700 dark:text-white"
+                            value={feedbackData.name}
+                            onChange={(e) => handleChange('name', e.target.value)}
+                        />
+
+                        {/* Institute Name Input */}
+                        <input
+                            required
+                            type="text"
+                            placeholder="Institute Name"
+                            className="w-full p-2 mb-4 border rounded bg-gray-50 dark:bg-gray-700 dark:text-white"
+                            value={feedbackData.institute}
+                            onChange={(e) => handleChange('institute', e.target.value)}
+                        />
+
+                        {/* Feedback Textarea */}
+                        <textarea
+                            required
+                            placeholder="Your Feedback"
+                            className="w-full p-2 mb-4 border rounded resize-none bg-gray-50 dark:bg-gray-700 dark:text-white"
+                            value={feedbackData.feedbackText}
+                            onChange={(e) => handleChange('feedbackText', e.target.value)}
+                            rows={4}
+                        ></textarea>
+
+                        {/* Submit Button */}
+                        <div className="flex justify-end">
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded"
+                                onClick={handleSubmit}
+                            >
+                                Submit
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

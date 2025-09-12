@@ -1,4 +1,5 @@
 @media (max-width: 425px) {
+  
   .modalLabel {
     font-size: 13px;
     margin-top: 5px;
@@ -141,6 +142,8 @@ select.pointsDropdown:focus {
 .custom{
   font-weight: bold;
 }
-
+.customBold{
+    font-weight: bold;
+  }
 
 
