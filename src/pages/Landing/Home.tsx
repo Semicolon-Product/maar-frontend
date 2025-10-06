@@ -47,7 +47,7 @@ export default function Home() {
         setShowFeedbackModal(false);
         setFeedbackData({ rating: 0, name: '', institute: '', feedbackText: '' });
     };
-    console.log("theme::", theme)
+   // console.log("theme::", theme)
     const features = [
         {
             icon: <BiFolder className="text-xl text-[#34699A]" />,
@@ -727,7 +727,7 @@ export default function Home() {
                         </div>
 
                         {/* Star Rating */}
-                        <div className="flex space-x-2 mb-4">
+                        <div className="flex space-x-2 mb-4  justify-center ">
                             {Array.from({ length: 5 }).map((_, index) => (
                                 <svg
                                     key={index}
@@ -780,7 +780,7 @@ export default function Home() {
                         {/* Submit Button */}
                         <div className="flex justify-end">
                             <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded"
+                                className="px-4 py-1 bg-[#34699A] text-white rounded  hover:bg-[#113F67]"
                                 onClick={handleSubmit}
                             >
                                 Submit

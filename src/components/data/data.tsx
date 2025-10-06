@@ -1967,7 +1967,7 @@ export const blogs = [
   },
   {
     id: 2,
-    title: "Why UI/UX Matters",
+    title: "Why UI-UX Matters",
     desc: "A deep dive into how design impacts user experience and retention.",
     bigDec: "Good UI/UX design is essential for keeping users engaged. This article explores why intuitive design, responsive layouts, and clear navigation significantly impact user retention and satisfaction. Learn the principles behind great design and how it influences customer decisions.",
     image: "https://cdn.pixabay.com/photo/2025/03/16/19/54/ai-generated-9474474_1280.png",

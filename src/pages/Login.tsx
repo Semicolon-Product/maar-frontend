@@ -154,7 +154,7 @@ const Login = () => {
         <div
             className="flex min-h-screen items-center justify-center px-4"
             style={{
-                backgroundImage: 'url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiOulwteOOo8lVZv2MdQ_s8b9mtmt9FDLtsOsD7veS9wyerLCL1BOLVWlHiGtiLT_UijNtNBsH-GDT761dM7jhBjpKJREBzN9nvBIRsCTzTQU3p5h8ywB8rGX9RvlXA_fk6kohDcCRfRYiKXlOV2JtwfVR8trU2TBZxtVDEL-AbjIjzwK6RwYIXP_oRtohS/s1400/Design%20455.jpg")',
+                backgroundImage: "url('/bg.svg')",
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',

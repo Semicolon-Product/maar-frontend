@@ -289,7 +289,7 @@ const SuperAdminPage = () => {
     value: dept.name,
   }));
 
-
+  console.log("paymentDetails", Number(paymentDetails?.[0]?.total_amount))
 
   return (
 
@@ -622,8 +622,8 @@ const SuperAdminPage = () => {
                           <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[0]?.total_amount}/year</p>
                         </div>
                         <button onClick={() => {
-                          const amount = paymentDetails?.[0]?.total_amount;
-                          if (typeof amount === "number") {
+                          const amount = Number(paymentDetails?.[0]?.total_amount);
+                          if (!isNaN(amount)) {
                             handleCreatePayment(amount);
                           }
                         }}
@@ -655,8 +655,8 @@ const SuperAdminPage = () => {
                           className="w-full h-48 object-contain my-4"
                         /> */}
                         <button onClick={() => {
-                          const amount = paymentDetails?.[1]?.total_amount;
-                          if (typeof amount === "number") {
+                          const amount = Number(paymentDetails?.[1]?.total_amount);
+                          if (!isNaN(amount)) {
                             handleCreatePayment(amount);
                           }
                         }} className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
@@ -682,8 +682,8 @@ const SuperAdminPage = () => {
                           <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[2]?.total_amount}/year</p>
                         </div>
                         <button onClick={() => {
-                          const amount = paymentDetails?.[2]?.total_amount;
-                          if (typeof amount === "number") {
+                          const amount = Number(paymentDetails?.[2]?.total_amount);
+                          if (!isNaN(amount)) {
                             handleCreatePayment(amount);
                           }
                         }} className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
