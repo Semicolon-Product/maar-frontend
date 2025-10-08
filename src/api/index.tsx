@@ -54,7 +54,7 @@ export const postApi = async (
         localStorage.setItem('token', response.data.data.token);
     }
 
-    console.log("in postApi token:", response.data?.data?.token);
+   console.log("in postApi token:", response.data?.data?.token);
    console.log("in postApi response:", response);
    
 

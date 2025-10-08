@@ -11,6 +11,7 @@ import LoginAdministrator from './pages/administrator/LoginAdministrator';
 import Home from './pages/Landing/Home';
 import { ToastContainer } from 'react-toastify';
 import BlogDetails from './components/BlogDetails';
+import Blog from './components/Blog';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
     <Routes>
       <Route path="/blog/:title" element={<BlogDetails />} />
+       <Route path="/blog" element={<Blog/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Home />} />
      

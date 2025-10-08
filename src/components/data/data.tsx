@@ -2144,16 +2144,7 @@ export const blogs = [
       "https://cdn.pixabay.com/photo/2016/08/04/10/37/office-1568780_1280.jpg",
     link: "#",
   },
-  {
-    id: 4,
-    title: "Scaling Your Startup",
-    desc: "Learn strategies to take your business from 0 to 1M users.",
-    bigDec:
-      "Scaling a startup involves more than just increasing the number of users. It requires strategic planning, infrastructure upgrades, team expansion, and a strong product-market fit. This piece provides key strategies for managing growth efficiently while keeping costs under control.",
-    image:
-      "https://cdn.pixabay.com/photo/2016/08/04/10/37/office-1568780_1280.jpg",
-    link: "#",
-  },
+
 ];
 
 export const reviews = [

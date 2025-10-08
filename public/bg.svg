@@ -3,8 +3,9 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 5000 2916" style="enable-background:new 0 0 5000 2916;" xml:space="preserve">
 <g>
-	<rect style="fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;" width="5000" height="2916"/>
-	<g>
+	<rect width="5000" height="2916" fill="transparent"/>
+
+	<g >
 		<defs>
 			<path id="SVGID_1_" d="M4973.012,1607.85l-12.862,5.385l15.98-4.248l12.391-4.502L4973.012,1607.85z M4875.348,1641.036
 				c-4.502,2.148-9.008,4.286-13.504,6.444c5.516-1.749,11.024-3.51,16.537-5.254l12.889-5.459L4875.348,1641.036z

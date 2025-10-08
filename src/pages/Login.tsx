@@ -152,9 +152,9 @@ const Login = () => {
 
     return (
         <div
-            className="flex min-h-screen items-center justify-center px-4"
+            className="flex bg-blue-100 min-h-screen items-center justify-center px-4"
             style={{
-                backgroundImage: "url('/bg.svg')",
+                backgroundImage: "url('./bg.svg')",
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
@@ -162,7 +162,7 @@ const Login = () => {
         >
 
             <ToastContainer position="top-right" />
-            <div className={`w-full max-w-3xl ${getGradientByRole(role)} border border-gray-500 rounded-2xl shadow p-6 grid md:grid-cols-2 gap-4`}>
+            <div className={`w-full  max-w-3xl ${getGradientByRole(role)} border border-gray-500 rounded-2xl  shadow p-6 grid md:grid-cols-2 gap-4`}>
                 <form className="flex flex-col gap-6">
                     <div className="flex justify-center gap-4">
                         {['student', 'teacher', 'superadmin'].map((r) => (
