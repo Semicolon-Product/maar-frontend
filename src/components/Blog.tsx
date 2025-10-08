@@ -42,9 +42,9 @@ const Blog = () => {
       : blogs.filter((b) => b.category === selectedCategory);
 
   return (
-    <div className="flex w-full min-h-screen bg-gray-100 p-6 gap-6">
+    <div className="flex w-full min-h-screen bg-gray-100 dark:bg-gray-800 p-6 gap-6">
       {/* Left Sidebar - Categories */}
-      <aside className="w-1/5 bg-white p-4 rounded-2xl shadow-md">
+      <aside className="w-1/5 bg-white p-4 rounded-2xl shadow-md dark:bg-gray-900">
         <h2 className="text-lg font-semibold mb-3">Categories</h2>
         <ul>
           {categories.map((cat) => (
@@ -64,8 +64,8 @@ const Blog = () => {
       </aside>
 
       {/* Middle Section - Blog Feed */}
-      <main className="flex-1 bg-white p-6 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Latest Posts</h2>
+      <main className="flex-1 bg-white p-6 rounded-2xl shadow-md dark:bg-gray-900">
+       {/*  <h2 className="text-2xl font-bold mb-4">Latest Posts</h2> */}
         {filteredBlogs.map((blog) => (
           <div
             key={blog.id}
@@ -89,7 +89,7 @@ const Blog = () => {
       </main>
 
       {/* Right Sidebar - Profile */}
-      <aside className="w-1/5 bg-white p-4 rounded-2xl shadow-md text-center">
+      <aside className="w-1/5 bg-white p-4 rounded-2xl shadow-md text-center dark:bg-gray-900">
         <img
           src="https://via.placeholder.com/120"
           alt="Profile"
