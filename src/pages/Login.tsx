@@ -152,7 +152,7 @@ const Login = () => {
 
     return (
         <div
-            className="flex bg-blue-100 min-h-screen items-center justify-center px-4"
+            className="flex bg-blue-100 min-h-screen items-center justify-center px-4 dark:text-black"
             style={{
                 backgroundImage: "url('./bg.svg')",
                 backgroundSize: 'cover',
