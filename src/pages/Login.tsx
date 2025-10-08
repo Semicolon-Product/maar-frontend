@@ -178,7 +178,7 @@ const Login = () => {
                                         setFormError({});
                                     }}
                                 />
-                                <span className="capitalize">{r}</span>
+                                <span className="capitalize dark:text-black">{r}.</span>
                             </label>
                         ))}
                     </div>
