@@ -25,9 +25,10 @@ import { RxCross2 } from "react-icons/rx";
 import { ThemeContext } from "@/contexts/themeContext";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import { PiInstagramLogoFill } from "react-icons/pi";
 
 export default function Home() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackData, setFeedbackData] = useState({
@@ -334,9 +335,10 @@ export default function Home() {
                         <img src="/VectorGroup.png" alt="" className="rotate-140" />
                     </div> */}
           <p className="text-[#34699A] mb-6 text-lg dark:text-blue-200">
-            MakautStudents.help centralizes MAR (Mandatory Additional Requirement) data uploads,
-            letting teachers and students securely submit and verify documents —
-            no more scattered WhatsApp/Google Forms mess.
+            MakautStudents.help centralizes MAR (Mandatory Additional
+            Requirement) data uploads, letting teachers and students securely
+            submit and verify documents — no more scattered WhatsApp/Google
+            Forms mess.
           </p>
 
           <Link
@@ -653,7 +655,12 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <span  onClick={() => navigate("/blog")}  className="text-blue-400 font-medium hover:underline m-2 ">View All → </span>
+          <span
+            onClick={() => navigate("/blog")}
+            className="text-blue-400 font-medium hover:underline m-2 "
+          >
+            View All →{" "}
+          </span>
         </section>
       </div>
       <div className="fixed bottom-5 right-5 flex flex-col items-end space-y-2 z-50">
@@ -691,16 +698,20 @@ export default function Home() {
                 <MdEmail className="text-lg" /> support@makautstudents.help
               </p>
               <div className="flex justify-center md:justify-start gap-4 text-[#113F67] dark:text-blue-200">
-                <a href="#" className="hover:text-blue-500 transition">
+                <a href="https://www.facebook.com/sekhar.ghosh.424646"  target="_blank" className="hover:text-blue-500 transition">
                   <FaFacebookF size={18} />
                 </a>
-                <a href="#" className="hover:text-blue-500 transition">
+                <a href="https://www.instagram.com/sekharghosh123/"  target="_blank" className="hover:text-blue-500 transition">
+                  <PiInstagramLogoFill size={19} />
+                </a>
+                <a href="https://x.com/sekharg62"   target="_blank" className="hover:text-blue-500 transition">
                   <FaTwitter size={18} />
                 </a>
-                <a href="#" className="hover:text-blue-500 transition">
+                <a href="https://www.linkedin.com/in/sekhar-ghosh-cse26/" target="_blank" rel="noopener noreferrer"  className="hover:text-blue-500 transition">
                   <FaLinkedinIn size={18} />
                 </a>
-                <a href="#" className="hover:text-blue-500 transition">
+
+                <a href="https://github.com/sekharg62"  target="_blank" className="hover:text-blue-500 transition">
                   <FaGithub size={18} />
                 </a>
               </div>
