@@ -26,6 +26,7 @@ import { ThemeContext } from "@/contexts/themeContext";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { PiInstagramLogoFill } from "react-icons/pi";
+import Faq from "../Faq";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -392,7 +393,7 @@ export default function Home() {
           Features
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -515,7 +516,7 @@ export default function Home() {
         </h3>
 
         {/* Pricing Plans */}
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
+        <div className="flex flex-col sm:flex-row md:flex-row gap-8 justify-center items-center">
           {pricing.map((plan, index) => (
             <div
               key={index}
@@ -662,6 +663,10 @@ export default function Home() {
             View All →{" "}
           </span>
         </section>
+        <div id="faq">
+          <Faq />
+        </div>
+        
       </div>
       <div className="fixed bottom-5 right-5 flex flex-col items-end space-y-2 z-50">
         <a
@@ -698,27 +703,49 @@ export default function Home() {
                 <MdEmail className="text-lg" /> support@makautstudents.help
               </p>
               <div className="flex justify-center md:justify-start gap-4 text-[#113F67] dark:text-blue-200">
-                <a href="https://www.facebook.com/sekhar.ghosh.424646"  target="_blank" className="hover:text-blue-500 transition">
+                <a
+                  href="https://www.facebook.com/sekhar.ghosh.424646"
+                  target="_blank"
+                  className="hover:text-blue-500 transition"
+                >
                   <FaFacebookF size={18} />
                 </a>
-                <a href="https://www.instagram.com/sekharghosh123/"  target="_blank" className="hover:text-blue-500 transition">
+                <a
+                  href="https://www.instagram.com/sekharghosh123/"
+                  target="_blank"
+                  className="hover:text-blue-500 transition"
+                >
                   <PiInstagramLogoFill size={19} />
                 </a>
-                <a href="https://x.com/sekharg62"   target="_blank" className="hover:text-blue-500 transition">
+                <a
+                  href="https://x.com/sekharg62"
+                  target="_blank"
+                  className="hover:text-blue-500 transition"
+                >
                   <FaTwitter size={18} />
                 </a>
-                <a href="https://www.linkedin.com/in/sekhar-ghosh-cse26/" target="_blank" rel="noopener noreferrer"  className="hover:text-blue-500 transition">
+                <a
+                  href="https://www.linkedin.com/in/sekhar-ghosh-cse26/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-500 transition"
+                >
                   <FaLinkedinIn size={18} />
                 </a>
 
-                <a href="https://github.com/sekharg62"  target="_blank" className="hover:text-blue-500 transition">
+                <a
+                  href="https://github.com/sekharg62"
+                  target="_blank"
+                  className="hover:text-blue-500 transition"
+                >
                   <FaGithub size={18} />
                 </a>
               </div>
             </div>
 
             {/* Column 2: Navigation */}
-            <div className="text-center">
+            <div className="grid grid-cols-2 text-center gap-6">
+              {/* Column 1: Main Navigation */}
               <ul className="space-y-2">
                 <li>
                   <a
@@ -745,6 +772,31 @@ export default function Home() {
                   <a href="#footer" className="hover:text-blue-500 transition">
                     Contact
                   </a>
+                </li>
+              </ul>
+
+              {/* Column 2: Legal & Support */}
+              <ul className="space-y-2">
+                <li>
+                  <a href="#faq" className="hover:text-blue-500 transition">
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    to="/terms-and-conditions"
+                    className="hover:text-blue-500 transition"
+                  >
+                    Terms & Conditions
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/privacy-policy"
+                    className="hover:text-blue-500 transition"
+                  >
+                    Privacy Policy
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -797,8 +849,8 @@ export default function Home() {
 
           {/* Bottom Section */}
           <div className="mt-10 border-t border-[#34699A]/40 pt-4 text-center text-sm text-[#34699A] dark:text-blue-200 font-semibold">
-            © {new Date().getFullYear()} MakautStudents.help · All rights
-            reserved
+            © {new Date().getFullYear()} makautstudents.help · Made for
+            MAKAUTians
           </div>
         </div>
       </footer>
