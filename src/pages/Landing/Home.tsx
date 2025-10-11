@@ -212,12 +212,12 @@ export default function Home() {
             Contact
           </a>
           <ThemeToggleButton />
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="px-4 py-1 bg-[#34699A] text-white rounded  hover:bg-[#113F67] transition"
           >
             Login
-          </a>
+          </Link>
         </nav>
 
         {/* Mobile Hamburger */}
@@ -270,13 +270,13 @@ export default function Home() {
           >
             Contact
           </a>
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="block px-4 py-2 bg-[#34699A] text-white rounded-sm font-semibold hover:bg-[#113F67] hover:text-white text-center"
             onClick={() => setMenuOpen(false)}
           >
             Login
-          </a>
+          </Link>
         </div>
       )}
 
@@ -339,13 +339,13 @@ export default function Home() {
             no more scattered WhatsApp/Google Forms mess.
           </p>
 
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="group inline-flex items-center gap-2 px-6 py-2 bg-[#34699A] text-white font-medium rounded-sm shadow-md hover:bg-[#113F67] transition-colors duration-300"
           >
             <span>Get Started</span>
             <FaArrowRightLong className="transform transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
+          </Link>
         </div>
 
         {/* Right Stats */}
@@ -532,12 +532,12 @@ export default function Home() {
               >
                 {plan.price}
               </p>
-              <a
-                href={plan.href}
+              <Link
+                to={plan.href}
                 className={`px-4 py-[7px] rounded transition ${plan.btnBg} ${plan.btnHover} text-white`}
               >
                 {plan.btnText}
-              </a>
+              </Link>
             </div>
           ))}
         </div>
