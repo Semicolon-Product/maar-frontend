@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const isAuthenticated = !!localStorage.getItem("token"); // or use context / redux
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />; // Redirect to login
+    return <Navigate to="/login" replace />; // Redirect to login
   }
 
   return children;
