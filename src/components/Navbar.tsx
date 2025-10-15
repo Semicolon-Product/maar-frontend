@@ -3,7 +3,7 @@ import { FiSearch, FiBell } from "react-icons/fi";
 
 const Navbar = () => {
   return (
-    <nav className="w-full bg-gray-900 text-white flex items-center px-4 py-2 shadow-md">
+    <nav className="w-full bg-gray-200 dark:bg-gray-900 text-black dark:text-white flex items-center px-4 py-2 shadow-md">
       {/* Left: Logo */}
       <div className="flex items-center">
         <img src="https://cdn.pixabay.com/photo/2025/09/15/22/27/caveman-9836779_1280.jpg" alt="Logo" className="w-10 h-10" />
@@ -16,7 +16,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full bg-gray-800 border border-gray-700 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full dark:bg-gray-800 border border-gray-700 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
           <FiSearch className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
         </div>

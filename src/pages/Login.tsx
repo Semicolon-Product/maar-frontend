@@ -162,7 +162,7 @@ const Login = () => {
         >
 
             <ToastContainer position="top-right" />
-            <div className={`w-full  max-w-3xl ${getGradientByRole(role)} border border-gray-500 rounded-2xl  shadow p-6 grid md:grid-cols-2 gap-4`}>
+            <div className={`w-full  max-w-3xl ${getGradientByRole(role)} border border-gray-400 rounded-2xl  shadow p-4 sm:p-6 grid md:grid-cols-2 gap-4`}>
                 <form className="flex flex-col gap-6">
                     <div className="flex justify-center gap-4">
                         {['student', 'teacher', 'superadmin'].map((r) => (
@@ -186,7 +186,7 @@ const Login = () => {
                     {role === 'student' && (
                         <>
                             <div>
-                                <label className="block">University Roll No.</label>
+                                <label className="block">University Roll No</label>
                                 <input
                                     type="text"
                                      
