@@ -32,8 +32,8 @@ const Faq = () => {
   };
 
   return (
-    <section className="text-center">
-      <h2 className="text-3xl font-bold mb-10 dark:text-blue-100">
+    <section className="">
+      <h2 className="text-3xl text-center font-bold mb-10 dark:text-blue-100">
         Frequently Asked Questions
       </h2>
 
@@ -45,7 +45,7 @@ const Faq = () => {
           >
             <button
               onClick={() => toggleFAQ(index)}
-              className="w-full cursor-pointer  flex justify-between items-center px-5 py-3 font-medium text-gray-900 dark:text-blue-100"
+              className="w-full cursor-pointer  flex justify-between  px-5 py-3 font-medium text-gray-900 dark:text-blue-100"
             >
               {faq.question}
               <FaChevronDown
