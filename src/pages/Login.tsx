@@ -177,6 +177,28 @@ const Login = () => {
       }}
     >
       <ToastContainer position="top-right" />
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-6 left-6 flex items-center gap-1 text-blue-700 hover:text-blue-900 
+               font-semibold   py-1.5 rounded-lg 
+               transition-all duration-300 "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-6 h-6 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        Back to Home
+      </button>
       <div
         className={`w-full  max-w-3xl ${getGradientByRole(
           role
@@ -534,7 +556,6 @@ const Login = () => {
             </>
           )}
         </form>
-
         <div className="hidden md:block">
           <img
             src={loginIn}

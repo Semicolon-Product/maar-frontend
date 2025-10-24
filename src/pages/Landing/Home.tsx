@@ -27,10 +27,12 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { PiInstagramLogoFill } from "react-icons/pi";
 import Faq from "../Faq";
+import { useDarkMode } from "@/utils/useDarkMode";
 
 export default function Home() {
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+  const isDarkMode = useDarkMode();
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackData, setFeedbackData] = useState({
     rating: 0,
@@ -66,24 +68,32 @@ export default function Home() {
       title: "Centralized Data",
       desc: "All certificates and documents in one place.",
       label: "", // empty
+      image: "./feature-1-light.png",
+      darkImage: "./feature-1.png",
     },
     {
       icon: <GrSecure className="text-xl text-[#34699A]" />,
       title: "Secure Authentication",
       desc: "Login for students, teachers, and admins.",
       label: "", // empty
+      image: "./feature-2-light.png",
+      darkImage: "./feature-2.png",
     },
     {
       icon: <FaLightbulb className="text-xl text-[#34699A]" />,
       title: "Year-wise Suggestions",
       desc: "Students receive suggestions and guidance based on their year of study.",
       label: "", // empty
+      image: "./feature-3-light.png",
+      darkImage: "./feature-3.png",
     },
     {
       icon: <FaUniversity className="text-xl text-[#34699A]" />,
       title: "University Ready",
       desc: "Verified data easily uploaded to MAKAUT portal.",
       label: "Coming Soon", // show label
+      image: "./feature-4-1.png",
+      darkImage: "./feature-4.png",
     },
   ];
 
@@ -388,40 +398,42 @@ export default function Home() {
 
       {/* Features */}
 
-      <section id="features" className="px-6 md:px-20 py-12 ">
+      <section id="features" className="px-6 md:px-20 py-12">
         <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#113F67] dark:text-blue-100">
           Features
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="relative p-6 border  rounded-xl shadow-md hover:shadow-xl  transition bg-gradient-to-br from-white to-blue-200 text-white  dark:from-gray-700 dark:to-gray-900"
+              className=" group rounded-2xl overflow-hidden hover:border-b-1 hover:border-blue-400  bg-white dark:bg-gray-900 transition-all duration-500"
             >
-              {/* Top-right label */}
-              {feature.label && (
-                <span className="absolute top-3 right-3 bg-blue-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                  {feature.label}
-                </span>
-              )}
+              {/* Image Section */}
+              <div className="relative h-64 overflow-hidden ">
+                <img
+                  src={isDarkMode ? feature.darkImage : feature.image}
+                  alt={feature.title}
+                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-101"
+                />
 
-              {/* Icon wrapper with bg */}
-              <div className="flex">
-                <div className="w-8 h-8 flex items-center justify-center rounded-full  bg-[#34699A]/10 dark:bg-blue-300 mb-4">
-                  {feature.icon}
-                </div>
-
-                {/* Title */}
-                <h4 className="font-bold text-m p-1 text-[#113F67] text-center justify-center dark:text-blue-100">
-                  {feature.title}
-                </h4>
+                {/* Optional label */}
+                {feature.label && (
+                  <span className="absolute top-3 right-3 bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
+                    {feature.label}
+                  </span>
+                )}
               </div>
 
-              {/* Description */}
-              <p className="text-l opacity-90 text-[#113F67] dark:text-blue-300">
-                {feature.desc}
-              </p>
+              {/* Text Section (Equal Height + Hover Bottom Border) */}
+              <div className="flex flex-col justify-between  p-4 text-center  min-h-[120px]  bg-blue-50 dark:bg-gray-900 transition-all duration-300 ">
+                <h3 className="text-lg font-bold mb-1 text-[#113F67] dark:text-blue-100">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                  {feature.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -660,13 +672,12 @@ export default function Home() {
             onClick={() => navigate("/blog")}
             className="text-blue-400 font-medium hover:underline m-2 "
           >
-            View All →{" "}
+            {/*             View All →{" "} */}
           </span>
         </section>
         <div id="faq">
           <Faq />
         </div>
-        
       </div>
       <div className="fixed bottom-5 right-5 flex flex-col items-end space-y-2 z-50">
         <a
