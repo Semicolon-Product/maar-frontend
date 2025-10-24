@@ -92,7 +92,7 @@ export default function Home() {
       title: "University Ready",
       desc: "Verified data easily uploaded to MAKAUT portal.",
       label: "Coming Soon", // show label
-      image: "./feature-4-1.png",
+      image: "./feature-4-light.png",
       darkImage: "./feature-4.png",
     },
   ];
