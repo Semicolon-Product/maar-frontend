@@ -337,6 +337,11 @@ export default function Home() {
             className={` text-4xl md:text-5xl font-bold tracking-tight ${
               theme === "dark" ? "text-white" : "text-[#113F67]"
             }`}
+            style={{
+              fontWeight: 800,
+              WebkitFontSmoothing: "antialiased",
+              textRendering: "optimizeLegibility",
+            }}
           >
             Simplify Student Activity{" "}
             <span className="text-blue-600">Submissions</span>
@@ -345,8 +350,8 @@ export default function Home() {
           {/* <div className="h-20 w-20 relative z-50">
                         <img src="/VectorGroup.png" alt="" className="rotate-140" />
                     </div> */}
-          <p className="text-[#34699A] mb-6 text-lg dark:text-blue-200">
-            MakautStudents.help centralizes MAR (Mandatory Additional
+          <p className="text-[#34699A] mb-6 mt-1 text-lg dark:text-blue-200">
+            MakautStudents.help centralizes MAAR (Mandatory Additional
             Requirement) data uploads, letting teachers and students securely
             submit and verify documents — no more scattered WhatsApp/Google
             Forms mess.
