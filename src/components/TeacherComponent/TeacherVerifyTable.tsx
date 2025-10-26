@@ -288,9 +288,9 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
         </div>
 
         <div className="mx-2 md:mx-5">
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-300 dark:border-gray-700 text-base">
-              <thead className="bg-[#2a4054] dark:bg-gray-800 text-white">
+          <div className="overflow-x-auto rounded-md">
+            <table className="min-w-full   text-base ">
+              <thead className="bg-[#2a4054] border  text-white ">
                 <tr className="h-10">
                   <th className="px-2 py-1 text-left font-bold">Sr No</th>
                   <th className="px-2 py-1 text-left font-bold">
@@ -311,9 +311,9 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                   students.map((student, index) => (
                     <React.Fragment key={index}>
                       <tr
-                        className={`border-b ${
+                        className={`border ${
                           index % 2
-                            ? "bg-gray-100 dark:bg-gray-900"
+                            ? "bg-gray-100 dark:bg-gray-800"
                             : "bg-white dark:bg-gray-800"
                         }`}
                       >
@@ -359,7 +359,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
                       {/* Collapse Row */}
                       {openIndex === index && (
-                        <tr className="bg-gray-50 dark:bg-gray-700">
+                        <tr className="bg-gray-50 dark:bg-gray-900 border   ">
                           <td colSpan={8} className="p-0">
                             <motion.div
                               initial={{ height: 0 }}
@@ -374,7 +374,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                 {student.activities?.length ? (
                                   <div className="overflow-x-auto mt-1">
                                     <table className="min-w-full border border-gray-300 dark:border-gray-600 text-sm">
-                                      <thead className="bg-[#00809D] dark:bg-blue-900 text-white">
+                                      <thead className="bg-gray-800  text-white">
                                         <tr className="h-8">
                                           <th className="px-2 py-1">
                                             Serial No.
@@ -426,7 +426,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                                 className={`px-2 py-1 cursor-pointer ${
                                                   !activity.is_active
                                                     ? "text-red-600"
-                                                    : "text-blue-600"
+                                                    : "text-blue-500"
                                                 } underline`}
                                                 onClick={() =>
                                                   handleDocsModal(activity)
@@ -458,7 +458,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                               </td>
                                               <td className="px-2 py-1 text-center">
                                                 <button
-                                                  className="text-red-600 hover:text-red-800"
+                                                  className="text-white hover:text-gray-500"
                                                   onClick={() =>
                                                     handleDeleteActivity(
                                                       activity
@@ -513,16 +513,20 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
         </div>
       </div>
 
-      <div className="max-w-sm mx-auto mt-10 p-6 bg-white shadow-md rounded-lg border border-gray-200">
-        <h2 className="text-xl font-semibold text-center text-gray-700 mb-6">
+      <div className="max-w-sm mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+        <h2 className="text-xl font-semibold text-center text-gray-700 dark:text-gray-200 mb-6">
           Teacher University Credential
         </h2>
-        <hr />
-        <form onSubmit={handleSubmitTeacherCredential} className="space-y-4">
+        <hr className="border-gray-300 dark:border-gray-600" />
+
+        <form
+          onSubmit={handleSubmitTeacherCredential}
+          className="space-y-4 mt-4"
+        >
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Username:
             </label>
@@ -532,13 +536,14 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
               value={credentials.username}
               onChange={handleChange}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300  shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
+
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Password:
             </label>
@@ -548,12 +553,13 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
               value={credentials.password}
               onChange={handleChange}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300  shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4  hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors duration-200 dark:bg-blue-500 dark:hover:bg-blue-600"
           >
             Submit
           </button>
