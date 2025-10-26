@@ -1,7 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { FaCalendarAlt, FaSchool, FaChalkboardTeacher, FaBarcode, FaStar } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaSchool,
+  FaChalkboardTeacher,
+  FaBarcode,
+  FaStar,
+} from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -15,24 +21,36 @@ import {
   Modal,
   Box,
   Typography,
-  Divider
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { superadminStyle } from '@/components/styles/style';
-import Close from '@mui/icons-material/Close';
-import type { AllDetails, PaymentPlan, SuperadminSidebarData, Teacher, Department } from '@/components/types/superadminType';
-import { X, Zap } from 'lucide-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
-import { getLoggedInSuperadminId } from '@/utils/auth';
-import { toast, ToastContainer } from 'react-toastify';
+  Divider,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { superadminStyle } from "@/components/styles/style";
+import Close from "@mui/icons-material/Close";
+import type {
+  AllDetails,
+  PaymentPlan,
+  SuperadminSidebarData,
+  Teacher,
+  Department,
+} from "@/components/types/superadminType";
+import { X, Zap } from "lucide-react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { getLoggedInSuperadminId } from "@/utils/auth";
 import { PiCurrencyInrBold } from "react-icons/pi";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { HiOutlineUserGroup, HiUserGroup } from "react-icons/hi2";
 //import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
-import { deleteApi, getApi, postApi } from '@/api';
+import { deleteApi, getApi, postApi } from "@/api";
 import Select from "react-select";
+import { useToast } from "@/contexts/ToastContext";
 interface SidebarContentProps {
   details?: SuperadminSidebarData;
   selectedSection: string;
@@ -41,32 +59,39 @@ interface SidebarContentProps {
 
 const SuperAdminPage = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [selectedSection, setSelectedSection] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   //--------------manage user-------------
-  const [showAddModal, setShowAddModal] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false);
   const [teacherData, setTeacherData] = useState<{
     id?: number;
     name: string;
     dept: string;
     email: string;
     password: string;
-    mobileNo: string
+    mobileNo: string;
   }>({
     id: undefined,
-    name: '',
-    dept: '',
-    email: '',
-    password: '',
+    name: "",
+    dept: "",
+    email: "",
+    password: "",
     mobileNo: "",
   });
 
-
-  //-----------add teacher 
+  //-----------add teacher
   const handleOpenAddModal = () => {
     setIsEditMode(false); // not editing, it's new
-    setTeacherData({ id: undefined, name: '', dept: '', email: '', password: '', mobileNo: "" });
+    setTeacherData({
+      id: undefined,
+      name: "",
+      dept: "",
+      email: "",
+      password: "",
+      mobileNo: "",
+    });
     setShowAddModal(true);
   };
   //-----edit teacher
@@ -88,16 +113,13 @@ const SuperAdminPage = () => {
 
   const handleClear = () => {
     setTeacherData({
-
       name: "",
       dept: "",
       email: "",
       password: "",
-      mobileNo: ""
+      mobileNo: "",
     });
-  }
-
-
+  };
 
   const getCurrentDateTime = (): string => {
     const now = new Date();
@@ -122,37 +144,31 @@ const SuperAdminPage = () => {
   const getAllTeacher = async () => {
     await getApi("teacher/getAllTeacher").then((res) => {
       console.log("get all teacher res::", res);
-      setAllTeacher(res?.teachers)
-    })
-  }
+      setAllTeacher(res?.teachers);
+    });
+  };
   const handleDeleteTeacher = (teacher: Teacher) => {
-    console.log("Delete", teacher)
-    setShowDeleteModal(!showDeleteModal)
+    console.log("Delete", teacher);
+    setShowDeleteModal(!showDeleteModal);
     setSelectedTeacher(teacher);
-    console.log("Delete activity", teacher)
-    getAllTeacher()
-  }
+    console.log("Delete activity", teacher);
+    getAllTeacher();
+  };
 
   const confirmDelete = async () => {
     if (!selectedTeacher || selectedTeacher.id === undefined) return;
     console.log("delte:::", selectedTeacher);
     await deleteApi(`teacher/delete/${selectedTeacher.id}`).then((res) => {
       console.log("res in delter", res);
-      toast.success(res?.message)
+      toast.success(res?.message);
       getAllTeacher();
       setShowDeleteModal(false);
-
-    })
-
-
+    });
   };
-
-
 
   const superadminId = getLoggedInSuperadminId();
 
-  console.log("Superadminid", superadminId)
-
+  console.log("Superadminid", superadminId);
 
   const [errors, setErrors] = useState({
     name: false,
@@ -161,7 +177,6 @@ const SuperAdminPage = () => {
     password: false,
     mobileNo: false,
   });
-
 
   const handleAddTeacher = async () => {
     const { name, dept, email, password, mobileNo } = teacherData;
@@ -176,23 +191,26 @@ const SuperAdminPage = () => {
 
     setErrors(newErrors);
 
-
-
     // Proceed to submit if all fields are valid
     try {
-      const payload = { teacher_name: name, department: dept, email: email, password: password, mobile_no: mobileNo }
+      const payload = {
+        teacher_name: name,
+        department: dept,
+        email: email,
+        password: password,
+        mobile_no: mobileNo,
+      };
       await postApi("teacher/create", payload).then((res) => {
-        console.log("res in teacher create::", res)
-        toast.success(res.message)
+        console.log("res in teacher create::", res);
+        toast.success(res.message);
         setShowAddModal(false);
-        handleClear()
+        handleClear();
         getAllTeacher();
-      })
+      });
     } catch (err) {
       toast.error("Something went wrong");
     }
   };
-
 
   const handleUpdateTeacher = async () => {
     /* const updatedData = {
@@ -206,36 +224,33 @@ const SuperAdminPage = () => {
       console.error("Teacher ID is missing for update");
       return;
     }
-
-
   };
 
   const [allDetails, setAllDetails] = useState<AllDetails>();
   const getAllDetails = async () => {
     await getApi("superadmin/getDetails").then((res) => {
-      console.log("in page::", res)
+      console.log("in page::", res);
       setAllDetails(res?.data);
       setAllTeacher(res?.data?.teachers);
-    })
-  }
+    });
+  };
   const [paymentDetails, setPaymentDetails] = useState<PaymentPlan[]>();
   const getPlanDetails = async () => {
     await getApi("superadmin/getPlans").then((res) => {
       console.log("res isn payment:::", res?.data);
-      setPaymentDetails(res?.data)
-
-    })
-  }
+      setPaymentDetails(res?.data);
+    });
+  };
 
   useEffect(() => {
     getAllDetails();
     getPlanDetails();
   }, []);
-  console.log("data::", allDetails)
+  console.log("data::", allDetails);
 
   //console.log("all teachers", backendAllTeachers);
 
-  //---------------log-out functionality 
+  //---------------log-out functionality
 
   useEffect(() => {
     if (selectedSection === "logout") {
@@ -250,7 +265,7 @@ const SuperAdminPage = () => {
     }
   }, [selectedSection]);
 
-  console.log("payment details::", paymentDetails)
+  console.log("payment details::", paymentDetails);
 
   const handleCreatePayment = async (amount: number) => {
     console.log("amount", amount, typeof amount);
@@ -273,51 +288,47 @@ const SuperAdminPage = () => {
     await getApi("superadmin/getAllDepartments").then((res) => {
       console.log("dept", res.data);
       setDeptList(res?.data);
-    })
-  }
-
+    });
+  };
 
   useEffect(() => {
-
     getAllDept();
-  }, [])
-
-
+  }, []);
 
   const deptOptions = deptList?.map((dept) => ({
     label: dept.name,
     value: dept.name,
   }));
 
-  console.log("paymentDetails", Number(paymentDetails?.[0]?.total_amount))
+  console.log("paymentDetails", Number(paymentDetails?.[0]?.total_amount));
 
   return (
-
     <div
       className="flex flex-col min-h-screen bg-cover bg-center text-white"
-    /*  style={{
+      /*  style={{
        backgroundImage: "url('https://imapro.in/bahrain/global/bg.svg')", // Replace with your actual image path
        backgroundAttachment: "fixed",
      }} */
     >
-      <ToastContainer position='top-right' />
       <div className="flex h-[100vh] overflow-hidden">
-
         {/* Sidebar for Desktop */}
         <div className="hidden md:block bg-gray-900 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
           <SidebarContent
             details={allDetails?.superadmin}
             selectedSection={selectedSection}
-            setSelectedSection={setSelectedSection} />
+            setSelectedSection={setSelectedSection}
+          />
         </div>
 
         {/* Sidebar for Mobile */}
         {isSidebarOpen && (
           <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
-
             {/* Close icon */}
             <div className="flex justify-end p-2">
-              <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="text-white hover:text-red-400"
+              >
                 <X size={24} />
                 {/* Or if using MUI: <CloseIcon /> */}
               </button>
@@ -335,12 +346,20 @@ const SuperAdminPage = () => {
         <Modal open={showAddModal} onClose={() => setShowAddModal(false)}>
           <div className="bg-white max-w-[95vw] sm:max-w-[90vw] md:max-w-[60vw] mt-[5%] mx-auto rounded-lg shadow-lg flex flex-col max-h-screen overflow-hidden">
             {/* Header */}
-            <Box sx={{ display: "flex", alignItems: "center", bgcolor: "#2a4054", px: 2, py: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                bgcolor: "#2a4054",
+                px: 2,
+                py: 1,
+              }}
+            >
               <Typography
                 variant="h6"
                 className="text-white text-center flex-1 text-sm sm:text-base md:text-lg"
               >
-                {isEditMode ? 'Edit Teacher' : 'Add New Teacher'}
+                {isEditMode ? "Edit Teacher" : "Add New Teacher"}
               </Typography>
               <IconButton onClick={() => setShowAddModal(false)} size="small">
                 <Close fontSize="small" sx={{ color: "white" }} />
@@ -353,23 +372,32 @@ const SuperAdminPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Teacher Name */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Teacher Name</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Teacher Name
+                    </label>
                     <input
                       type="text"
                       name="name"
                       value={teacherData.name}
                       onChange={(e) =>
-                        setTeacherData((prev) => ({ ...prev, name: e.target.value }))
+                        setTeacherData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
                       }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.name ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                        }`}
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
+                        errors.name
+                          ? "border-red-500 ring-red-500"
+                          : "border-gray-300 focus:ring-blue-500"
+                      }`}
                     />
-
                   </div>
 
                   {/* Department */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Department
+                    </label>
                     {/* <input
                       type="text"
                       name="dept"
@@ -383,9 +411,16 @@ const SuperAdminPage = () => {
                     <Select
                       name="dept"
                       options={deptOptions}
-                      value={deptOptions?.find((opt) => opt.value === teacherData.dept) || null}
+                      value={
+                        deptOptions?.find(
+                          (opt) => opt.value === teacherData.dept
+                        ) || null
+                      }
                       onChange={(selectedOption) =>
-                        setTeacherData((prev) => ({ ...prev, dept: selectedOption?.value || "" }))
+                        setTeacherData((prev) => ({
+                          ...prev,
+                          dept: selectedOption?.value || "",
+                        }))
                       }
                       classNamePrefix="react-select"
                       styles={{
@@ -393,7 +428,9 @@ const SuperAdminPage = () => {
                           ...base,
                           padding: "2px",
                           borderRadius: "0.25rem",
-                          border: errors.dept ? "1px solid #f87171" : "1px solid #d1d5db", // red-500 or gray-300
+                          border: errors.dept
+                            ? "1px solid #f87171"
+                            : "1px solid #d1d5db", // red-500 or gray-300
                           boxShadow: state.isFocused
                             ? errors.dept
                               ? "0 0 0 1px #f87171"
@@ -410,46 +447,70 @@ const SuperAdminPage = () => {
 
                   {/* Email */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email
+                    </label>
                     <input
                       type="email"
                       name="email"
                       value={teacherData.email}
                       onChange={(e) =>
-                        setTeacherData((prev) => ({ ...prev, email: e.target.value }))
+                        setTeacherData((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
                       }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                        }`}
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
+                        errors.email
+                          ? "border-red-500 ring-red-500"
+                          : "border-gray-300 focus:ring-blue-500"
+                      }`}
                     />
                   </div>
 
                   {/* Password */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password
+                    </label>
                     <input
                       type="text"
                       name="password"
                       value={teacherData.password}
                       onChange={(e) =>
-                        setTeacherData((prev) => ({ ...prev, password: e.target.value }))
+                        setTeacherData((prev) => ({
+                          ...prev,
+                          password: e.target.value,
+                        }))
                       }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                        }`}
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
+                        errors.password
+                          ? "border-red-500 ring-red-500"
+                          : "border-gray-300 focus:ring-blue-500"
+                      }`}
                     />
                   </div>
 
                   {/* Mobile No */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mobile No</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Mobile No
+                    </label>
                     <input
                       type="text"
                       name="mobileNo"
                       value={teacherData.mobileNo}
                       onChange={(e) =>
-                        setTeacherData((prev) => ({ ...prev, mobileNo: e.target.value }))
+                        setTeacherData((prev) => ({
+                          ...prev,
+                          mobileNo: e.target.value,
+                        }))
                       }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${errors.mobileNo ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                        }`}
+                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
+                        errors.mobileNo
+                          ? "border-red-500 ring-red-500"
+                          : "border-gray-300 focus:ring-blue-500"
+                      }`}
                     />
                   </div>
                 </div>
@@ -471,18 +532,18 @@ const SuperAdminPage = () => {
                   ...superadminStyle.button,
                   color: "white",
                   backgroundColor: "green",
-                  '&:hover': { backgroundColor: "#228B22" },
+                  "&:hover": { backgroundColor: "#228B22" },
                 }}
                 onClick={isEditMode ? handleUpdateTeacher : handleAddTeacher}
               >
-                {isEditMode ? 'Update' : 'Add'}
+                {isEditMode ? "Update" : "Add"}
               </Button>
               <Button
                 sx={{
                   ...superadminStyle.button,
                   color: "white",
                   backgroundColor: "red",
-                  '&:hover': { backgroundColor: "#cc0000" },
+                  "&:hover": { backgroundColor: "#cc0000" },
                 }}
                 onClick={handleClear}
               >
@@ -492,10 +553,8 @@ const SuperAdminPage = () => {
           </div>
         </Modal>
 
-
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto ">
-
           {/* Top bar with menu icon */}
           <div className="flex justify-end px-4 py-2 md:hidden">
             <Button
@@ -514,7 +573,7 @@ const SuperAdminPage = () => {
 
             {/* Render Section Content */}
             <div className="mt-6">
-              {selectedSection === "dashboard" &&
+              {selectedSection === "dashboard" && (
                 <div className="p-4 grid gap-6">
                   {/* Row 1 - 3 Equal Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -523,7 +582,9 @@ const SuperAdminPage = () => {
                         <FaCalendarAlt className="text-blue-500 text-xl" />
                         Current Date & Time
                       </h3>
-                      <p className="text-gray-700 text-base">{getCurrentDateTime()}</p>
+                      <p className="text-gray-700 text-base">
+                        {getCurrentDateTime()}
+                      </p>
                     </div>
 
                     <div className="bg-green-100 rounded-xl shadow-md p-5 border border-green-200">
@@ -531,7 +592,9 @@ const SuperAdminPage = () => {
                         <FaSchool className="text-green-500 text-xl" />
                         Institute Name
                       </h3>
-                      <p className="text-gray-700 text-base">{allDetails?.institute.name}</p>
+                      <p className="text-gray-700 text-base">
+                        {allDetails?.institute.name}
+                      </p>
                     </div>
 
                     <div className="bg-purple-100 rounded-xl shadow-md p-5 border border-purple-200">
@@ -539,7 +602,8 @@ const SuperAdminPage = () => {
                         <FaChalkboardTeacher className="text-purple-500 text-xl" />
                         Total Teachers
                       </h3>
-                      <p className="text-gray-700 text-base">{allDetails?.teachers?.length}
+                      <p className="text-gray-700 text-base">
+                        {allDetails?.teachers?.length}
                       </p>
                     </div>
                   </div>
@@ -552,7 +616,9 @@ const SuperAdminPage = () => {
                         <FaBarcode className="text-orange-500 text-xl" />
                         Institute Code
                       </h3>
-                      <p className="text-gray-700 text-base">{allDetails?.institute.institute_code}</p>
+                      <p className="text-gray-700 text-base">
+                        {allDetails?.institute.institute_code}
+                      </p>
                     </div>
 
                     {/* 2/3 Card */}
@@ -560,7 +626,6 @@ const SuperAdminPage = () => {
                       <div className="flex justify-between items-center mb-3">
                         <h3 className="flex items-center text-lg font-semibold text-gray-800 gap-2">
                           <PiCurrencyInrBold className="text-orange-500 text-xl" />
-
                           Current Plan
                         </h3>
                         <span className="text-sm font-medium text-white bg-orange-500 px-3 py-1 rounded-full">
@@ -572,121 +637,194 @@ const SuperAdminPage = () => {
                         {/* Left Column - Plan Details */}
                         <div className="space-y-2">
                           <p className="text-sm text-gray-700">
-                            Total Quota: <span className="font-medium">{allDetails?.payment?.student_quota ?? 0}</span>
+                            Total Quota:{" "}
+                            <span className="font-medium">
+                              {allDetails?.payment?.student_quota ?? 0}
+                            </span>
                           </p>
                           <p className="text-sm text-gray-700">
-                            Registered Students: <span className="font-medium">{allDetails?.payment?.students_registered ?? 0}</span>
+                            Registered Students:{" "}
+                            <span className="font-medium">
+                              {allDetails?.payment?.students_registered ?? 0}
+                            </span>
                           </p>
                         </div>
 
                         {/* Right Column - Payment Info */}
                         <div className="space-y-2">
                           <p className="text-sm text-gray-700">
-                            <span className="font-medium">Last Payment Date:</span>{" "}
+                            <span className="font-medium">
+                              Last Payment Date:
+                            </span>{" "}
                             {allDetails?.payment?.paid_on
-                              ? new Date(allDetails.payment.paid_on).toLocaleDateString("en-GB", {
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric",
-                              })
+                              ? new Date(
+                                  allDetails.payment.paid_on
+                                ).toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "long",
+                                  year: "numeric",
+                                })
                               : "N/A"}
                           </p>
                           <p className="text-sm text-gray-700">
-                            <span className="font-medium">Plan Expiry Date:</span> 10 July 2026
+                            <span className="font-medium">
+                              Plan Expiry Date:
+                            </span>{" "}
+                            10 July 2026
                           </p>
                         </div>
                       </div>
                     </div>
-
-
-
-
-
-
                   </div>
                   <div className="w-full max-w-7xl mx-auto px-4 py-12">
                     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
                       <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
                         <div>
-                          <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">{paymentDetails && paymentDetails[0]?.plan_name} Plan</h4>
+                          <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">
+                            {paymentDetails && paymentDetails[0]?.plan_name}{" "}
+                            Plan
+                          </h4>
                           <div className="flex items-center gap-2 mb-3">
                             <HiUserGroup className="h-6 w-6 text-blue-500" />
-                            <h3 className="text-xl font-bold text-gray-800">Up to{paymentDetails && paymentDetails[0]?.total_students}  Students</h3>
+                            <h3 className="text-xl font-bold text-gray-800">
+                              Up to
+                              {paymentDetails &&
+                                paymentDetails[0]?.total_students}{" "}
+                              Students
+                            </h3>
                           </div>
                           <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
-                            <li>₹{paymentDetails && paymentDetails[0]?.amount_per_student}  per student</li>
+                            <li>
+                              ₹
+                              {paymentDetails &&
+                                paymentDetails[0]?.amount_per_student}{" "}
+                              per student
+                            </li>
                             <li>Email support</li>
                             <li>Basic analytics</li>
                           </ul>
-                          <p className="text-sm text-gray-400 line-through">₹24,000/year</p>
-                          <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[0]?.total_amount}/year</p>
+                          <p className="text-sm text-gray-400 line-through">
+                            ₹24,000/year
+                          </p>
+                          <p className="text-3xl font-bold text-green-600">
+                            ₹{paymentDetails && paymentDetails[0]?.total_amount}
+                            /year
+                          </p>
                         </div>
-                        <button onClick={() => {
-                          const amount = Number(paymentDetails?.[0]?.total_amount);
-                          if (!isNaN(amount)) {
-                            handleCreatePayment(amount);
-                          }
-                        }}
-                          className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition">
+                        <button
+                          onClick={() => {
+                            const amount = Number(
+                              paymentDetails?.[0]?.total_amount
+                            );
+                            if (!isNaN(amount)) {
+                              handleCreatePayment(amount);
+                            }
+                          }}
+                          className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition"
+                        >
                           Choose Standard
                         </button>
                       </div>
 
-
                       <div className="bg-gradient-to-br from-[#fff9db] via-[#fff4bf] to-[#fef08a] shadow-2xl border-3 border-yellow-400 rounded-2xl p-6 flex flex-col h-[350px] justify-between scale-105 z-10 hover:scale-[1.07] transition-transform duration-300">
                         <div>
-                          <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">{paymentDetails && paymentDetails[1]?.plan_name} Plan</h4>
+                          <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">
+                            {paymentDetails && paymentDetails[1]?.plan_name}{" "}
+                            Plan
+                          </h4>
                           <div className="flex items-center gap-2 mb-3">
                             <FaStar className="h-6 w-6 text-yellow-500" />
-                            <h3 className="text-xl font-bold text-gray-900">Up to {paymentDetails && paymentDetails[1]?.total_students}  Students</h3>
+                            <h3 className="text-xl font-bold text-gray-900">
+                              Up to{" "}
+                              {paymentDetails &&
+                                paymentDetails[1]?.total_students}{" "}
+                              Students
+                            </h3>
                           </div>
                           <ul className="text-sm text-gray-800 list-disc pl-5 space-y-1 mb-4">
-                            <li>₹{paymentDetails && paymentDetails[1]?.amount_per_student}  per student</li>
+                            <li>
+                              ₹
+                              {paymentDetails &&
+                                paymentDetails[1]?.amount_per_student}{" "}
+                              per student
+                            </li>
                             <li>Priority email support</li>
                             <li>Advanced reporting dashboard</li>
                             <li>Data export feature</li>
                           </ul>
-                          <p className="text-sm text-gray-500 line-through">₹54,000/year</p>
-                          <p className="text-3xl font-bold text-yellow-700">₹{paymentDetails && paymentDetails[1]?.total_amount}/year</p>
+                          <p className="text-sm text-gray-500 line-through">
+                            ₹54,000/year
+                          </p>
+                          <p className="text-3xl font-bold text-yellow-700">
+                            ₹{paymentDetails && paymentDetails[1]?.total_amount}
+                            /year
+                          </p>
                         </div>
                         {/*  <img
                           src={premium}
                           alt="Premium Plan"
                           className="w-full h-48 object-contain my-4"
                         /> */}
-                        <button onClick={() => {
-                          const amount = Number(paymentDetails?.[1]?.total_amount);
-                          if (!isNaN(amount)) {
-                            handleCreatePayment(amount);
-                          }
-                        }} className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition">
+                        <button
+                          onClick={() => {
+                            const amount = Number(
+                              paymentDetails?.[1]?.total_amount
+                            );
+                            if (!isNaN(amount)) {
+                              handleCreatePayment(amount);
+                            }
+                          }}
+                          className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition"
+                        >
                           Choose Premium
                         </button>
                       </div>
 
-
                       <div className="bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] shadow-lg border border-yellow-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:rotate-y-3 transition-transform duration-300">
                         <div>
-                          <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">{paymentDetails && paymentDetails[2]?.plan_name} Plan</h4>
+                          <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">
+                            {paymentDetails && paymentDetails[2]?.plan_name}{" "}
+                            Plan
+                          </h4>
                           <div className="flex items-center gap-2 mb-3">
                             <HiOutlineUserGroup className="h-6 w-6 text-indigo-500" />
-                            <h3 className="text-xl font-bold text-gray-800">Up to {paymentDetails && paymentDetails[2]?.total_students} Students</h3>
+                            <h3 className="text-xl font-bold text-gray-800">
+                              Up to{" "}
+                              {paymentDetails &&
+                                paymentDetails[2]?.total_students}{" "}
+                              Students
+                            </h3>
                           </div>
                           <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
-                            <li>₹{paymentDetails && paymentDetails[2]?.amount_per_student}  per student</li>
+                            <li>
+                              ₹
+                              {paymentDetails &&
+                                paymentDetails[2]?.amount_per_student}{" "}
+                              per student
+                            </li>
                             <li>Dedicated account manager</li>
                             <li>Full API access</li>
                             <li>Custom integrations</li>
                           </ul>
-                          <p className="text-sm text-gray-400 line-through">₹75,000/year</p>
-                          <p className="text-3xl font-bold text-green-600">₹{paymentDetails && paymentDetails[2]?.total_amount}/year</p>
+                          <p className="text-sm text-gray-400 line-through">
+                            ₹75,000/year
+                          </p>
+                          <p className="text-3xl font-bold text-green-600">
+                            ₹{paymentDetails && paymentDetails[2]?.total_amount}
+                            /year
+                          </p>
                         </div>
-                        <button onClick={() => {
-                          const amount = Number(paymentDetails?.[2]?.total_amount);
-                          if (!isNaN(amount)) {
-                            handleCreatePayment(amount);
-                          }
-                        }} className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition">
+                        <button
+                          onClick={() => {
+                            const amount = Number(
+                              paymentDetails?.[2]?.total_amount
+                            );
+                            if (!isNaN(amount)) {
+                              handleCreatePayment(amount);
+                            }
+                          }}
+                          className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition"
+                        >
                           Choose Enterprise
                         </button>
                       </div>
@@ -696,96 +834,206 @@ const SuperAdminPage = () => {
                     <div className="mt-10 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
                       <p className="text-sm text-gray-800 font-medium">
                         Need access for more than 5000 students?{" "}
-                        <span className="text-blue-600 underline cursor-pointer hover:text-blue-800">Contact us</span> for an enterprise solution.
+                        <span className="text-blue-600 underline cursor-pointer hover:text-blue-800">
+                          Contact us
+                        </span>{" "}
+                        for an enterprise solution.
                       </p>
                     </div>
 
                     {/* Auto Submission Add-on */}
-                    <div className="mt-8 cursor-pointer" onClick={() => handleCreatePayment(5000)}>
+                    <div
+                      className="mt-8 cursor-pointer"
+                      onClick={() => handleCreatePayment(5000)}
+                    >
                       <div className="bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] border border-orange-300 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
                         <div className="flex items-center gap-3">
                           <Zap className="h-6 w-6 text-orange-500" />
                           <div>
-                            <p className="text-md font-bold text-gray-800">Auto Submission Feature</p>
-                            <p className="text-sm text-gray-700">Sync student records automatically every year.</p>
+                            <p className="text-md font-bold text-gray-800">
+                              Auto Submission Feature
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              Sync student records automatically every year.
+                            </p>
                           </div>
                         </div>
-                        <p className="text-lg font-bold text-green-700">₹5,000/year</p>
+                        <p className="text-lg font-bold text-green-700">
+                          ₹5,000/year
+                        </p>
                       </div>
                     </div>
                   </div>
-
-
-
                 </div>
-              }
-
+              )}
 
               {selectedSection === "users" && (
-
                 <div>
-                  <Button variant="contained" sx={{
-                    fontSize: "12px", mb: 2, textTransform: "none", background: "#2a4054", p: 1
-                  }} onClick={() => handleOpenAddModal()}>Add Teacher</Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontSize: "12px",
+                      mb: 2,
+                      textTransform: "none",
+                      background: "#2a4054",
+                      p: 1,
+                    }}
+                    onClick={() => handleOpenAddModal()}
+                  >
+                    Add Teacher
+                  </Button>
                   <TableContainer component={Paper}>
                     <Table>
                       <TableHead>
-                        <TableRow sx={{ backgroundColor: "#2a4054", height: "30px", }}>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Teacher Name</TableCell>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Email</TableCell>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Mobile No</TableCell>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Department</TableCell>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Password</TableCell>
-                          <TableCell sx={{ ...superadminStyle.headerStyle, fontSize: "0.8em" }}>Action</TableCell>
+                        <TableRow
+                          sx={{ backgroundColor: "#2a4054", height: "30px" }}
+                        >
+                          <TableCell
+                            sx={{
+                              ...superadminStyle.headerStyle,
+                              fontSize: "0.8em",
+                            }}
+                          >
+                            Teacher Name
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...superadminStyle.headerStyle,
+                              fontSize: "0.8em",
+                            }}
+                          >
+                            Email
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...superadminStyle.headerStyle,
+                              fontSize: "0.8em",
+                            }}
+                          >
+                            Mobile No
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...superadminStyle.headerStyle,
+                              fontSize: "0.8em",
+                            }}
+                          >
+                            Department
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...superadminStyle.headerStyle,
+                              fontSize: "0.8em",
+                            }}
+                          >
+                            Password
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...superadminStyle.headerStyle,
+                              fontSize: "0.8em",
+                            }}
+                          >
+                            Action
+                          </TableCell>
                         </TableRow>
                       </TableHead>
-                      {allTeacher?.length ?
+                      {allTeacher?.length ? (
                         <TableBody>
                           {allTeacher?.map((teacher: any, index: number) => (
-                            <TableRow key={index} sx={{ background: index % 2 ? "#eceff1" : "white" }}>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.name}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.email}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.mobile_no}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.department}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>{teacher.password_hash}</TableCell>
-                              <TableCell sx={{ ...superadminStyle.cellStyle, fontSize: "0.8em" }}>
-                                <IconButton aria-label="edit" color="primary" onClick={() => handleTeacherEdit(teacher)}>
+                            <TableRow
+                              key={index}
+                              sx={{
+                                background: index % 2 ? "#eceff1" : "white",
+                              }}
+                            >
+                              <TableCell
+                                sx={{
+                                  ...superadminStyle.cellStyle,
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                {teacher.name}
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  ...superadminStyle.cellStyle,
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                {teacher.email}
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  ...superadminStyle.cellStyle,
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                {teacher.mobile_no}
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  ...superadminStyle.cellStyle,
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                {teacher.department}
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  ...superadminStyle.cellStyle,
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                {teacher.password_hash}
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  ...superadminStyle.cellStyle,
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                <IconButton
+                                  aria-label="edit"
+                                  color="primary"
+                                  onClick={() => handleTeacherEdit(teacher)}
+                                >
                                   <EditIcon sx={{ fontSize: "20px" }} />
                                 </IconButton>
-                                <IconButton aria-label="delete" color="error" onClick={() => handleDeleteTeacher(teacher)}>
+                                <IconButton
+                                  aria-label="delete"
+                                  color="error"
+                                  onClick={() => handleDeleteTeacher(teacher)}
+                                >
                                   <DeleteIcon sx={{ fontSize: "20px" }} />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
-                        :
+                      ) : (
                         <TableBody>
                           <TableRow>
-                            <TableCell colSpan={4} align="center" sx={{ fontStyle: "italic", color: "gray", py: 3 }}>
-                              No teachers available. Please add a new teacher to get started.
+                            <TableCell
+                              colSpan={4}
+                              align="center"
+                              sx={{ fontStyle: "italic", color: "gray", py: 3 }}
+                            >
+                              No teachers available. Please add a new teacher to
+                              get started.
                             </TableCell>
                           </TableRow>
                         </TableBody>
-
-                      }
-
+                      )}
                     </Table>
                   </TableContainer>
-
-                </div>
-
-              )}
-
-              {selectedSection === "logout" && (
-                <div>
-                  Logging out...
                 </div>
               )}
+
+              {selectedSection === "logout" && <div>Logging out...</div>}
             </div>
           </div>
         </div>
-
       </div>
       <Dialog open={showDeleteModal}>
         <DialogTitle>Confirm Delete</DialogTitle>
@@ -803,23 +1051,24 @@ const SuperAdminPage = () => {
           </button>
 
           <button
-            onClick={confirmDelete}// Replace with your actual delete function
+            onClick={confirmDelete} // Replace with your actual delete function
             className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
           >
             Delete
           </button>
-
         </DialogActions>
       </Dialog>
-
     </div>
   );
 };
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ details, selectedSection, setSelectedSection }) => {
+const SidebarContent: React.FC<SidebarContentProps> = ({
+  details,
+  selectedSection,
+  setSelectedSection,
+}) => {
   return (
     <div className="flex flex-col h-full">
-
       {/* Top: Avatar and Menu */}
       <div className="flex items-center space-x-4 p-4">
         <Avatar className="w-10 h-10">
@@ -841,8 +1090,9 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ details, selectedSectio
         ].map(({ id, label }) => (
           <li
             key={id}
-            className={`p-1 rounded font-bold cursor-pointer ${selectedSection === id ? "text-blue-300" : "hover:text-blue-500"
-              }`}
+            className={`p-1 rounded font-bold cursor-pointer ${
+              selectedSection === id ? "text-blue-300" : "hover:text-blue-500"
+            }`}
             onClick={() => setSelectedSection(id)}
           >
             {label}

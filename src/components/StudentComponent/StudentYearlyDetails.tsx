@@ -5,7 +5,7 @@ import {
   type StudentActivityFormData,
   type StudentYearlyDetailsProps,
 } from "../types/superadminType";
-import { toast, ToastContainer } from "react-toastify";
+
 import {
   Button,
   Dialog,
@@ -18,11 +18,13 @@ import { Save } from "lucide-react";
 import "./tableStyle.css";
 import { FileUpload, postApi } from "@/api";
 import CloseIcon from "../CloseIcon";
+import { useToast } from "@/contexts/ToastContext";
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
   data,
   currentyear,
   year,
 }) => {
+  const toast = useToast();
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
   //const [error, setError] = useState("");
@@ -461,8 +463,6 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
             Total Points: {totalPoint}
           </span> */}
           <div className="max-h-[88vh] lg:max-h-[88vh] overflow-y-auto myForm">
-            <ToastContainer position="top-right" />
-
             <form className="border border-[#ccc]">
               <table className="table-auto border w-full text-sm ">
                 <thead className="bg-gray-200 dark:bg-gray-700 font-semibold text-center top-0 sticky mythead">

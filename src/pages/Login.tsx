@@ -1,6 +1,5 @@
 import { useState } from "react";
 import loginIn from "../assets/login.jpg";
-import { ToastContainer, toast } from "react-toastify";
 import { postApi } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -10,9 +9,10 @@ import type {
   SuperAdminSignupFormData,
   SuperAdminFormErrors,
 } from "@/components/types/superadminType";
+import { useToast } from "@/contexts/ToastContext";
 const Login = () => {
   const navigate = useNavigate();
-
+  const toast = useToast();
   const [role, setRole] = useState("student");
   const [superadminLogin, setSuperAdminLogin] = useState(false);
   const [show, setShow] = useState(false);
@@ -176,7 +176,6 @@ const Login = () => {
         backgroundPosition: "center",
       }}
     >
-      <ToastContainer position="top-right" />
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 flex items-center gap-1 text-blue-700 hover:text-blue-900 

@@ -9,7 +9,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Administrator from "./pages/administrator/Index";
 import LoginAdministrator from "./pages/administrator/LoginAdministrator";
 import Home from "./pages/Landing/Home";
-import { ToastContainer } from "react-toastify";
 import BlogDetails from "./components/BlogDetails";
 import Blog from "./components/Blog";
 
@@ -19,16 +18,15 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 function App() {
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog/:title" element={<BlogDetails />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog" element={<Blog />} />
-         <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/terms-and-conditions" element={<TermCondition />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-      
+
         <Route
           path="/student"
           element={

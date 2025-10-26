@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Box, Modal, Typography, } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable";
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 import { teacherPageModalStyle } from "@/components/styles/style";
@@ -14,10 +12,15 @@ import { X } from "lucide-react";
 //import { studentdata } from "@/components/data/data";
 import { getApi } from "@/api";
 import { useNavigate } from "react-router-dom";
-import type { BackendStudentDetails, teacherGetDetails, TeacherSideBarProps,  } from "@/components/types/superadminType";
+import type {
+  BackendStudentDetails,
+  teacherGetDetails,
+  TeacherSideBarProps,
+} from "@/components/types/superadminType";
+import ThemeToggleSwitch from "@/components/ThemeToggleButton";
 
 interface SidebarContentProps {
-data?:TeacherSideBarProps,
+  data?: TeacherSideBarProps;
   selectedSection: string;
   setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -25,7 +28,8 @@ data?:TeacherSideBarProps,
 const TeacherPage = () => {
   const navigate = useNavigate();
   const [selectedSection, setSelectedSection] = useState("dashboard");
-  const [backendAllStudentDetails,setBackendAllStudentDetails] =useState<BackendStudentDetails> ();
+  const [backendAllStudentDetails, setBackendAllStudentDetails] =
+    useState<BackendStudentDetails>();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   //-----------docs show modal
   const [openDocsModal, setOpenDocsModal] = useState(false);
@@ -37,31 +41,33 @@ const TeacherPage = () => {
   useEffect(() => {
     getTeacherDetails();
     getAllYearStudentDetails();
-  }, [])
+  }, []);
   const [teacherDetails, setTeacherDetails] = useState<teacherGetDetails>();
   const getTeacherDetails = async () => {
     await getApi("teacher/getDetails").then((res) => {
       setTeacherDetails(res.data);
-    })
-  }
+    });
+  };
 
-  const getAllYearStudentDetails = async()=>{
-    await getApi("student/getYearlyDetails").then((res)=>{
+  const getAllYearStudentDetails = async () => {
+    await getApi("student/getYearlyDetails").then((res) => {
       setBackendAllStudentDetails(res);
       //console.log("get student details",res);
-    })
+    });
+  };
+  if (selectedSection === "logout") {
+    localStorage.removeItem("token");
+    navigate("/");
   }
-   if (selectedSection === "logout") {
-        localStorage.removeItem("token");
-        navigate("/");
-    }
   //console.log("in page ::",teacherDetails)
-  console.log("backendAllStudentDetails",backendAllStudentDetails?.teacherSignature)
-  console.log("teacjer deital::",teacherDetails)
-  
+  console.log(
+    "backendAllStudentDetails",
+    backendAllStudentDetails?.teacherSignature
+  );
+  console.log("teacjer deital::", teacherDetails);
+
   return (
-    <div className="flex h-screen overflow-hidden" >
-      <ToastContainer />
+    <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900">
       <Modal open={openDocsModal} onClose={handleClose}>
         <Box sx={teacherPageModalStyle}>
           <Typography variant="h6" mb={2}>
@@ -88,9 +94,9 @@ const TeacherPage = () => {
       </Modal>
 
       {/* Sidebar for Desktop */}
-      <div className="hidden md:block bg-gray-900 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
+      <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
         <SidebarContent
-           data={teacherDetails?.teacher}
+          data={teacherDetails?.teacher}
           selectedSection={selectedSection}
           setSelectedSection={setSelectedSection}
         />
@@ -98,16 +104,16 @@ const TeacherPage = () => {
 
       {/* Sidebar for Mobile */}
       {isSidebarOpen && (
-        <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
-
+        <div className="flex absolute inset-0 bg-gray-800 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
           {/* Close icon */}
           <div className="flex justify-end p-2">
-            <button onClick={() => setIsSidebarOpen(false)} className="text-white hover:text-red-400">
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="text-white hover:text-red-400"
+            >
               <X size={24} />
-
             </button>
           </div>
-
 
           <SidebarContent
             data={teacherDetails?.teacher}
@@ -145,7 +151,9 @@ const TeacherPage = () => {
         {/* Content */}
         <div className="p-0">
           <div className="mt-0">
-            {selectedSection === "dashboard" && <TeacherDetails data={teacherDetails} />}
+            {selectedSection === "dashboard" && (
+              <TeacherDetails data={teacherDetails} />
+            )}
 
             {selectedSection === "first" && (
               <TeacherVerifyTable
@@ -156,7 +164,7 @@ const TeacherPage = () => {
 
             {selectedSection === "second" && (
               <TeacherVerifyTable
-                 data={backendAllStudentDetails?.secondYear}
+                data={backendAllStudentDetails?.secondYear}
                 signature={backendAllStudentDetails?.teacherSignature}
               />
             )}
@@ -179,7 +187,6 @@ const TeacherPage = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
@@ -189,8 +196,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   selectedSection,
   setSelectedSection,
 }) => {
-
-  console.log("in side bar",data)
+  console.log("in side bar", data);
   return (
     <>
       <div className="flex flex-col h-full">
@@ -216,14 +222,20 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           ].map(({ id, label }) => (
             <li
               key={id}
-              className={`p-1 rounded font-bold cursor-pointer ${selectedSection === id ? " text-blue-300" : "hover:text-blue-500"
-                }`}
+              className={`p-1 rounded font-bold cursor-pointer ${
+                selectedSection === id
+                  ? " text-blue-300"
+                  : "hover:text-blue-500"
+              }`}
               onClick={() => setSelectedSection(id)}
             >
               {label}
             </li>
           ))}
         </ul>
+        <li className="flex mt-2">
+          <ThemeToggleSwitch />
+        </li>
         <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
           © {new Date().getFullYear()} Abc Pvt Ltd
         </div>

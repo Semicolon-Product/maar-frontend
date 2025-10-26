@@ -1,36 +1,43 @@
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { useEffect, useState } from "react";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
-import { useEffect, useState } from 'react';
-import { FaChalkboardTeacher } from 'react-icons/fa';
-
-import { superadminStyle } from '../styles/style';
-import { FileUpload, getApi, postApi } from '@/api';
-import { toast } from 'react-toastify';
-import type { StudentBasicInfo, StudentYearData, StudentYearDataArray, Teacher, YearlyStudentData } from '../types/superadminType';
-
+import { superadminStyle } from "../styles/style";
+import { FileUpload, getApi, postApi } from "@/api";
+import type {
+  StudentBasicInfo,
+  StudentYearData,
+  StudentYearDataArray,
+  Teacher,
+  YearlyStudentData,
+} from "../types/superadminType";
+import { useToast } from "@/contexts/ToastContext";
 
 const TeacherDetails = (teacherDetails: any) => {
+  //console.log("from props::",teacherDetails.data.studentData)
+  const toast = useToast();
+  const [teacherDataApi, setTeacherDataApi] = useState<Teacher>();
+  const [studentData, setStudentData] = useState<StudentYearDataArray>();
 
-    //console.log("from props::",teacherDetails.data.studentData)
+  useEffect(() => {
+    setTeacherDataApi(teacherDetails?.data?.teacher);
+    setStudentData(teacherDetails?.data?.studentData);
+  }, [teacherDetails]);
 
+  //const [year, setYear] = useState("1");
+  // const [excelFile, setExcelFile] = useState<File | null>(null);
+  const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
-    const [teacherDataApi, setTeacherDataApi] = useState<Teacher>();
-    const [studentData, setStudentData] = useState<StudentYearDataArray>();
-
-    useEffect(() => {
-        setTeacherDataApi(teacherDetails?.data?.teacher)
-        setStudentData(teacherDetails?.data?.studentData)
-    }, [teacherDetails])
-
-
-
-
-    //const [year, setYear] = useState("1");
-    // const [excelFile, setExcelFile] = useState<File | null>(null);
-    const [signatureFile, setSignatureFile] = useState<File | null>(null);
-
-    /* const handleSubmit = async (e) => {
+  /* const handleSubmit = async (e) => {
         e.preventDefault();
 
          if (!excelFile || !signatureFile) {
@@ -49,166 +56,188 @@ const TeacherDetails = (teacherDetails: any) => {
 
     }; */
 
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        rollNo: "",
-        mobileNo: "",
-        year: "",
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    rollNo: "",
+    mobileNo: "",
+    year: "",
+  });
 
-    const [students, setStudents] = useState<YearlyStudentData>();
+  const [students, setStudents] = useState<YearlyStudentData>();
 
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleChange = (e: any) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleSubmitStudent = async (e: any) => {
+    e.preventDefault();
 
-    const handleSubmitStudent = async (e: any) => {
-        e.preventDefault();
-
-        console.log("submit data::", formData)
-        //setFormData({ name: "", email: "", rollNo: "", mobileNo: "", year: "" });
-        await postApi("student/createIndividual", formData)
-            .then((res) => {
-                console.log("res in create", res);
-                toast.success(res.message);
-                getAllStudent();
-            })
-            .catch((err) => {
-                console.log("Error creating student:", err.response.data.error);
-                toast.error(err.response.data.error)
-            });
-    };
-
-    const getAllStudent = async () => {
-        await getApi("student/getAllStudents").then((res) => {
-            console.log("res all studetn", res)
-            setStudents(res?.data)
-
-        });
-    }
-    useEffect(() => {
+    console.log("submit data::", formData);
+    //setFormData({ name: "", email: "", rollNo: "", mobileNo: "", year: "" });
+    await postApi("student/createIndividual", formData)
+      .then((res) => {
+        console.log("res in create", res);
+        toast.success(res.message);
         getAllStudent();
-    }, [])
+      })
+      .catch((err) => {
+        console.log("Error creating student:", err.response.data.error);
+        toast.error(err.response.data.error);
+      });
+  };
 
-    const [selectedYear, setSelectedYear] = useState<string>("");
+  const getAllStudent = async () => {
+    await getApi("student/getAllStudents").then((res) => {
+      console.log("res all studetn", res);
+      setStudents(res?.data);
+    });
+  };
+  useEffect(() => {
+    getAllStudent();
+  }, []);
 
-    // Extract years from object keys like 1, 2, 3, 4
-    const availableYears = Object.keys(students ?? {}).sort((a: any, b: any) => a - b);
+  const [selectedYear, setSelectedYear] = useState<string>("");
 
+  // Extract years from object keys like 1, 2, 3, 4
+  const availableYears = Object.keys(students ?? {}).sort(
+    (a: any, b: any) => a - b
+  );
 
-    // Optional: convert 1 → 1st Year, 2 → 2nd Year, etc.
-    const formatYear = (year: number) => {
-        const suffix = ["th", "st", "nd", "rd", "th"];
-        const v = year % 100;
-        return `${year}${suffix[(v - 20) % 10] || suffix[v] || suffix[0]} Year`;
-    };
-    console.log("students all", students)
-    console.log("students all", typeof (students))
-    console.log("selected::::", typeof (selectedYear))
+  // Optional: convert 1 → 1st Year, 2 → 2nd Year, etc.
+  const formatYear = (year: number) => {
+    const suffix = ["th", "st", "nd", "rd", "th"];
+    const v = year % 100;
+    return `${year}${suffix[(v - 20) % 10] || suffix[v] || suffix[0]} Year`;
+  };
+  console.log("students all", students);
+  console.log("students all", typeof students);
+  console.log("selected::::", typeof selectedYear);
 
-    const [fileError, setFileError] = useState(false);
-    const handleSignatureUpload = async () => {
-        if (!signatureFile) {
-            setFileError(true)
-            return;
-        }
-        console.log("signatureFile==>>>>", signatureFile)
-
-        const formData = new FormData();
-        formData.append('signature', signatureFile); // field name must match multer's .single('signature')
-
-        await FileUpload("teacher/uploadSignature", formData).then((res) => {
-            console.log("res of upload==>>", res);
-        });
-
-
+  const [fileError, setFileError] = useState(false);
+  const handleSignatureUpload = async () => {
+    if (!signatureFile) {
+      setFileError(true);
+      return;
     }
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    console.log("signatureFile==>>>>", signatureFile);
 
-    console.log("teacherDataApi?.signature",teacherDataApi?.signature)
-    return (
-        <div>
-            <div className="p-4 space-y-8 bg-gray-50 min-h-screen">
-                {/* Teacher Info Card */}
-                <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto border border-green-200">
-                    <h2 className="text-2xl font-semibold mb-6 text-green-800 border-b pb-2 flex gap-1"><FaChalkboardTeacher className="mt-2 " /> Teacher Information</h2>
+    const formData = new FormData();
+    formData.append("signature", signatureFile); // field name must match multer's .single('signature')
 
-                    <div className="grid grid-cols-1 md:grid-cols-2  items-center ">
-                        {/* Column 1: Teacher Info */}
-                        <div className="space-y-2 text-gray-700">
-                            <p><strong>Name:</strong> {teacherDataApi?.name}</p>
-                            <p><strong>Email:</strong> {teacherDataApi?.email}</p>
-                            <p><strong>Department:</strong> {teacherDataApi?.department}</p>
-                        </div>
+    await FileUpload("teacher/uploadSignature", formData).then((res) => {
+      console.log("res of upload==>>", res);
+    });
+  };
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-                        {/* Column 2: Signature */}
-                        <div className="flex flex-col items-center md:items-end gap-3">
-                            {/* Signature Preview Box */}
-                            <div className="border-2 border-dotted border-green-400 p-2 rounded bg-white shadow-sm" style={{ height: "100px", width: "300px" }}>
-                                {previewUrl ? (
-                                    <img src={previewUrl} alt="Signature Preview" className="h-full w-full object-contain" />
-                                ) : teacherDataApi?.signature ? (
-                                    <img src={teacherDataApi.signature} alt="Signature" className="h-full w-full object-contain" />
-                                ) : (
-                                    <div className="flex items-center justify-center h-full text-gray-500 text-sm">
-                                        Please Upload Signature
-                                    </div>
-                                )}
-                            </div>
+  console.log("teacherDataApi?.signature", teacherDataApi?.signature);
+  return (
+    <div>
+      <div className="p-4 space-y-8  min-h-screen">
+        {/* Teacher Info Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto ">
+          <h2 className="text-2xl font-semibold mb-6 border-b pb-2 flex gap-1">
+            <FaChalkboardTeacher className="mt-2 " /> Teacher Information
+          </h2>
 
-                            {/* Upload Input + Button */}
-                            <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-                                <input
-                                    id="signatureUpload"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                        //const file = e.target.files[0] ?? null;
-                                        const file = e.target.files?.[0] ?? null;
+          <div className="grid grid-cols-1 md:grid-cols-2  items-center ">
+            {/* Column 1: Teacher Info */}
+            <div className="space-y-2 ">
+              <p>
+                <strong>Name:</strong> {teacherDataApi?.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {teacherDataApi?.email}
+              </p>
+              <p>
+                <strong>Department:</strong> {teacherDataApi?.department}
+              </p>
+            </div>
 
-                                        if (file) {
-                                            setSignatureFile(file);
-                                            setPreviewUrl(URL.createObjectURL(file)); // preview without upload
-                                        }
-                                    }}
-                                   className="text-sm file:bg-green-600 file:text-white file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-0 w-full sm:w-auto"
-                                />
+            {/* Column 2: Signature */}
+            <div className="flex flex-col items-center md:items-end gap-3">
+              {/* Signature Preview Box */}
+              <div
+                className="border-2 border-dotted border-blue-400 p-2 rounded shadow-sm"
+                style={{ height: "100px", width: "300px" }}
+              >
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Signature Preview"
+                    className="h-full w-full object-contain"
+                  />
+                ) : teacherDataApi?.signature ? (
+                  <img
+                    src={teacherDataApi.signature}
+                    alt="Signature"
+                    className="h-full w-full object-contain"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                    Please Upload Signature
+                  </div>
+                )}
+              </div>
 
-                                <button
-                                    type="button"
-                                    onClick={handleSignatureUpload}
-                                    className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded shadow"
-                                >
-                                    Upload
-                                </button>
+              {/* Upload Input + Button */}
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                <input
+                  id="signatureUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    //const file = e.target.files[0] ?? null;
+                    const file = e.target.files?.[0] ?? null;
 
-                            </div>
-                            {fileError && !signatureFile && (
-                                <span className='text-red-500 text-[15px]'>Please Select File!</span>
-                            )}
+                    if (file) {
+                      setSignatureFile(file);
+                      setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                    }
+                  }}
+                  className="text-sm file:bg-blue-300 dark:file:bg-blue-800 file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-blue-100 dark:bg-blue-900 rounded border border-blue-300 p-0 w-full sm:w-auto"
+                />
 
+                <button
+                  type="button"
+                  onClick={handleSignatureUpload}
+                  className="bg-blue-600 hover:bg-blue-700  text-sm px-4 py-1 rounded shadow"
+                >
+                  Upload
+                </button>
+              </div>
+              {fileError && !signatureFile && (
+                <span className="text-red-500 text-[15px]">
+                  Please Select File!
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
 
-                        </div>
+        {/* Student Info Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto ">
+          {studentData?.map((item: StudentYearData, index: number) => (
+            <div
+              key={index}
+              className="bg-blue-50 dark:bg-gray-800 rounded-xl shadow p-4 text-center space-y-2 "
+            >
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-blue-100">
+                {item.year}
+              </h3>
+              <p className="text-2xl font-bold text-blue-700">{item.count}</p>
+              <p className="text-sm text-green-500 font-semibold">
+                Submitted: {item.submit}
+              </p>
+              <p className="text-sm text-red-500 font-semibold">
+                Remaining: {item.remain}
+              </p>
+            </div>
+          ))}
+        </div>
 
-                    </div>
-                </div>
-
-                {/* Student Info Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto ">
-                    {studentData?.map((item: StudentYearData, index: number) => (
-                        <div key={index} className="bg-blue-50 rounded-xl shadow p-4 text-center space-y-2 border-1 border-blue-300">
-                            <h3 className="text-lg font-semibold text-gray-800">{item.year}</h3>
-                            <p className="text-2xl font-bold text-blue-700">{item.count}</p>
-                            <p className="text-sm text-green-700 font-semibold">Submitted: {item.submit}</p>
-                            <p className="text-sm text-red-700 font-semibold">Remaining: {item.remain}</p>
-                        </div>
-                    ))}
-                </div>
-
-
-                {/*  <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto border border-red-200">
+        {/*  <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto border border-red-200">
                     <h2 className="text-2xl font-semibold mb-4 text-red-600 flex gap-2"><FaCloudUploadAlt className='mt-1' /> Upload Student Data</h2>
 
                     <div className="flex flex-col md:flex-row gap-6">
@@ -273,118 +302,163 @@ const TeacherDetails = (teacherDetails: any) => {
                     </div>
                 </div> */}
 
-                <div className="max-w-5xl mx-auto p-6 space-y-6 bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] rounded-xl">
-                    <form onSubmit={handleSubmitStudent} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="border p-2 rounded w-full bg-white"
-                            required
-                        />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="border p-2 rounded w-full bg-white"
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="rollNo"
-                            placeholder="University Roll No"
-                            value={formData.rollNo}
-                            onChange={handleChange}
-                            className="border p-2 rounded w-full bg-white"
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="mobileNo"
-                            placeholder="Mobile No"
-                            value={formData.mobileNo}
-                            onChange={handleChange}
-                            className="border p-2 rounded w-full bg-white"
-                            required
-                        />
-                        <select
-                            name="year"
-                            value={formData.year}
-                            onChange={handleChange}
-                            className="border p-2 rounded w-full bg-white"
-                            required
-                        >
-                            <option value="">Select Admission Year</option>
-                            <option value="1">1st Year </option>
-                            <option value="2">2nd Year </option>
-                            <option value="3">3rd Year </option>
-                            <option value="4">4th Year </option>
+        <div className="max-w-4xl mx-auto py-6 space-y-6  rounded-xl">
+          <form
+            onSubmit={handleSubmitStudent}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleChange}
+              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              required
+            />
+            <input
+              type="text"
+              name="rollNo"
+              placeholder="University Roll No"
+              value={formData.rollNo}
+              onChange={handleChange}
+              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              required
+            />
+            <input
+              type="text"
+              name="mobileNo"
+              placeholder="Mobile No"
+              value={formData.mobileNo}
+              onChange={handleChange}
+              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              required
+            />
+            <select
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              required
+            >
+              <option value="">Select Admission Year</option>
+              <option value="1">1st Year </option>
+              <option value="2">2nd Year </option>
+              <option value="3">3rd Year </option>
+              <option value="4">4th Year </option>
+            </select>
 
-                        </select>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full"
+            >
+              Save
+            </button>
+          </form>
 
-
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full"
-                        >
-                            Save
-                        </button>
-
-                    </form>
-
-                    {availableYears.length > 0 && (
-                        <div className="flex justify-end mb-4">
-                            <select
-                                value={selectedYear}
-                                onChange={(e) => setSelectedYear(e.target.value)}
-                                className="border p-2 rounded bg-white"
-                            >
-                                <option value="">Select Year</option>
-                                {availableYears.map((year) => (
-                                    <option key={year} value={year}>
-                                        {formatYear(parseInt(year))}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
-                    {selectedYear && students?.[selectedYear] && (
-                        <TableContainer component={Paper}>
-                            <Table sx={{ fontSize: "22px" }}>
-                                <TableHead >
-                                    <TableRow sx={{ backgroundColor: "#2a4054", height: "30px" }}>
-                                        <TableCell sx={superadminStyle.headerStyle}>Name</TableCell>
-                                        <TableCell sx={superadminStyle.headerStyle}>Email</TableCell>
-                                        <TableCell sx={superadminStyle.headerStyle}>Roll No</TableCell>
-                                        <TableCell sx={superadminStyle.headerStyle}>Mobile No</TableCell>
-                                        <TableCell sx={superadminStyle.headerStyle}>Year</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {students[selectedYear]?.map((student: StudentBasicInfo, index: number) => (
-                                        <TableRow key={index} sx={{
-                                            background: index % 2 ? "#eceff1" : "white",
-                                        }}>
-                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.name}</TableCell>
-                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.email}</TableCell>
-                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.roll_no}</TableCell>
-                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.mobile_no}</TableCell>
-                                            <TableCell sx={{ ...superadminStyle.cellStyle, py: { xs: "10px", sm: "4px", } }}>{student.admission_year}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>)}
-
-                </div>
+          {availableYears.length > 0 && (
+            <div className="flex justify-end mb-4">
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                className="border p-2 rounded bg-white dark:bg-gray-800"
+              >
+                <option value="">Select Year</option>
+                {availableYears.map((year) => (
+                  <option key={year} value={year}>
+                    {formatYear(parseInt(year))}
+                  </option>
+                ))}
+              </select>
             </div>
+          )}
+          {selectedYear && students?.[selectedYear] && (
+            <TableContainer component={Paper}>
+              <Table sx={{ fontSize: "22px" }}>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#2a4054", height: "30px" }}>
+                    <TableCell sx={superadminStyle.headerStyle}>Name</TableCell>
+                    <TableCell sx={superadminStyle.headerStyle}>
+                      Email
+                    </TableCell>
+                    <TableCell sx={superadminStyle.headerStyle}>
+                      Roll No
+                    </TableCell>
+                    <TableCell sx={superadminStyle.headerStyle}>
+                      Mobile No
+                    </TableCell>
+                    <TableCell sx={superadminStyle.headerStyle}>Year</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {students[selectedYear]?.map(
+                    (student: StudentBasicInfo, index: number) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          background: index % 2 ? "#eceff1" : "white",
+                        }}
+                      >
+                        <TableCell
+                          sx={{
+                            ...superadminStyle.cellStyle,
+                            py: { xs: "10px", sm: "4px" },
+                          }}
+                        >
+                          {student.name}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            ...superadminStyle.cellStyle,
+                            py: { xs: "10px", sm: "4px" },
+                          }}
+                        >
+                          {student.email}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            ...superadminStyle.cellStyle,
+                            py: { xs: "10px", sm: "4px" },
+                          }}
+                        >
+                          {student.roll_no}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            ...superadminStyle.cellStyle,
+                            py: { xs: "10px", sm: "4px" },
+                          }}
+                        >
+                          {student.mobile_no}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            ...superadminStyle.cellStyle,
+                            py: { xs: "10px", sm: "4px" },
+                          }}
+                        >
+                          {student.admission_year}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </div>
-
-    );
+      </div>
+    </div>
+  );
 };
 
 export default TeacherDetails;

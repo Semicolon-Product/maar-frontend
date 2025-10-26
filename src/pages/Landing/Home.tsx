@@ -23,14 +23,15 @@ import ThemeToggleButton from "@/components/ThemeToggleButton";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { ThemeContext } from "@/contexts/themeContext";
-import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { PiInstagramLogoFill } from "react-icons/pi";
 import Faq from "../Faq";
 import { useDarkMode } from "@/utils/useDarkMode";
+import { useToast } from "@/contexts/ToastContext";
 
 export default function Home() {
   const navigate = useNavigate();
+  const toast = useToast();
   const { theme } = useContext(ThemeContext);
   const isDarkMode = useDarkMode();
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
