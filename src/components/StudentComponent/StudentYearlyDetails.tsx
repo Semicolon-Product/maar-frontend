@@ -6,24 +6,32 @@ import {
   type StudentYearlyDetailsProps,
 } from "../types/superadminType";
 import { toast, ToastContainer } from "react-toastify";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { Save } from "lucide-react";
-import './tableStyle.css'
+import "./tableStyle.css";
 import { FileUpload, postApi } from "@/api";
 import CloseIcon from "../CloseIcon";
-const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, currentyear, year }) => {
+const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
+  data,
+  currentyear,
+  year,
+}) => {
   const [totalPoint, setTotalPoint] = useState(0);
   const [open, setOpen] = useState(false);
   //const [error, setError] = useState("");
-  const [validationMessage, setValidationMessage] = useState('');
+  const [validationMessage, setValidationMessage] = useState("");
   const [showValidationPopup, setShowValidationPopup] = useState(false);
-
-
 
   const [formData, setFormData] = useState<StudentActivityFormData>(
     initialStudentActivityFormData
   );
-
 
   //------------------------------Calculate Total Points-----------------------
   useEffect(() => {
@@ -58,13 +66,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
       //setError("1. MOOCs can't be greater than 40")
       toast.error("1. MOOCs can't be greater than 40");
       //showValidationError("1. MOOCs can't be greater than 40");
-      setValidationMessage("555")
+      setValidationMessage("555");
       return;
     }
 
     if (
       Number(formData.techFestOrganizer) +
-      data[1].subpoints[0].already_acquired >
+        data[1].subpoints[0].already_acquired >
       10
     ) {
       toast.error(
@@ -74,7 +82,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.techFestParticipant) +
-      data[1].subpoints[1].already_acquired >
+        data[1].subpoints[1].already_acquired >
       6
     ) {
       toast.error(
@@ -94,8 +102,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.reliefFundCollection) +
-      Number(formData.reliefWorkTeam) +
-      data[4].already_acquired >
+        Number(formData.reliefWorkTeam) +
+        data[4].already_acquired >
       40
     ) {
       toast.error("5. Relief/Charitable Activities can't be greater than 20");
@@ -134,7 +142,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.bloodDonationCampOrganization) +
-      data[9].subpoints[1].already_acquired >
+        data[9].subpoints[1].already_acquired >
       20
     ) {
       toast.error(
@@ -162,7 +170,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.sportsUniversity) +
-      data[10].subpoints[2].already_acquired >
+        data[10].subpoints[2].already_acquired >
       20
     ) {
       toast.error(
@@ -190,7 +198,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.sportsNationalInternational) +
-      data[10].subpoints[5].already_acquired >
+        data[10].subpoints[5].already_acquired >
       40
     ) {
       toast.error(
@@ -200,7 +208,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.professionalSocietyActivities) +
-      data[11].already_acquired >
+        data[11].already_acquired >
       20
     ) {
       toast.error(
@@ -222,7 +230,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.entrepreneurshipOrganize) +
-      data[14].subpoints[0].already_acquired >
+        data[14].subpoints[0].already_acquired >
       20
     ) {
       toast.error(
@@ -232,7 +240,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.entrepreneurshipParticipate) +
-      data[14].subpoints[1].already_acquired >
+        data[14].subpoints[1].already_acquired >
       10
     ) {
       toast.error(
@@ -242,7 +250,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.entrepreneurshipVideo) +
-      data[14].subpoints[2].already_acquired >
+        data[14].subpoints[2].already_acquired >
       20
     ) {
       toast.error(
@@ -252,7 +260,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.entrepreneurshipBusinessPlan) +
-      data[14].subpoints[3].already_acquired >
+        data[14].subpoints[3].already_acquired >
       20
     ) {
       toast.error(
@@ -262,42 +270,35 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
     if (
       Number(formData.entrepreneurshipWorkForStartup) +
-      data[14].subpoints[4].already_acquired >
+        data[14].subpoints[4].already_acquired >
       40
     ) {
       toast.error(
         "15.e. To work for start-up/as entrepreneur can't be greater than 20"
       );
       return;
-    }
-    else {
+    } else {
       setOpen(true);
-
     }
-
-
   };
-
-
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleConfirm = async () => {
-
     console.log("Form Data Submitted:", formData, totalPoint);
-    await postApi("student/activitySubmit", { formData, totalPoint }).then((res) => {
-      toast.success(res.message);
-    })
+    await postApi("student/activitySubmit", { formData, totalPoint }).then(
+      (res) => {
+        toast.success(res.message);
+      }
+    );
     setOpen(false);
     // Add your form submission logic here
-
   };
-  console.log("year and current >>>", year, currentyear)
+  console.log("year and current >>>", year, currentyear);
 
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
-
 
   const uploadActivityFileToS3 = async (fieldName: string, file: File) => {
     const formData = new FormData();
@@ -322,7 +323,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
   // Delete from S3 + clear state
   const handleClearFile = async (fieldName: string) => {
-    console.log("field name in clear", fieldName)
+    console.log("field name in clear", fieldName);
     try {
       const fileUrl = formData[fieldName as keyof StudentActivityFormData];
 
@@ -344,10 +345,17 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
       fileInputRefs.current[fieldName]!.value = "";
     }
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, type, value } = e.target;
 
-    if (type === "file" && e.target instanceof HTMLInputElement && e.target.files && e.target.files[0]) {
+    if (
+      type === "file" &&
+      e.target instanceof HTMLInputElement &&
+      e.target.files &&
+      e.target.files[0]
+    ) {
       const file = e.target.files[0];
 
       // Show filename instantly
@@ -366,14 +374,12 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
     }
   };
 
-  console.log("Form data:::l", formData)
+  console.log("Form data:::l", formData);
   return (
     <div className="">
-
       {showValidationPopup && (
         <div className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 ">
           <div className="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-md border-t-4 border-red-600 relative animate-fade-in border ">
-
             <div className="flex items-center justify-center mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -389,9 +395,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
               </svg>
             </div>
 
-
-            <p className="text-center text-gray-800 font-medium">{validationMessage}</p>
-
+            <p className="text-center text-gray-800 font-medium">
+              {validationMessage}
+            </p>
 
             <button
               onClick={() => setShowValidationPopup(false)}
@@ -403,13 +409,12 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
         </div>
       )}
 
-
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle
           sx={{
-            backgroundColor: '', // Light green background
-            textAlign: 'center',
-            fontWeight: 'bold'
+            backgroundColor: "", // Light green background
+            textAlign: "center",
+            fontWeight: "bold",
           }}
         >
           Confirm Submission
@@ -421,16 +426,28 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
           </DialogContentText>
         </DialogContent>
 
-        <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+        <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
           <Button
             onClick={handleClose}
-            sx={{ textTransform: "none", py: "0.25em", backgroundColor: '#f44336', color: '#fff', '&:hover': { backgroundColor: '#d32f2f' } }}
+            sx={{
+              textTransform: "none",
+              py: "0.25em",
+              backgroundColor: "#f44336",
+              color: "#fff",
+              "&:hover": { backgroundColor: "#d32f2f" },
+            }}
           >
             Cancel
           </Button>
           <Button
             onClick={handleConfirm}
-            sx={{ textTransform: "none", py: "0.25em", backgroundColor: '#4caf50', color: '#fff', '&:hover': { backgroundColor: '#388e3c' } }}
+            sx={{
+              textTransform: "none",
+              py: "0.25em",
+              backgroundColor: "#4caf50",
+              color: "#fff",
+              "&:hover": { backgroundColor: "#388e3c" },
+            }}
             autoFocus
           >
             Confirm
@@ -448,10 +465,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
 
             <form className="border border-[#ccc]">
               <table className="table-auto border w-full text-sm ">
-                <thead className="bgHead font-semibold text-center top-0 sticky mythead">
+                <thead className="bg-gray-200 dark:bg-gray-700 font-semibold text-center top-0 sticky mythead">
                   <tr className="">
-                    <th className="border border-black border-t-0 border-r px-2 py-1 ">
-
+                    <th className="border border-black dark:border-white border-t-0 border-r px-2 py-1 ">
                       Activity
                     </th>
                     <th className="border border-black border-t-0 px-2 py-1">
@@ -466,13 +482,15 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                     <th className="border border-black border-t-0 px-2 py-1">
                       Already Aquire
                     </th>
-
                   </tr>
                 </thead>
                 <tbody className="mytbody">
                   {/* MOOCS */}
-                  <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border border-black px-2 py-1 text-center">
+                  <tr className="bg-yellow-300 text-black font-semibold">
+                    <td
+                      colSpan={5}
+                      className="border border-black px-2 py-1 text-center"
+                    >
                       {" "}
                       {/* Colspan adjusted */}
                       1. MOOCS (SWAYAM/NPTEL/Spoken Tutorial/any technical,
@@ -492,28 +510,25 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="20">20</option>
                         <option value="40">40</option>
                       </select>
-                   
-                        <input
-                          id="moocs12WeeksFile"
-                          ref={(el) => {
-                            fileInputRefs.current["moocs12WeeksFile"] = el;
-                          }}
-                          type="file"
-                          //className="text-[11px] file:bg-gray-500 file:text-white file:text-center file:px-2 file:py-0.4 border-rounded file:border-0 file:cursor-pointer" 
-                          className="fileInputBox"
-                          name="moocs12WeeksFile"
-                          onChange={handleChange}
+                      <input
+                        id="moocs12WeeksFile"
+                        ref={(el) => {
+                          fileInputRefs.current["moocs12WeeksFile"] = el;
+                        }}
+                        type="file"
+                        //className="text-[11px] file:bg-gray-500 file:text-white file:text-center file:px-2 file:py-0.4 border-rounded file:border-0 file:cursor-pointer"
+                        className="fileInputBox"
+                        name="moocs12WeeksFile"
+                        onChange={handleChange}
+                      />
+                      {formData.moocs12WeeksFile && (
+                        <CloseIcon
+                          size={19}
+                          color="white"
+                          onClick={() => handleClearFile("moocs12WeeksFile")}
+                          className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                         />
-                        {formData.moocs12WeeksFile && (
-                          <CloseIcon
-                            size={19}
-                            color="white"
-                            onClick={() => handleClearFile("moocs12WeeksFile")}
-                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
-                          />
-                        )}
-
-
+                      )}
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[0]?.point_per_activity}
@@ -542,27 +557,24 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="15">15</option>
                         <option value="30">30</option>
                       </select>
-                      
-                        <input
-                          id="moocs8WeeksFile"
-                          type="file"
-                          className="fileInputBox"
-                          name="moocs8WeeksFile"
-                          ref={(el) => {
-                            fileInputRefs.current["moocs8WeeksFile"] = el;
-                          }}
-                          onChange={handleChange}
+                      <input
+                        id="moocs8WeeksFile"
+                        type="file"
+                        className="fileInputBox"
+                        name="moocs8WeeksFile"
+                        ref={(el) => {
+                          fileInputRefs.current["moocs8WeeksFile"] = el;
+                        }}
+                        onChange={handleChange}
+                      />
+                      {formData.moocs8WeeksFile && (
+                        <CloseIcon
+                          size={19}
+                          color="white"
+                          onClick={() => handleClearFile("moocs8WeeksFile")}
+                          className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                         />
-
-                        {formData.moocs8WeeksFile && (
-                          <CloseIcon
-                            size={19}
-                            color="white"
-                            onClick={() => handleClearFile("moocs8WeeksFile")}
-                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
-                          />
-                        )}
-                    
+                      )}
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[1]?.point_per_activity}
@@ -581,29 +593,24 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                         <option value="10">10</option>
                         <option value="20">20</option>
                       </select>
-                      
-
-
-                        <input
-                          id="moocs4WeeksFile"
-                          type="file"
-                          className="fileInputBox"
-                          name="moocs4WeeksFile"
-                          ref={(el) => {
-                            fileInputRefs.current["moocs4WeeksFile"] = el;
-                          }}
-                          onChange={handleChange}
+                      <input
+                        id="moocs4WeeksFile"
+                        type="file"
+                        className="fileInputBox"
+                        name="moocs4WeeksFile"
+                        ref={(el) => {
+                          fileInputRefs.current["moocs4WeeksFile"] = el;
+                        }}
+                        onChange={handleChange}
+                      />
+                      {formData.moocs4WeeksFile && (
+                        <CloseIcon
+                          size={19}
+                          color="white"
+                          onClick={() => handleClearFile("moocs4WeeksFile")}
+                          className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                         />
-                        {formData.moocs4WeeksFile && (
-                          <CloseIcon
-                            size={19}
-                            color="white"
-                            onClick={() => handleClearFile("moocs4WeeksFile")}
-                            className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
-                          />
-                        )}
-
-                      
+                      )}
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[2]?.point_per_activity}
@@ -647,7 +654,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                             onClick={() => handleClearFile("moocs2WeeksFile")}
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[0]?.subpoints[3]?.point_per_activity}
@@ -655,8 +663,11 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
 
                   {/* Tech Fest/Fest/Teachers Day/Fresher’s Welcome */}
-                  <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
+                  <tr className="bg-yellow-300 text-black font-semibold">
+                    <td
+                      colSpan={5}
+                      className="border-t border-black px-2 py-1 text-center"
+                    >
                       2. Tech Fest/Fest/Teachers Day/Fresher’s Welcome
                     </td>{" "}
                     {/* Colspan adjusted */}
@@ -689,10 +700,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("techFestOrganizerFile")}
+                            onClick={() =>
+                              handleClearFile("techFestOrganizerFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[1]?.subpoints[0]?.point_per_activity}
@@ -723,7 +737,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                       <div className="flex">
                         <input
                           ref={(el) => {
-                            fileInputRefs.current["techFestParticipantFile"] = el;
+                            fileInputRefs.current["techFestParticipantFile"] =
+                              el;
                           }}
                           id="techFestParticipantFile"
                           type="file"
@@ -735,10 +750,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("techFestParticipantFile")}
+                            onClick={() =>
+                              handleClearFile("techFestParticipantFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[1]?.subpoints[1]?.point_per_activity}
@@ -784,10 +802,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("ruralReportingFile")}
+                            onClick={() =>
+                              handleClearFile("ruralReportingFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[2]?.point_per_activity}
@@ -841,10 +862,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("treePlantationFile")}
+                            onClick={() =>
+                              handleClearFile("treePlantationFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[3]?.point_per_activity}
@@ -862,8 +886,11 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
 
                   {/* Relief/Charitable Activities */}
-                  <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
+                  <tr className="bg-yellow-300 text-black font-semibold">
+                    <td
+                      colSpan={5}
+                      className="border-t border-black px-2 py-1 text-center"
+                    >
                       5. Relief/Charitable Activities
                     </td>{" "}
                     {/* Colspan adjusted */}
@@ -895,7 +922,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="reliefFundCollectionFile"
                           ref={(el) => {
-                            fileInputRefs.current["reliefFundCollectionFile"] = el;
+                            fileInputRefs.current["reliefFundCollectionFile"] =
+                              el;
                           }}
                           onChange={handleChange}
                         />
@@ -903,10 +931,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("reliefFundCollectionFile")}
+                            onClick={() =>
+                              handleClearFile("reliefFundCollectionFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[4]?.subpoints[0]?.point_per_activity}
@@ -950,10 +981,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("reliefWorkTeamFile")}
+                            onClick={() =>
+                              handleClearFile("reliefWorkTeamFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[4]?.subpoints[1]?.point_per_activity}
@@ -985,7 +1019,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="participationInArtsFile"
                           ref={(el) => {
-                            fileInputRefs.current["participationInArtsFile"] = el;
+                            fileInputRefs.current["participationInArtsFile"] =
+                              el;
                           }}
                           onChange={handleChange}
                         />
@@ -993,10 +1028,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("participationInArtsFile")}
+                            onClick={() =>
+                              handleClearFile("participationInArtsFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[5]?.point_per_activity}
@@ -1046,7 +1084,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                             onClick={() => handleClearFile("publicationFile")}
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[6]?.point_per_activity}
@@ -1084,7 +1123,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="researchPublicationFile"
                           ref={(el) => {
-                            fileInputRefs.current["researchPublicationFile"] = el;
+                            fileInputRefs.current["researchPublicationFile"] =
+                              el;
                           }}
                           onChange={handleChange}
                         />
@@ -1092,10 +1132,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("researchPublicationFile")}
+                            onClick={() =>
+                              handleClearFile("researchPublicationFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[7]?.point_per_activity}
@@ -1133,7 +1176,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="innovativeProjectsFile"
                           ref={(el) => {
-                            fileInputRefs.current["innovativeProjectsFile"] = el;
+                            fileInputRefs.current["innovativeProjectsFile"] =
+                              el;
                           }}
                           onChange={handleChange}
                         />
@@ -1141,10 +1185,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("innovativeProjectsFile")}
+                            onClick={() =>
+                              handleClearFile("innovativeProjectsFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[8]?.point_per_activity}
@@ -1193,7 +1240,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                             onClick={() => handleClearFile("bloodDonationFile")}
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[9]?.subpoints[0].point_per_activity}
@@ -1229,7 +1277,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="bloodDonationCampOrganizationFile"
                           ref={(el) => {
-                            fileInputRefs.current["bloodDonationCampOrganizationFile"] = el;
+                            fileInputRefs.current[
+                              "bloodDonationCampOrganizationFile"
+                            ] = el;
                           }}
                           onChange={handleChange}
                         />
@@ -1237,10 +1287,15 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("bloodDonationCampOrganizationFile")}
+                            onClick={() =>
+                              handleClearFile(
+                                "bloodDonationCampOrganizationFile"
+                              )
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[9]?.subpoints[1].point_per_activity}
@@ -1258,8 +1313,11 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
 
                   {/* Sports/Games/Adventure Sports/Trekking/Yoga Camp */}
-                  <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
+                  <tr className="bg-yellow-300 text-black font-semibold">
+                    <td
+                      colSpan={5}
+                      className="border-t border-black px-2 py-1 text-center"
+                    >
                       11. Sports/Games/Adventure Sports/Trekking/Yoga Camp
                     </td>{" "}
                     {/* Colspan adjusted */}
@@ -1292,10 +1350,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("sportsPersonalFile")}
+                            onClick={() =>
+                              handleClearFile("sportsPersonalFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[0].point_per_activity}
@@ -1342,7 +1403,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                             onClick={() => handleClearFile("sportsCollegeFile")}
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[1].point_per_activity}
@@ -1386,10 +1448,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("sportsUniversityFile")}
+                            onClick={() =>
+                              handleClearFile("sportsUniversityFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[2].point_per_activity}
@@ -1433,10 +1498,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("sportsDistrictFile")}
+                            onClick={() =>
+                              handleClearFile("sportsDistrictFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[3].point_per_activity}
@@ -1483,7 +1551,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                             onClick={() => handleClearFile("sportsStateFile")}
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[4].point_per_activity}
@@ -1519,7 +1588,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="sportsNationalInternationalFile"
                           ref={(el) => {
-                            fileInputRefs.current["sportsNationalInternationalFile"] = el;
+                            fileInputRefs.current[
+                              "sportsNationalInternationalFile"
+                            ] = el;
                           }}
                           onChange={handleChange}
                         />
@@ -1527,10 +1598,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("sportsNationalInternationalFile")}
+                            onClick={() =>
+                              handleClearFile("sportsNationalInternationalFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[10]?.subpoints[5].point_per_activity}
@@ -1568,7 +1642,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="professionalSocietyActivitiesFile"
                           ref={(el) => {
-                            fileInputRefs.current["professionalSocietyActivitiesFile"] = el;
+                            fileInputRefs.current[
+                              "professionalSocietyActivitiesFile"
+                            ] = el;
                           }}
                           onChange={handleChange}
                         />
@@ -1576,10 +1652,15 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("professionalSocietyActivitiesFile")}
+                            onClick={() =>
+                              handleClearFile(
+                                "professionalSocietyActivitiesFile"
+                              )
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[11]?.point_per_activity}
@@ -1630,7 +1711,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                             onClick={() => handleClearFile("industryVisitFile")}
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[12]?.point_per_activity}
@@ -1678,10 +1760,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("communityServiceFile")}
+                            onClick={() =>
+                              handleClearFile("communityServiceFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[13]?.point_per_activity}
@@ -1699,8 +1784,11 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
 
                   {/* Self-Entrepreneurship Programme */}
-                  <tr className="bg-yellow-300 font-semibold">
-                    <td colSpan={5} className="border-t border-black px-2 py-1 text-center">
+                  <tr className="bg-yellow-300 text-black font-semibold">
+                    <td
+                      colSpan={5}
+                      className="border-t border-black px-2 py-1 text-center"
+                    >
                       15. Self-Entrepreneurship Programme
                     </td>{" "}
                     {/* Colspan adjusted */}
@@ -1724,7 +1812,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           type="file"
                           className="fileInputBox"
                           ref={(el) => {
-                            fileInputRefs.current["entrepreneurshipOrganizeFile"] = el;
+                            fileInputRefs.current[
+                              "entrepreneurshipOrganizeFile"
+                            ] = el;
                           }}
                           name="entrepreneurshipOrganizeFile"
                           onChange={handleChange}
@@ -1733,10 +1823,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("entrepreneurshipOrganizeFile")}
+                            onClick={() =>
+                              handleClearFile("entrepreneurshipOrganizeFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[0].point_per_activity}
@@ -1772,7 +1865,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           type="file"
                           className="fileInputBox"
                           ref={(el) => {
-                            fileInputRefs.current["entrepreneurshipParticipateFile"] = el;
+                            fileInputRefs.current[
+                              "entrepreneurshipParticipateFile"
+                            ] = el;
                           }}
                           name="entrepreneurshipParticipateFile"
                           onChange={handleChange}
@@ -1781,10 +1876,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("entrepreneurshipParticipateFile")}
+                            onClick={() =>
+                              handleClearFile("entrepreneurshipParticipateFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[1].point_per_activity}
@@ -1820,7 +1918,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="entrepreneurshipVideoFile"
                           ref={(el) => {
-                            fileInputRefs.current["entrepreneurshipVideoFile"] = el;
+                            fileInputRefs.current["entrepreneurshipVideoFile"] =
+                              el;
                           }}
                           onChange={handleChange}
                         />
@@ -1828,10 +1927,13 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("entrepreneurshipVideoFile")}
+                            onClick={() =>
+                              handleClearFile("entrepreneurshipVideoFile")
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[2].point_per_activity}
@@ -1867,7 +1969,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="entrepreneurshipBusinessPlanFile"
                           ref={(el) => {
-                            fileInputRefs.current["entrepreneurshipBusinessPlanFile"] = el;
+                            fileInputRefs.current[
+                              "entrepreneurshipBusinessPlanFile"
+                            ] = el;
                           }}
                           onChange={handleChange}
                         />
@@ -1875,10 +1979,15 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("entrepreneurshipBusinessPlanFile")}
+                            onClick={() =>
+                              handleClearFile(
+                                "entrepreneurshipBusinessPlanFile"
+                              )
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold"
                           />
-                        )}</div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-black text-center">
                       {data[14]?.subpoints[3].point_per_activity}
@@ -1914,7 +2023,9 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           className="fileInputBox"
                           name="entrepreneurshipWorkForStartupFile"
                           ref={(el) => {
-                            fileInputRefs.current["entrepreneurshipWorkForStartupFile"] = el;
+                            fileInputRefs.current[
+                              "entrepreneurshipWorkForStartupFile"
+                            ] = el;
                           }}
                           onChange={handleChange}
                         />
@@ -1922,7 +2033,11 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                           <CloseIcon
                             size={19}
                             color="white"
-                            onClick={() => handleClearFile("entrepreneurshipWorkForStartupFile")}
+                            onClick={() =>
+                              handleClearFile(
+                                "entrepreneurshipWorkForStartupFile"
+                              )
+                            }
                             className="border border-gray-700 bg-green-700 cursor-pointer text-bold hover:bg-green-500"
                           />
                         )}
@@ -1944,23 +2059,21 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({ data, curre
                   </tr>
                 </tbody>
               </table>
-
             </form>
           </div>
           <button
             type="submit"
             disabled={year < (currentyear ?? 0) || totalPoint == 0}
-
             onClick={handleSubmit}
-            className={`mt-4 flex justify-center items-center gap-2 px-4 py-2 text-center rounded w-full transition-colors duration-200 ${year < (currentyear ?? 0) || totalPoint == 0
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
-              }`}
+            className={`mt-4 flex justify-center items-center gap-2 px-4 py-2 text-center rounded w-full transition-colors duration-200 ${
+              year < (currentyear ?? 0) || totalPoint == 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
+            }`}
           >
             <Save />
             Submit <span>{totalPoint}</span> Point
           </button>
-
         </div>
       ) : (
         <div className="pt-1 sm:pt-6 px-6 pb-6 space-y-6 sm:space-y-8 ">

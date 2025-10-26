@@ -18,6 +18,7 @@ import type {
   StudentResponseofGetDetails,
   YearWiseActivityStructure,
 } from "@/components/types/superadminType";
+import ThemeToggleSwitch from "@/components/ThemeToggleButton";
 interface SidebarContentProps {
   selectedYear: string;
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
@@ -109,7 +110,7 @@ const StudentDetails = () => {
       )}
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto ">
+      <div className="flex-1 overflow-y-auto dark:bg-gray-900 ">
         {/* Top bar with menu icon */}
         <div className="flex justify-end p-0 pb-0">
           <Button
@@ -241,6 +242,9 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           >
             <LogOut className="w-4 h-4 mt-0.5" />
             Log Out
+          </li>
+          <li className="flex ml-2">
+            <ThemeToggleSwitch />
           </li>
         </ul>
       </div>
