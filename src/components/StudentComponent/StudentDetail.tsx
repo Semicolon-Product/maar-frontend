@@ -66,13 +66,13 @@ console.log("year=>>",year)
     <div className="p-4 max-w-5xl mx-auto  dark:bg-gray-900 min-h-screen">
       {/* Student Info */}
       <div className=" dark:bg-gray-800 shadow-md rounded-xl p-6 mb-8 border">
-        <h2 className="text-2xl font-semibold mb-6 t  pb-2 flex gap-0.5 left-content">
+        <h2 className="text-2xl font-semibold mb-6 t  pb-2 flex gap-0.5 ">
           <FaGraduationCap className="mt-1" /> Student Profile
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-sm text-gray-800 dark:text-white">
           {/* Column 1 */}
-          <div className="space-y-3 left-content">
+          <div className="space-y-3 ">
             <div>
               <span className="font-semibold">Name:</span> {studentData?.name}
             </div>
@@ -90,7 +90,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Column 2 */}
-          <div className="space-y-3 right-content">
+          <div className="space-y-3 ">
             <div>
               <span className="font-semibold">Phone:</span>{" "}
               {studentData?.mobile_no}
@@ -208,7 +208,7 @@ console.log("year=>>",year)
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-gray-800">
           {/* First Year */}
-          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition left-content">
+          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">
               First Year
             </h3>
@@ -222,7 +222,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Second Year */}
-          <div className="bg-blue-50 dark:bg-gray-900 border  rounded-lg p-4 shadow-sm hover:shadow-md transition right-content">
+          <div className="bg-blue-50 dark:bg-gray-900 border  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">
               Second Year
             </h3>
@@ -238,7 +238,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Third Year */}
-          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition left-content">
+          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">
               Third Year
             </h3>
@@ -252,7 +252,7 @@ console.log("year=>>",year)
           </div>
 
           {/* Fourth Year */}
-          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition right-content">
+          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
             <h3 className="text-lg font-semibold text-blue-700 mb-2">
               Fourth Year
             </h3>

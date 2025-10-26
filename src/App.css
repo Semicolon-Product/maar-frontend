@@ -95,13 +95,6 @@ select.pointsDropdown:focus {
   justify-content: space-between;
 }
 
-.left-content {
-  animation: slideInFromLeft 1s ease-out forwards;
-}
-
-.right-content {
-  animation: slideInFromRight 1s ease-out forwards;
-}
 
 @keyframes slideInFromLeft {
   from {

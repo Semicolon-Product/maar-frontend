@@ -67,12 +67,12 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 50 }}
                 transition={{ duration: 0.3 }}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 shadow-lg w-72 font-medium 
+                className={`flex items-center gap-3  px-4 py-3 shadow-2xl w-74 rounded-md font-medium 
                   ${
                     type === "success"
-                      ? "bg-green-600 text-white"
+                      ? "bg-gradient-to-br from-green-500 via-green-600 to-green-700 text-white"
                       : type === "error"
-                      ? "bg-red-600 text-white"
+                      ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white"
                       : "bg-yellow-500 text-black"
                   }`}
               >

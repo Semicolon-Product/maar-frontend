@@ -206,7 +206,7 @@ const Login = () => {
         <form className="flex flex-col gap-6">
           <div className="flex justify-center gap-4">
             {["student", "teacher", "superadmin"].map((r) => (
-              <label key={r} className="flex items-center gap-2">
+              <label key={r} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="role"
@@ -215,10 +215,11 @@ const Login = () => {
                   checked={role === r}
                   onChange={() => {
                     setRole(r);
+                    if (r === "superadmin") setSuperAdminLogin(false);
                     setFormError({});
                   }}
                 />
-                <span className="capitalize dark:text-black">{r}.</span>
+                <span className="capitalize  dark:text-black ">{r}.</span>
               </label>
             ))}
           </div>
@@ -352,7 +353,7 @@ const Login = () => {
             </>
           )}
 
-          {role === "superadmin" && !superadminLogin && (
+          {role === "superadmin" && superadminLogin && (
             <>
               <div>
                 <label className="block">Name</label>
@@ -472,7 +473,7 @@ const Login = () => {
                 Already have an account?{" "}
                 <a
                   href="#"
-                  onClick={() => setSuperAdminLogin(true)}
+                  onClick={() => setSuperAdminLogin(!superadminLogin)}
                   className="text-blue-600 underline"
                 >
                   Sign in
@@ -481,7 +482,7 @@ const Login = () => {
             </>
           )}
 
-          {role === "superadmin" && superadminLogin && (
+          {role === "superadmin" && !superadminLogin && (
             <>
               <div>
                 <label className="block">Email</label>
@@ -546,7 +547,7 @@ const Login = () => {
                 Don’t have an account?{" "}
                 <a
                   href="#"
-                  onClick={() => setSuperAdminLogin(false)}
+                  onClick={() => setSuperAdminLogin(!superadminLogin)}
                   className="text-blue-600 underline"
                 >
                   Sign up

@@ -50,6 +50,9 @@ export const postApi = async (
   if (response.data?.data?.token) {
     localStorage.setItem("token", response.data.data.token);
   }
+  if (response.data?.data?.role) {
+    localStorage.setItem("role", response.data.data.role);
+  }
 
   console.log("in postApi token:", response.data?.data?.token);
   console.log("in postApi response:", response);

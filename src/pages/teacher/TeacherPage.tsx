@@ -140,7 +140,7 @@ const TeacherPage = () => {
           {/* Menu icon - show only on small screens */}
           <div className="md:hidden">
             <Button
-              className="text-black bg-gray-100 hover:bg-gray-100"
+              className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             >
               <IoReorderThree className="text-xl scale-150" />
