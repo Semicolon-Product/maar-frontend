@@ -290,22 +290,28 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
         <div className="mx-2 md:mx-5">
           <div className="overflow-x-auto rounded-md">
             <table className="min-w-full   text-base ">
-              <thead className="bg-[#2a4054] border  text-white ">
+              <thead className="bg-[#2a4054] border text-white">
                 <tr className="h-10">
-                  <th className="px-2 py-1 text-left font-bold">Sr No</th>
-                  <th className="px-2 py-1 text-left font-bold">
-                    Student Name
-                  </th>
-                  <th className="px-2 py-1 text-left font-bold">Roll No</th>
-                  <th className="px-2 py-1 text-left font-bold">Mobile No</th>
-                  <th className="px-2 py-1 text-left font-bold">
-                    Total Acquired Points
-                  </th>
-                  <th className="px-2 py-1 text-left font-bold">Report</th>
-                  <th className="px-2 py-1 text-left font-bold">Status</th>
-                  <th className="px-2 py-1 text-left font-bold">Expand</th>
+                  {[
+                    "Sr No",
+                    "Student Name",
+                    "Roll No",
+                    "Mobile No",
+                    "Total Acquired Points",
+                    "Report",
+                    "Status",
+                    "Expand",
+                  ].map((label) => (
+                    <th
+                      key={label}
+                      className="px-2 py-1 text-left font-bold whitespace-nowrap"
+                    >
+                      {label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
+
               <tbody>
                 {students?.length ? (
                   students.map((student, index) => (
