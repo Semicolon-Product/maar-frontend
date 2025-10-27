@@ -352,7 +352,7 @@ export default function Home() {
                         <img src="/VectorGroup.png" alt="" className="rotate-140" />
                     </div> */}
           <p className="text-[#34699A] mb-6 mt-1 text-lg dark:text-blue-200">
-            MakautStudents.help centralizes MAAR (Mandatory Additional
+            MakautStudents.help centralizes MAR (Mandatory Additional
             Requirement) data uploads, letting teachers and students securely
             submit and verify documents — no more scattered WhatsApp/Google
             Forms mess.
