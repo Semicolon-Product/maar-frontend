@@ -1,56 +1,38 @@
 import { useEffect, useState } from "react";
-import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   FaCalendarAlt,
   FaSchool,
   FaChalkboardTeacher,
   FaBarcode,
-  FaStar,
 } from "react-icons/fa";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  IconButton,
-  Modal,
-  Box,
-  Typography,
-  Divider,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { superadminStyle } from "@/components/styles/style";
-import Close from "@mui/icons-material/Close";
+
 import type {
   AllDetails,
   PaymentPlan,
   SuperadminSidebarData,
   Teacher,
-  Department,
 } from "@/components/types/superadminType";
-import { X, Zap } from "lucide-react";
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+  LayoutDashboard,
+  LogOut,
+  Pencil,
+  Trash2,
+  Users,
+  X,
+  Zap,
+} from "lucide-react";
+
 import { getLoggedInSuperadminId } from "@/utils/auth";
 import { PiCurrencyInrBold } from "react-icons/pi";
 
 import { useNavigate } from "react-router-dom";
-import { HiOutlineUserGroup, HiUserGroup } from "react-icons/hi2";
 //import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
 import { deleteApi, getApi, postApi } from "@/api";
-import Select from "react-select";
+
 import { useToast } from "@/contexts/ToastContext";
+import ThemeToggleSwitch from "@/components/ThemeToggleButton";
+import { AnimatePresence, motion } from "framer-motion";
 interface SidebarContentProps {
   details?: SuperadminSidebarData;
   selectedSection: string;
@@ -282,37 +264,29 @@ const SuperAdminPage = () => {
       console.error("Payment creation failed", error);
     }
   };
-
-  const [deptList, setDeptList] = useState<Department[]>();
-  const getAllDept = async () => {
+  /* const getAllDept = async () => {
     await getApi("superadmin/getAllDepartments").then((res) => {
       console.log("dept", res.data);
-      setDeptList(res?.data);
     });
-  };
-
+  }; */
+  /* 
   useEffect(() => {
     getAllDept();
-  }, []);
-
-  const deptOptions = deptList?.map((dept) => ({
-    label: dept.name,
-    value: dept.name,
-  }));
+  }, []); */
 
   console.log("paymentDetails", Number(paymentDetails?.[0]?.total_amount));
 
   return (
     <div
-      className="flex flex-col min-h-screen bg-cover bg-center text-white"
-      /*  style={{
-       backgroundImage: "url('https://imapro.in/bahrain/global/bg.svg')", // Replace with your actual image path
-       backgroundAttachment: "fixed",
-     }} */
+      className="flex flex-col min-h-screen bg-center text-white
+             bg-cover dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')]"
+      style={{
+        backgroundAttachment: "fixed",
+      }}
     >
       <div className="flex h-[100vh] overflow-hidden">
         {/* Sidebar for Desktop */}
-        <div className="hidden md:block bg-gray-900 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
+        <div className="hidden md:block text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
           <SidebarContent
             details={allDetails?.superadmin}
             selectedSection={selectedSection}
@@ -322,7 +296,7 @@ const SuperAdminPage = () => {
 
         {/* Sidebar for Mobile */}
         {isSidebarOpen && (
-          <div className="flex absolute inset-0 bg-gray-900 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
+          <div className="flex absolute inset-0  text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
             {/* Close icon */}
             <div className="flex justify-end p-2">
               <button
@@ -343,226 +317,239 @@ const SuperAdminPage = () => {
           </div>
         )}
 
-        <Modal open={showAddModal} onClose={() => setShowAddModal(false)}>
-          <div className="bg-white max-w-[95vw] sm:max-w-[90vw] md:max-w-[60vw] mt-[5%] mx-auto rounded-lg shadow-lg flex flex-col max-h-screen overflow-hidden">
-            {/* Header */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                bgcolor: "#2a4054",
-                px: 2,
-                py: 1,
-              }}
-            >
-              <Typography
-                variant="h6"
-                className="text-white text-center flex-1 text-sm sm:text-base md:text-lg"
+        <AnimatePresence>
+          {showAddModal && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+
+              {/* Modal container */}
+              <motion.div
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
               >
-                {isEditMode ? "Edit Teacher" : "Add New Teacher"}
-              </Typography>
-              <IconButton onClick={() => setShowAddModal(false)} size="small">
-                <Close fontSize="small" sx={{ color: "white" }} />
-              </IconButton>
-            </Box>
-
-            {/* Content */}
-            <Box sx={{ p: 3, overflowY: "auto", minHeight: "50vh" }}>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Teacher Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Teacher Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={teacherData.name}
-                      onChange={(e) =>
-                        setTeacherData((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
-                        errors.name
-                          ? "border-red-500 ring-red-500"
-                          : "border-gray-300 focus:ring-blue-500"
-                      }`}
-                    />
+                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full max-w-[90vw] md:max-w-[60vw] flex flex-col max-h-[90vh]  dark:border-gray-700 overflow-hidden">
+                  {/* Header */}
+                  <div className=" border-b border-gray-700 flex items-center justify-between bg-[#2a4054] dark:bg-gray-900 text-white px-4 py-3">
+                    <h2 className="text-base sm:text-lg font-semibold">
+                      {isEditMode ? "Edit Teacher" : "Add New Teacher"}
+                    </h2>
+                    <button
+                      onClick={() => setShowAddModal(false)}
+                      className="p-1 hover:bg-white/20 rounded-md transition"
+                    >
+                      <X size={18} />
+                    </button>
                   </div>
 
-                  {/* Department */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Department
-                    </label>
-                    {/* <input
-                      type="text"
-                      name="dept"
-                      value={teacherData.dept}
-                      onChange={(e) =>
-                        setTeacherData((prev) => ({ ...prev, dept: e.target.value }))
-                      }
-                      className={`w-full px-4 py-2 border focus:outline-none focus:ring-1 ${errors.dept ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                        }`}
-                    /> */}
-                    <Select
-                      name="dept"
-                      options={deptOptions}
-                      value={
-                        deptOptions?.find(
-                          (opt) => opt.value === teacherData.dept
-                        ) || null
-                      }
-                      onChange={(selectedOption) =>
-                        setTeacherData((prev) => ({
-                          ...prev,
-                          dept: selectedOption?.value || "",
-                        }))
-                      }
-                      classNamePrefix="react-select"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          padding: "2px",
-                          borderRadius: "0.25rem",
-                          border: errors.dept
-                            ? "1px solid #f87171"
-                            : "1px solid #d1d5db", // red-500 or gray-300
-                          boxShadow: state.isFocused
-                            ? errors.dept
-                              ? "0 0 0 1px #f87171"
-                              : "0 0 0 1px #3b82f6"
-                            : "none", // blue-500 ring
-                          "&:hover": {
-                            borderColor: errors.dept ? "#f87171" : "#3b82f6",
-                          },
-                        }),
-                      }}
-                      isSearchable
-                    />
+                  {/* Form Content */}
+                  <div className="p-4 overflow-y-auto flex-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Teacher Name */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Teacher Name
+                        </label>
+                        <input
+                          type="text"
+                          value={teacherData.name}
+                          onChange={(e) =>
+                            setTeacherData((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
+                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.name
+                              ? "border-red-500 ring-red-500"
+                              : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                          }`}
+                        />
+                      </div>
+
+                      {/* Department */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Department
+                        </label>
+                        <input
+                          type="text"
+                          value={teacherData.dept}
+                          onChange={(e) =>
+                            setTeacherData((prev) => ({
+                              ...prev,
+                              dept: e.target.value,
+                            }))
+                          }
+                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.dept
+                              ? "border-red-500 ring-red-500"
+                              : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                          }`}
+                        />
+                      </div>
+
+                      {/* Email */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          value={teacherData.email}
+                          onChange={(e) =>
+                            setTeacherData((prev) => ({
+                              ...prev,
+                              email: e.target.value,
+                            }))
+                          }
+                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.email
+                              ? "border-red-500 ring-red-500"
+                              : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                          }`}
+                        />
+                      </div>
+
+                      {/* Password */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Password
+                        </label>
+                        <input
+                          type="text"
+                          value={teacherData.password}
+                          onChange={(e) =>
+                            setTeacherData((prev) => ({
+                              ...prev,
+                              password: e.target.value,
+                            }))
+                          }
+                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.password
+                              ? "border-red-500 ring-red-500"
+                              : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                          }`}
+                        />
+                      </div>
+
+                      {/* Mobile No */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Mobile No
+                        </label>
+                        <input
+                          type="text"
+                          value={teacherData.mobileNo}
+                          onChange={(e) =>
+                            setTeacherData((prev) => ({
+                              ...prev,
+                              mobileNo: e.target.value,
+                            }))
+                          }
+                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.mobileNo
+                              ? "border-red-500 ring-red-500"
+                              : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                          }`}
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={teacherData.email}
-                      onChange={(e) =>
-                        setTeacherData((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
+                  {/* Footer */}
+                  <div className="border-t border-gray-200 dark:border-gray-700 p-3 flex justify-end gap-3">
+                    <button
+                      onClick={
+                        isEditMode ? handleUpdateTeacher : handleAddTeacher
                       }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
-                        errors.email
-                          ? "border-red-500 ring-red-500"
-                          : "border-gray-300 focus:ring-blue-500"
-                      }`}
-                    />
-                  </div>
+                      className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition text-sm"
+                    >
+                      {isEditMode ? (
+                        <>
+                          {/* Edit Icon */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15.232 5.232l3.536 3.536M16.732 3.732a2.5 2.5 0 113.536 3.536L7.5 20.036H4v-3.572L16.732 3.732z"
+                            />
+                          </svg>
+                          Update
+                        </>
+                      ) : (
+                        <>
+                          {/* Add Icon */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>
+                          Add
+                        </>
+                      )}
+                    </button>
 
-                  {/* Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Password
-                    </label>
-                    <input
-                      type="text"
-                      name="password"
-                      value={teacherData.password}
-                      onChange={(e) =>
-                        setTeacherData((prev) => ({
-                          ...prev,
-                          password: e.target.value,
-                        }))
-                      }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
-                        errors.password
-                          ? "border-red-500 ring-red-500"
-                          : "border-gray-300 focus:ring-blue-500"
-                      }`}
-                    />
-                  </div>
-
-                  {/* Mobile No */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Mobile No
-                    </label>
-                    <input
-                      type="text"
-                      name="mobileNo"
-                      value={teacherData.mobileNo}
-                      onChange={(e) =>
-                        setTeacherData((prev) => ({
-                          ...prev,
-                          mobileNo: e.target.value,
-                        }))
-                      }
-                      className={`w-full px-4 py-2 border  focus:outline-none focus:ring-1 ${
-                        errors.mobileNo
-                          ? "border-red-500 ring-red-500"
-                          : "border-gray-300 focus:ring-blue-500"
-                      }`}
-                    />
+                    <button
+                      onClick={handleClear}
+                      className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-sm"
+                    >
+                      Clear
+                    </button>
                   </div>
                 </div>
-              </div>
-            </Box>
-
-            {/* Footer */}
-            <Divider />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: 1,
-                p: 2,
-              }}
-            >
-              <Button
-                sx={{
-                  ...superadminStyle.button,
-                  color: "white",
-                  backgroundColor: "green",
-                  "&:hover": { backgroundColor: "#228B22" },
-                }}
-                onClick={isEditMode ? handleUpdateTeacher : handleAddTeacher}
-              >
-                {isEditMode ? "Update" : "Add"}
-              </Button>
-              <Button
-                sx={{
-                  ...superadminStyle.button,
-                  color: "white",
-                  backgroundColor: "red",
-                  "&:hover": { backgroundColor: "#cc0000" },
-                }}
-                onClick={handleClear}
-              >
-                Clear
-              </Button>
-            </Box>
-          </div>
-        </Modal>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto ">
           {/* Top bar with menu icon */}
           <div className="flex justify-end px-4 py-2 md:hidden">
-            <Button
-              className="text-black bg-transparent hover:bg-gray-100  block"
+            <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="text-black dark:text-white bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-2 transition flex items-center justify-center"
             >
-              <IoReorderThree className="text-xl scale-150" />
-            </Button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-7 h-7"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
 
           <div className="px-4 py-2">
@@ -577,32 +564,32 @@ const SuperAdminPage = () => {
                 <div className="p-4 grid gap-6">
                   {/* Row 1 - 3 Equal Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-blue-100 rounded-xl shadow-md p-5 border border-blue-200">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
-                        <FaCalendarAlt className="text-blue-500 text-xl" />
+                    <div className="bg-blue-100 dark:bg-gray-800 rounded-xl shadow-md p-5 ">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                        <FaCalendarAlt className="text-blue-500 dark:text-blue-200 text-xl" />
                         Current Date & Time
                       </h3>
-                      <p className="text-gray-700 text-base">
+                      <p className="text-gray-700 dark:text-blue-200 text-base">
                         {getCurrentDateTime()}
                       </p>
                     </div>
 
-                    <div className="bg-green-100 rounded-xl shadow-md p-5 border border-green-200">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
-                        <FaSchool className="text-green-500 text-xl" />
+                    <div className="bg-green-100  dark:bg-gray-800 rounded-xl shadow-md p-5">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-green-200">
+                        <FaSchool className="text-green-300 text-xl" />
                         Institute Name
                       </h3>
-                      <p className="text-gray-700 text-base">
+                      <p className="text-gray-700 dark:text-green-200 text-base">
                         {allDetails?.institute.name}
                       </p>
                     </div>
 
-                    <div className="bg-purple-100 rounded-xl shadow-md p-5 border border-purple-200">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
-                        <FaChalkboardTeacher className="text-purple-500 text-xl" />
+                    <div className="bg-purple-100 dark:bg-gray-800 rounded-xl shadow-md p-5">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-purple-200">
+                        <FaChalkboardTeacher className="text-purple-500 dark:text-purple-200 text-xl" />
                         Total Teachers
                       </h3>
-                      <p className="text-gray-700 text-base">
+                      <p className="text-gray-700 dark:text-purple-200 text-base">
                         {allDetails?.teachers?.length}
                       </p>
                     </div>
@@ -611,24 +598,24 @@ const SuperAdminPage = () => {
                   {/* Row 2 - Code (1/3) and Payment (2/3) */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* 1/3 Card */}
-                    <div className="bg-red-100 rounded-xl shadow-md p-5 border border-red-200">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800">
-                        <FaBarcode className="text-orange-500 text-xl" />
+                    <div className="bg-red-100 dark:bg-gray-800 rounded-xl shadow-md p-5">
+                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-orange-200">
+                        <FaBarcode className="text-orange-500 dark:text-orange-200 text-xl" />
                         Institute Code
                       </h3>
-                      <p className="text-gray-700 text-base">
+                      <p className="text-gray-700 dark:text-orange-200 text-base">
                         {allDetails?.institute.institute_code}
                       </p>
                     </div>
 
                     {/* 2/3 Card */}
-                    <div className="lg:col-span-2 bg-orange-100 rounded-xl shadow-md p-5 border border-gray-200">
+                    <div className="lg:col-span-2 bg-orange-100 dark:bg-gray-800 rounded-xl shadow-md p-5">
                       <div className="flex justify-between items-center mb-3">
-                        <h3 className="flex items-center text-lg font-semibold text-gray-800 gap-2">
-                          <PiCurrencyInrBold className="text-orange-500 text-xl" />
+                        <h3 className="flex items-center text-lg font-semibold text-gray-800 dark:text-orange-400 gap-2">
+                          <PiCurrencyInrBold className="text-orange-500  text-xl" />
                           Current Plan
                         </h3>
-                        <span className="text-sm font-medium text-white bg-orange-500 px-3 py-1 rounded-full">
+                        <span className="text-sm font-medium text-white bg-orange-500 dark:bg-amber-800 px-3 py-1 rounded-full">
                           Premium Plan
                         </span>
                       </div>
@@ -636,13 +623,13 @@ const SuperAdminPage = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Left Column - Plan Details */}
                         <div className="space-y-2">
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-700 dark:text-gray-300">
                             Total Quota:{" "}
                             <span className="font-medium">
                               {allDetails?.payment?.student_quota ?? 0}
                             </span>
                           </p>
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-700 dark:text-gray-300">
                             Registered Students:{" "}
                             <span className="font-medium">
                               {allDetails?.payment?.students_registered ?? 0}
@@ -652,7 +639,7 @@ const SuperAdminPage = () => {
 
                         {/* Right Column - Payment Info */}
                         <div className="space-y-2">
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-700 dark:text-gray-300">
                             <span className="font-medium">
                               Last Payment Date:
                             </span>{" "}
@@ -666,7 +653,7 @@ const SuperAdminPage = () => {
                                 })
                               : "N/A"}
                           </p>
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-700 dark:text-gray-300">
                             <span className="font-medium">
                               Plan Expiry Date:
                             </span>{" "}
@@ -677,7 +664,7 @@ const SuperAdminPage = () => {
                     </div>
                   </div>
                   <div className="w-full max-w-7xl mx-auto px-4 py-12">
-                    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
+                    {/* <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
                       <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
                         <div>
                           <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">
@@ -760,11 +747,7 @@ const SuperAdminPage = () => {
                             /year
                           </p>
                         </div>
-                        {/*  <img
-                          src={premium}
-                          alt="Premium Plan"
-                          className="w-full h-48 object-contain my-4"
-                        /> */}
+                        
                         <button
                           onClick={() => {
                             const amount = Number(
@@ -828,13 +811,13 @@ const SuperAdminPage = () => {
                           Choose Enterprise
                         </button>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Contact Section */}
-                    <div className="mt-10 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
-                      <p className="text-sm text-gray-800 font-medium">
+                    <div className="mt-10 bg-yellow-50 dark:bg-yellow-950 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
+                      <p className="text-sm text-gray-800 dark:text-gray-200 font-medium">
                         Need access for more than 5000 students?{" "}
-                        <span className="text-blue-600 underline cursor-pointer hover:text-blue-800">
+                        <span className="text-blue-600  underline cursor-pointer hover:text-blue-800">
                           Contact us
                         </span>{" "}
                         for an enterprise solution.
@@ -846,19 +829,19 @@ const SuperAdminPage = () => {
                       className="mt-8 cursor-pointer"
                       onClick={() => handleCreatePayment(5000)}
                     >
-                      <div className="bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] border border-orange-300 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
+                      <div className=" bg-amber-50 dark:bg-amber-800  rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
                         <div className="flex items-center gap-3">
                           <Zap className="h-6 w-6 text-orange-500" />
                           <div>
-                            <p className="text-md font-bold text-gray-800">
+                            <p className="text-md font-bold text-gray-800 dark:text-gray-200">
                               Auto Submission Feature
                             </p>
-                            <p className="text-sm text-gray-700">
+                            <p className="text-sm text-gray-700 dark:text-gray-400">
                               Sync student records automatically every year.
                             </p>
                           </div>
                         </div>
-                        <p className="text-lg font-bold text-green-700">
+                        <p className="text-lg font-bold text-green-700 dark:text-green-500">
                           ₹5,000/year
                         </p>
                       </div>
@@ -868,165 +851,97 @@ const SuperAdminPage = () => {
               )}
 
               {selectedSection === "users" && (
-                <div>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      fontSize: "12px",
-                      mb: 2,
-                      textTransform: "none",
-                      background: "#2a4054",
-                      p: 1,
-                    }}
-                    onClick={() => handleOpenAddModal()}
-                  >
-                    Add Teacher
-                  </Button>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow
-                          sx={{ backgroundColor: "#2a4054", height: "30px" }}
-                        >
-                          <TableCell
-                            sx={{
-                              ...superadminStyle.headerStyle,
-                              fontSize: "0.8em",
-                            }}
-                          >
+                <div className="p-1 min-h-screen text-white">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      Teacher Management
+                    </h2>
+                    <button
+                      onClick={handleOpenAddModal}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-sm text-sm font-medium"
+                    >
+                      Add Teacher
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 uppercase text-xs tracking-wider">
+                        <tr>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
                             Teacher Name
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              ...superadminStyle.headerStyle,
-                              fontSize: "0.8em",
-                            }}
-                          >
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
                             Email
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              ...superadminStyle.headerStyle,
-                              fontSize: "0.8em",
-                            }}
-                          >
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
                             Mobile No
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              ...superadminStyle.headerStyle,
-                              fontSize: "0.8em",
-                            }}
-                          >
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
                             Department
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              ...superadminStyle.headerStyle,
-                              fontSize: "0.8em",
-                            }}
-                          >
-                            Password
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              ...superadminStyle.headerStyle,
-                              fontSize: "0.8em",
-                            }}
-                          >
+                          </th>
+                          <th className="py-3 px-4 text-center whitespace-nowrap">
                             Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
+                          </th>
+                        </tr>
+                      </thead>
+
                       {allTeacher?.length ? (
-                        <TableBody>
-                          {allTeacher?.map((teacher: any, index: number) => (
-                            <TableRow
+                        <tbody>
+                          {allTeacher?.map((teacher, index) => (
+                            <tr
                               key={index}
-                              sx={{
-                                background: index % 2 ? "#eceff1" : "white",
-                              }}
+                              className={`${
+                                index % 2 === 0
+                                  ? "bg-white dark:bg-gray-900"
+                                  : "bg-gray-50 dark:bg-gray-800"
+                              } hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
                             >
-                              <TableCell
-                                sx={{
-                                  ...superadminStyle.cellStyle,
-                                  fontSize: "0.8em",
-                                }}
-                              >
+                              <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
                                 {teacher.name}
-                              </TableCell>
-                              <TableCell
-                                sx={{
-                                  ...superadminStyle.cellStyle,
-                                  fontSize: "0.8em",
-                                }}
-                              >
+                              </td>
+                              <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
                                 {teacher.email}
-                              </TableCell>
-                              <TableCell
-                                sx={{
-                                  ...superadminStyle.cellStyle,
-                                  fontSize: "0.8em",
-                                }}
-                              >
+                              </td>
+                              <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
                                 {teacher.mobile_no}
-                              </TableCell>
-                              <TableCell
-                                sx={{
-                                  ...superadminStyle.cellStyle,
-                                  fontSize: "0.8em",
-                                }}
-                              >
+                              </td>
+                              <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
                                 {teacher.department}
-                              </TableCell>
-                              <TableCell
-                                sx={{
-                                  ...superadminStyle.cellStyle,
-                                  fontSize: "0.8em",
-                                }}
-                              >
-                                {teacher.password_hash}
-                              </TableCell>
-                              <TableCell
-                                sx={{
-                                  ...superadminStyle.cellStyle,
-                                  fontSize: "0.8em",
-                                }}
-                              >
-                                <IconButton
-                                  aria-label="edit"
-                                  color="primary"
+                              </td>
+
+                              <td className="py-3 px-4 text-center flex justify-center gap-3">
+                                <button
                                   onClick={() => handleTeacherEdit(teacher)}
+                                  className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
                                 >
-                                  <EditIcon sx={{ fontSize: "20px" }} />
-                                </IconButton>
-                                <IconButton
-                                  aria-label="delete"
-                                  color="error"
+                                  <Pencil size={18} />
+                                </button>
+                                <button
                                   onClick={() => handleDeleteTeacher(teacher)}
+                                  className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
                                 >
-                                  <DeleteIcon sx={{ fontSize: "20px" }} />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
+                                  <Trash2 size={18} />
+                                </button>
+                              </td>
+                            </tr>
                           ))}
-                        </TableBody>
+                        </tbody>
                       ) : (
-                        <TableBody>
-                          <TableRow>
-                            <TableCell
-                              colSpan={4}
-                              align="center"
-                              sx={{ fontStyle: "italic", color: "gray", py: 3 }}
+                        <tbody>
+                          <tr>
+                            <td
+                              colSpan={6}
+                              className="text-center py-6 italic text-gray-500 dark:text-gray-400"
                             >
                               No teachers available. Please add a new teacher to
                               get started.
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
+                            </td>
+                          </tr>
+                        </tbody>
                       )}
-                    </Table>
-                  </TableContainer>
+                    </table>
+                  </div>
                 </div>
               )}
 
@@ -1035,29 +950,54 @@ const SuperAdminPage = () => {
           </div>
         </div>
       </div>
-      <Dialog open={showDeleteModal}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this teacher?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <button
-            onClick={() => setShowDeleteModal(false)}
-            className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
-          >
-            Cancel
-          </button>
+      <AnimatePresence>
+        {showDeleteModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/40 dark:bg-black/60 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
 
-          <button
-            onClick={confirmDelete} // Replace with your actual delete function
-            className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
-          >
-            Delete
-          </button>
-        </DialogActions>
-      </Dialog>
+            {/* Modal Box */}
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                  Confirm Delete
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                  Are you sure you want to delete this teacher? This action
+                  cannot be undone.
+                </p>
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={confirmDelete}
+                    className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -1067,41 +1007,69 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   selectedSection,
   setSelectedSection,
 }) => {
+  const menuItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "users", label: "Manage Users", icon: Users },
+    { id: "logout", label: "Logout", icon: LogOut },
+  ];
+
   return (
-    <div className="flex flex-col h-full">
-      {/* Top: Avatar and Menu */}
-      <div className="flex items-center space-x-4 p-4">
-        <Avatar className="w-10 h-10">
+    <div className="flex flex-col h-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 shadow-xl rounded-r-2xl overflow-hidden">
+      {/* Top: Avatar and Details */}
+      <motion.div
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center space-x-3 p-5 bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-700 dark:to-blue-500"
+      >
+        <Avatar className="w-12 h-12 border-2 border-white">
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>SA</AvatarFallback>
+          <AvatarFallback>SG</AvatarFallback>
         </Avatar>
         <div>
-          <h2 className="text-lg font-semibold">{details?.name}</h2>
-          <p className="text-sm text-gray-400">{details?.email}</p>
+          <h2 className="text-base sm:text-lg font-semibold text-white">
+            {details?.name || "User"}
+          </h2>
+          <p className="text-sm text-blue-100 truncate max-w-[160px]">
+            {details?.email || "user@email.com"}
+          </p>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Sidebar Menu Items */}
-      <ul className="space-y-2 mt-4 px-4">
-        {[
-          { id: "dashboard", label: "Dashboard" },
-          { id: "users", label: "Manage Users" },
-          { id: "logout", label: "Logout" },
-        ].map(({ id, label }) => (
-          <li
+      {/* Menu Items */}
+      <ul className="flex-1 space-y-1 mt-4 px-3">
+        {menuItems.map(({ id, label, icon: Icon }) => (
+          <motion.li
             key={id}
-            className={`p-1 rounded font-bold cursor-pointer ${
-              selectedSection === id ? "text-blue-300" : "hover:text-blue-500"
-            }`}
+            whileHover={{ x: 6 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setSelectedSection(id)}
+            className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer font-medium transition-all duration-200 ${
+              selectedSection === id
+                ? "bg-blue-600 text-white shadow-md"
+                : "hover:bg-blue-100 dark:hover:bg-gray-800"
+            }`}
           >
-            {label}
-          </li>
+            <Icon
+              size={18}
+              className={`${
+                selectedSection === id
+                  ? "text-white"
+                  : "text-blue-600 dark:text-gray-300"
+              }`}
+            />
+            <span>{label}</span>
+          </motion.li>
         ))}
       </ul>
 
-      {/* Footer Stuck to Bottom */}
-      <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
+      {/* Theme Switch */}
+      <div className="flex items-center justify-between mt-auto px-5 py-3 border-t border-gray-300 dark:border-gray-700">
+        <span className="text-sm font-medium">Theme</span>
+        <ThemeToggleSwitch />
+      </div>
+
+      {/* Footer */}
+      <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
         © {new Date().getFullYear()} Abc Pvt Ltd
       </div>
     </div>

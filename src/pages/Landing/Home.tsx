@@ -312,27 +312,9 @@ export default function Home() {
               >
                 Where MAKAUT Students & Teachers Connect
               </span>
-
-              <style>{`
-    .animate-border {
-      background-size: 200% 200%;
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation: borderMove 3s steps(4, end) infinite;
-    }
-
-    @keyframes borderMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  `}</style>
+              <style>{` .animate-border { background-size: 200% 200%; -webkit-mask: linear-gradient(#fff 0 0) content-box,  linear-gradient(#fff 0 0); -webkit-mask-composite: xor;mask-composite: exclude;animation: borderMove 3s steps(4, end) infinite;} @keyframes borderMove { 0% { background-position: 0% 50%; }50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }}`}</style>
             </button>
           </div>
-
           {/* Main Heading */}
           <h1
             className={` text-4xl md:text-5xl font-bold tracking-tight ${
@@ -348,9 +330,6 @@ export default function Home() {
             <span className="text-blue-600">Submissions</span>
           </h1>
 
-          {/* <div className="h-20 w-20 relative z-50">
-                        <img src="/VectorGroup.png" alt="" className="rotate-140" />
-                    </div> */}
           <p className="text-[#34699A] mb-6 mt-1 text-lg dark:text-blue-200">
             MakautStudents.help centralizes MAR (Mandatory Additional
             Requirement) data uploads, letting teachers and students securely
