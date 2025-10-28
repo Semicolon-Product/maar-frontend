@@ -1,16 +1,6 @@
 import React, { useRef, useState } from "react";
 
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  Tooltip,
-  Typography,
-} from "@mui/material";
 import { motion } from "framer-motion";
-
-import { teacherPageModalStyle } from "@/components/styles/style";
 //import { students } from "@/components/data/data";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -39,6 +29,7 @@ import dayjs from "dayjs";
 import { postApi } from "@/api";
 import { PhoneCallIcon } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
+import DocsModal from "../DocsModal";
 
 const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
   data,
@@ -156,62 +147,12 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
   return (
     <div>
-      <Modal open={openDocsModal} onClose={handleClose}>
-        <Box sx={teacherPageModalStyle}>
-          {/* Header */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              backgroundColor: "#2a4054",
-              padding: "10px 16px",
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                color: "#ffffff",
-                flexGrow: 1,
-                textAlign: "center",
-                marginRight: "32px", // For centering due to close icon
-              }}
-            >
-              {`${currentActivity?.activity_serial_no}. ${currentActivity?.activity_name}`}
-            </Typography>
+      <DocsModal
+        open={openDocsModal}
+        onClose={handleClose} // also fix this, see below 👇
+        currentActivity={currentActivity ?? null}
+      />
 
-            <Button
-              onClick={handleClose}
-              sx={{
-                minWidth: "auto",
-                padding: "4px",
-                color: "#ffffff",
-              }}
-            >
-              ✕
-            </Button>
-          </Box>
-
-          {/* Body */}
-          <Box sx={{ padding: "16px" }}>
-            {currentActivity?.document_url ? (
-              <iframe
-                src={currentActivity.document_url}
-                style={{
-                  width: "100%",
-                  height: "80vh",
-                  border: "none",
-                }}
-                title="Document"
-              />
-            ) : (
-              <Typography>No document available.</Typography>
-            )}
-
-            {/* Footer */}
-          </Box>
-        </Box>
-      </Modal>
       <Dialog open={showDeleteModal}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
@@ -266,24 +207,24 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
           {/* Right side: download icon */}
           <div className="flex justify-end cursor-pointer">
-            <Tooltip title="Download All Students Report">
-              <IconButton
+            <div className="relative group inline-block">
+              <button
                 onClick={() =>
                   generateAllReports(students ?? [], signature ?? "")
                 }
+                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
               >
-                <BsFileEarmarkPdfFill color="#cc3f35" size={25} />
-              </IconButton>
+                <BsFileEarmarkPdfFill className="text-red-600" size={25} />
+              </button>
 
-              {/* <img
-                                onClick={() => generateAllReports(students, signature)}
-                                src={pdf}
-                                height={80}
-                                width={80}
-                                className="h-12 w-12 p-2 rounded-3xl transition-all duration-300 ease-in-out hover:bg-amber-100 cursor-pointer"
-                                alt="Download PDF"
-                            /> */}
-            </Tooltip>
+              <div
+                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap 
+               bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 
+               group-hover:opacity-100 transition-opacity duration-200"
+              >
+                Download All Students Report
+              </div>
+            </div>
           </div>
         </div>
 

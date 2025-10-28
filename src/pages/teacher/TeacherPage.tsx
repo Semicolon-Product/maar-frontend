@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { IoReorderThree } from "react-icons/io5";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Box, Modal, Typography } from "@mui/material";
+
 import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable";
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
-import { teacherPageModalStyle } from "@/components/styles/style";
 
 //import { allStudentDetails } from "@/components/data/data";
-import { X } from "lucide-react";
+import { GraduationCap, LayoutDashboard, LogOut, X } from "lucide-react";
 //import { studentdata } from "@/components/data/data";
 import { getApi } from "@/api";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +16,7 @@ import type {
   TeacherSideBarProps,
 } from "@/components/types/superadminType";
 import ThemeToggleSwitch from "@/components/ThemeToggleButton";
+import { motion } from "framer-motion";
 
 interface SidebarContentProps {
   data?: TeacherSideBarProps;
@@ -31,13 +30,7 @@ const TeacherPage = () => {
   const [backendAllStudentDetails, setBackendAllStudentDetails] =
     useState<BackendStudentDetails>();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  //-----------docs show modal
-  const [openDocsModal, setOpenDocsModal] = useState(false);
-  const [docLink, setDocLink] = useState<string | null>(null);
-  const handleClose = () => {
-    setOpenDocsModal(false);
-    setDocLink(null);
-  };
+
   useEffect(() => {
     getTeacherDetails();
     getAllYearStudentDetails();
@@ -67,34 +60,9 @@ const TeacherPage = () => {
   console.log("teacjer deital::", teacherDetails);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900">
-      <Modal open={openDocsModal} onClose={handleClose}>
-        <Box sx={teacherPageModalStyle}>
-          <Typography variant="h6" mb={2}>
-            Document Link
-          </Typography>
-          {docLink ? (
-            <iframe
-              src={docLink}
-              style={{
-                width: "100%",
-                height: "calc(100% - 48px)",
-                border: "none",
-              }}
-              title="Document"
-            />
-          ) : (
-            <Typography>No document available.</Typography>
-          )}
-
-          <Box mt={3} textAlign="right">
-            <Button onClick={handleClose}>Close</Button>
-          </Box>
-        </Box>
-      </Modal>
-
+    <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900 dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')] dark:bg-cover dark:bg-center dark:bg-fixed transition-colors duration-500">
       {/* Sidebar for Desktop */}
-      <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
+      <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto shadow-lg shadow-black/20">
         <SidebarContent
           data={teacherDetails?.teacher}
           selectedSection={selectedSection}
@@ -104,12 +72,12 @@ const TeacherPage = () => {
 
       {/* Sidebar for Mobile */}
       {isSidebarOpen && (
-        <div className="flex absolute inset-0 bg-gray-800 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
+        <div className="flex absolute inset-0 bg-gray-900/95 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col backdrop-blur-sm">
           {/* Close icon */}
           <div className="flex justify-end p-2">
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="text-white hover:text-red-400"
+              className="text-white hover:text-red-400 transition"
             >
               <X size={24} />
             </button>
@@ -129,7 +97,12 @@ const TeacherPage = () => {
         <div className="flex items-center justify-between px-4 pt-4 pb-0">
           {/* Heading */}
           {selectedSection && selectedSection !== "dashboard" && (
-            <h2 className="text-base md:text-2xl font-semibold bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 text-green-900 rounded-sm shadow-md px-3 py-1 w-fit">
+            <h2
+              className="text-base md:text-2xl font-semibold 
+          bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 
+          text-green-900 dark:text-white rounded-sm shadow-md px-3 py-1 w-fit
+          transition-colors duration-300"
+            >
               {selectedSection === "first" && "First Year Student Data"}
               {selectedSection === "second" && "Second Year Student Data"}
               {selectedSection === "third" && "Third Year Student Data"}
@@ -139,12 +112,14 @@ const TeacherPage = () => {
 
           {/* Menu icon - show only on small screens */}
           <div className="md:hidden">
-            <Button
-              className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            <button
+              className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white 
+          hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors 
+          p-2 rounded-md shadow-sm"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             >
               <IoReorderThree className="text-xl scale-150" />
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -183,7 +158,11 @@ const TeacherPage = () => {
               />
             )}
 
-            {selectedSection === "logout" && <p>Logging out...</p>}
+            {selectedSection === "logout" && (
+              <p className="text-gray-800 dark:text-gray-300 px-4 py-2">
+                Logging out...
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -196,51 +175,75 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   selectedSection,
   setSelectedSection,
 }) => {
-  console.log("in side bar", data);
-  return (
-    <>
-      <div className="flex flex-col h-full">
-        <div className="flex items-center space-x-4 p-4">
-          <Avatar className="w-10 h-10">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>TP</AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="text-lg font-semibold">{data?.name}</h2>
-            <p className="text-sm text-gray-400">{data?.email}</p>
-          </div>
-        </div>
+  const menuItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "first", label: "First Year", icon: GraduationCap },
+    { id: "second", label: "Second Year", icon: GraduationCap },
+    { id: "third", label: "Third Year", icon: GraduationCap },
+    { id: "four", label: "Fourth Year", icon: GraduationCap },
+    { id: "logout", label: "Logout", icon: LogOut },
+  ];
 
-        <ul className="space-y-4 mt-4">
-          {[
-            { id: "dashboard", label: "Dashboard" },
-            { id: "first", label: "First Year" },
-            { id: "second", label: "Second Year" },
-            { id: "third", label: "Third Year" },
-            { id: "four", label: "Fourth Year" },
-            { id: "logout", label: "Logout" },
-          ].map(({ id, label }) => (
-            <li
-              key={id}
-              className={`p-1 rounded font-bold cursor-pointer ${
-                selectedSection === id
-                  ? " text-blue-300"
-                  : "hover:text-blue-500"
-              }`}
-              onClick={() => setSelectedSection(id)}
-            >
-              {label}
-            </li>
-          ))}
-        </ul>
-        <li className="flex mt-2">
-          <ThemeToggleSwitch />
-        </li>
-        <div className="text-center text-xs mt-auto text-gray-400 py-4 border-t border-gray-400">
-          © {new Date().getFullYear()} Abc Pvt Ltd
+  return (
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-lg rounded-r-2xl overflow-hidden transition-all duration-300">
+      {/* Profile Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center space-x-3 p-5 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-700 dark:to-blue-600"
+      >
+        <Avatar className="w-12 h-12 border-2 border-white">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>TP</AvatarFallback>
+        </Avatar>
+        <div>
+          <h2 className="text-white font-semibold text-base sm:text-lg">
+            {data?.name || "Teacher"}
+          </h2>
+          <p className="text-blue-100 text-sm truncate max-w-[160px]">
+            {data?.email || "teacher@example.com"}
+          </p>
         </div>
+      </motion.div>
+
+      {/* Sidebar Menu */}
+      <ul className="flex-1 px-3 py-4 space-y-1">
+        {menuItems.map(({ id, label, icon: Icon }) => (
+          <motion.li
+            key={id}
+            whileHover={{ x: 6 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setSelectedSection(id)}
+            className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer font-medium transition-all duration-200 ${
+              selectedSection === id
+                ? "bg-blue-600 text-white shadow-md"
+                : "hover:bg-blue-100 dark:hover:bg-gray-800"
+            }`}
+          >
+            <Icon
+              size={18}
+              className={`${
+                selectedSection === id
+                  ? "text-white"
+                  : "text-blue-600 dark:text-gray-300"
+              }`}
+            />
+            <span>{label}</span>
+          </motion.li>
+        ))}
+      </ul>
+
+      {/* Theme Switch */}
+      <div className="flex items-center justify-between mt-auto px-5 py-3 border-t border-gray-300 dark:border-gray-700">
+        <span className="text-sm font-medium">Theme</span>
+        <ThemeToggleSwitch />
       </div>
-    </>
+
+      {/* Footer */}
+      <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
+        © {new Date().getFullYear()} Abc Pvt Ltd
+      </div>
+    </div>
   );
 };
 
