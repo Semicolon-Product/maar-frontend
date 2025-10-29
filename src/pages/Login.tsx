@@ -282,7 +282,7 @@ const Login = () => {
               >
                 Login
               </button>
-              <p className="text-sm text-center text-gray-700">
+              <p className="text-xs text-center text-gray-700 whitespace-nowrap">
                 Don’t have an account? Contact to Department Teacher
               </p>
             </>
@@ -347,7 +347,7 @@ const Login = () => {
               >
                 Login
               </button>
-              <p className="text-sm text-center text-gray-700">
+              <p className="text-xs text-center text-gray-700">
                 Don’t have an account? Contact to Institute Admin
               </p>
             </>
@@ -543,7 +543,7 @@ const Login = () => {
               >
                 Login
               </button>
-              <p className="text-sm text-center">
+              <p className="text-xs text-center">
                 Don’t have an account?{" "}
                 <a
                   href="#"
