@@ -37,6 +37,7 @@ interface SidebarContentProps {
   details?: SuperadminSidebarData;
   selectedSection: string;
   setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
+  onClose?: () => void;
 }
 
 const SuperAdminPage = () => {
@@ -44,7 +45,6 @@ const SuperAdminPage = () => {
   const toast = useToast();
   const [selectedSection, setSelectedSection] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   //--------------manage user-------------
   const [showAddModal, setShowAddModal] = useState(false);
   const [teacherData, setTeacherData] = useState<{
@@ -82,14 +82,6 @@ const SuperAdminPage = () => {
   const handleTeacherEdit = (teacher: Teacher) => {
     setIsEditMode(true);
     console.log("teacher", teacher);
-    /* setTeacherData({
-      id: teacher.id,
-      name: teacher.name,
-      dept: teacher.department,
-      email: teacher.email,
-      password: teacher.password,
-      mobileNo:teacher.mobile_no
-    }); */
     setShowAddModal(true);
   };
 
@@ -298,18 +290,10 @@ const SuperAdminPage = () => {
         {isSidebarOpen && (
           <div className="flex absolute inset-0  text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
             {/* Close icon */}
-            <div className="flex justify-end p-2">
-              <button
-                onClick={() => setIsSidebarOpen(false)}
-                className="text-white hover:text-red-400"
-              >
-                <X size={24} />
-                {/* Or if using MUI: <CloseIcon /> */}
-              </button>
-            </div>
 
             {/* Sidebar content below the icon */}
             <SidebarContent
+              onClose={() => setIsSidebarOpen(!isSidebarOpen)}
               details={allDetails?.superadmin}
               selectedSection={selectedSection}
               setSelectedSection={setSelectedSection}
@@ -559,9 +543,9 @@ const SuperAdminPage = () => {
             </p> */}
 
             {/* Render Section Content */}
-            <div className="mt-6">
+            <div className="">
               {selectedSection === "dashboard" && (
-                <div className="p-4 grid gap-6">
+                <div className="px-2 grid gap-6">
                   {/* Row 1 - 3 Equal Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-blue-100 dark:bg-gray-800 rounded-xl shadow-md p-5 ">
@@ -1006,6 +990,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   details,
   selectedSection,
   setSelectedSection,
+  onClose,
 }) => {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -1019,12 +1004,17 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center space-x-3 p-5 bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-700 dark:to-blue-500"
+        className="relative flex items-center space-x-3 p-5 
+                 bg-gradient-to-r from-blue-600 to-blue-400 
+                 dark:from-blue-700 dark:to-blue-500"
       >
+        {/* Avatar Section */}
         <Avatar className="w-12 h-12 border-2 border-white">
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>SG</AvatarFallback>
         </Avatar>
+
+        {/* User Info */}
         <div>
           <h2 className="text-base sm:text-lg font-semibold text-white">
             {details?.name || "User"}
@@ -1033,6 +1023,30 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             {details?.email || "user@email.com"}
           </p>
         </div>
+
+        {/* ❌ Close Icon (Top-right corner, mobile only) */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 md:hidden text-white hover:bg-blue-700/50 
+                   rounded-full p-1.5 transition"
+          aria-label="Close"
+        >
+          {/* Inline SVG for close icon */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </motion.div>
 
       {/* Menu Items */}
