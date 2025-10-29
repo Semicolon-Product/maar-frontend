@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { IoReorderThree } from "react-icons/io5";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable";
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 
 //import { allStudentDetails } from "@/components/data/data";
-import { GraduationCap, LayoutDashboard, LogOut, X } from "lucide-react";
+import { GraduationCap, LayoutDashboard, LogOut } from "lucide-react";
 //import { studentdata } from "@/components/data/data";
 import { getApi } from "@/api";
 import { useNavigate } from "react-router-dom";
@@ -16,12 +15,13 @@ import type {
   TeacherSideBarProps,
 } from "@/components/types/superadminType";
 import ThemeToggleSwitch from "@/components/ThemeToggleButton";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface SidebarContentProps {
   data?: TeacherSideBarProps;
   selectedSection: string;
   setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
+  onClose?: () => void;
 }
 
 const TeacherPage = () => {
@@ -61,7 +61,6 @@ const TeacherPage = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900 dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')] dark:bg-cover dark:bg-center dark:bg-fixed transition-colors duration-500">
-      {/* Sidebar for Desktop */}
       <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto shadow-lg shadow-black/20">
         <SidebarContent
           data={teacherDetails?.teacher}
@@ -70,57 +69,81 @@ const TeacherPage = () => {
         />
       </div>
 
-      {/* Sidebar for Mobile */}
-      {isSidebarOpen && (
-        <div className="flex absolute inset-0 bg-gray-900/95 text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col backdrop-blur-sm">
-          {/* Close icon */}
-          <div className="flex justify-end p-2">
-            <button
+      {/* ✅ Sidebar for Mobile (Dynamic + Animated) */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            {/* Background overlay (click to close) */}
+            <motion.div
+              className="fixed inset-0 bg-black/60  z-[998]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setIsSidebarOpen(false)}
-              className="text-white hover:text-red-400 transition"
-            >
-              <X size={24} />
-            </button>
-          </div>
+            />
 
-          <SidebarContent
-            data={teacherDetails?.teacher}
-            selectedSection={selectedSection}
-            setSelectedSection={setSelectedSection}
-          />
-        </div>
-      )}
+            {/* Sidebar Slide-in Panel */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 120, damping: 20 }}
+              className="fixed top-0 left-0 z-[999] w-72 h-full 
+                   bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100
+                   shadow-2xl flex flex-col rounded-r-2xl overflow-y-auto"
+            >
+              {/* Top: Profile Header + Close Button */}
+
+              {/* Sidebar Menu Items */}
+              <SidebarContent
+                onClose={() => setIsSidebarOpen(!isSidebarOpen)}
+                data={teacherDetails?.teacher}
+                selectedSection={selectedSection}
+                setSelectedSection={(section) => {
+                  setSelectedSection(section);
+                  setIsSidebarOpen(false); // ✅ close sidebar when a section is clicked (mobile UX)
+                }}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Top bar: h2 on left, menu icon on right */}
         <div className="flex items-center justify-between px-4 pt-4 pb-0">
-          {/* Heading */}
+          {/* Sidebar Toggle (Mobile Only) */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 
+                 dark:from-gray-800 dark:to-gray-700 shadow-sm 
+                 hover:shadow-md transition-all duration-300 
+                 hover:scale-105 active:scale-95"
+              aria-label="Toggle Sidebar"
+            >
+              <IoReorderThree className="text-2xl text-gray-700 dark:text-gray-100" />
+            </button>
+          </div>
+
+          {/* Dynamic Page Title */}
           {selectedSection && selectedSection !== "dashboard" && (
-            <h2
-              className="text-base md:text-2xl font-semibold 
-          bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 
-          text-green-900 dark:text-white rounded-sm shadow-md px-3 py-1 w-fit
-          transition-colors duration-300"
+            <motion.h2
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-lg md:text-2xl font-semibold tracking-wide 
+                 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
+                 bg-clip-text text-transparent select-none
+                 drop-shadow-sm px-3 py-1 rounded-md"
             >
               {selectedSection === "first" && "First Year Student Data"}
               {selectedSection === "second" && "Second Year Student Data"}
               {selectedSection === "third" && "Third Year Student Data"}
               {selectedSection === "four" && "Fourth Year Student Data"}
-            </h2>
+            </motion.h2>
           )}
-
-          {/* Menu icon - show only on small screens */}
-          <div className="md:hidden">
-            <button
-              className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white 
-          hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors 
-          p-2 rounded-md shadow-sm"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-              <IoReorderThree className="text-xl scale-150" />
-            </button>
-          </div>
         </div>
 
         {/* Content */}
@@ -174,6 +197,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   data,
   selectedSection,
   setSelectedSection,
+  onClose,
 }) => {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -190,20 +214,52 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center space-x-3 p-5 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-700 dark:to-blue-600"
+        className="relative flex items-center space-x-3 p-5 
+                 bg-gradient-to-r from-blue-600 to-blue-500 
+                 dark:from-blue-700 dark:to-blue-600"
       >
-        <Avatar className="w-12 h-12 border-2 border-white">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>TP</AvatarFallback>
-        </Avatar>
-        <div>
-          <h2 className="text-white font-semibold text-base sm:text-lg">
-            {data?.name || "Teacher"}
-          </h2>
-          <p className="text-blue-100 text-sm truncate max-w-[160px]">
-            {data?.email || "teacher@example.com"}
-          </p>
+        {/* Profile Section */}
+        <div className="flex items-center space-x-3">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white">
+            <img
+              src="https://github.com/shadcn.png"
+              alt="Avatar"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-base sm:text-lg">
+              {data?.name || "Teacher"}
+            </h2>
+            <p className="text-blue-100 text-sm truncate max-w-[160px]">
+              {data?.email || "teacher@example.com"}
+            </p>
+          </div>
         </div>
+
+        {/* ❌ Close Button (Top-Right, Mobile Only) */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 md:hidden text-white 
+                   hover:bg-blue-700 p-1.5 rounded-full transition"
+          aria-label="Close Sidebar"
+        >
+          {/* Inline SVG for cross icon */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </motion.div>
 
       {/* Sidebar Menu */}

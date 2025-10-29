@@ -245,7 +245,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                   ].map((label) => (
                     <th
                       key={label}
-                      className="px-2 py-1 text-left font-bold whitespace-nowrap"
+                      className="px-2 py-1  font-bold whitespace-nowrap uppercase text-center"
                     >
                       {label}
                     </th>
@@ -264,17 +264,23 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                             : "bg-white dark:bg-gray-800"
                         }`}
                       >
-                        <td className="px-2 py-1">{index + 1}</td>
-                        <td className="px-2 py-1">{student.name}</td>
-                        <td className="px-2 py-1">{student.roll_no}</td>
-                        <td className="px-2 py-1">{student.mobile_no}</td>
-                        <td className="px-2 py-1">
+                        <td className="px-2 py-1 text-center">{index + 1}</td>
+                        <td className="px-2 py-1  text-center">
+                          {student.name}
+                        </td>
+                        <td className="px-2 py-1  text-center">
+                          {student.roll_no}
+                        </td>
+                        <td className="px-2 py-1  text-center">
+                          {student.mobile_no}
+                        </td>
+                        <td className="px-2 py-1  text-center">
                           {student.activities?.reduce(
                             (total, item) => total + (item.point || 0),
                             0
                           )}
                         </td>
-                        <td className="px-2 py-1">
+                        <td className="px-2 py-1  text-center">
                           <button
                             className="text-red-600 hover:text-red-800"
                             onClick={() => downloadIndividualReport(student)}
@@ -282,14 +288,14 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                             <BsFileEarmarkPdfFill size={20} className="mt-1" />
                           </button>
                         </td>
-                        <td className="px-2 py-1">
+                        <td className="px-2 py-1  text-center">
                           {student.status ? (
                             <CheckCircleIcon className="text-green-600" />
                           ) : (
                             <CancelIcon className="text-red-600 " />
                           )}
                         </td>
-                        <td className="px-2 py-1">
+                        <td className="px-2 py-1  text-center">
                           <button
                             onClick={() =>
                               setOpenIndex(openIndex === index ? null : index)
@@ -405,7 +411,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                               </td>
                                               <td className="px-2 py-1 text-center">
                                                 <button
-                                                  className="text-white hover:text-gray-500"
+                                                  className="text-black hover:text-gray-500 dark:text-white dark:hover:text-gray-200"
                                                   onClick={() =>
                                                     handleDeleteActivity(
                                                       activity
