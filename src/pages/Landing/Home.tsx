@@ -544,11 +544,12 @@ export default function Home() {
       </section>
       <div className="px-6 py-16 space-y-20">
         {/* Reviews Section */}
-        <section className="text-center px-4 md:px-10">
-          <h2 className="text-3xl font-bold mb-10 dark:text-blue-100">
+        <section className="text-center px-4 md:px-10 py-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 dark:text-blue-100">
             What Our Partners Say
           </h2>
-          <div className="relative w-full max-w-6xl mx-auto">
+
+          <div className="relative w-full max-w-7xl mx-auto">
             {/* Cards wrapper */}
             <div className="overflow-hidden">
               <div
@@ -562,16 +563,32 @@ export default function Home() {
                 {reviews.map((item) => (
                   <div
                     key={item.id}
-                    className="w-full sm:w-1/2 md:w-2/3 lg:w-1/4 flex-shrink-0 p-4"
+                    className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-4"
                   >
-                    <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-white to-blue-200 text-left h-full flex flex-col justify-between border hover:shadow-xl transition-all duration-300  dark:from-gray-700 dark:to-gray-900">
+                    <div
+                      className="
+                relative overflow-hidden 
+                p-6 rounded-2xl 
+                bg-gradient-to-br from-white via-blue-50 to-blue-100 
+                dark:from-gray-800 dark:via-gray-900 dark:to-black
+                border border-blue-100 dark:border-gray-700 
+                shadow-[0_6px_15px_rgba(0,0,0,0.1)]
+                hover:shadow-[0_10px_25px_rgba(59,130,246,0.2)]
+                hover:-translate-y-1
+                transition-all duration-300 
+                flex flex-col justify-between h-full
+              "
+                    >
+                      {/* Decorative gradient glow */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 opacity-10 blur-3xl pointer-events-none"></div>
+
                       {/* Star Rating */}
-                      <div className="flex mb-3 text-yellow-500">
+                      <div className="flex mb-4 text-yellow-400 relative z-10">
                         {Array.from({ length: item.rating }).map((_, index) => (
                           <svg
                             key={index}
                             xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5 fill-current"
+                            className="w-5 h-5 fill-current drop-shadow-[0_0_4px_rgba(250,204,21,0.4)]"
                             viewBox="0 0 20 20"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.39 2.463a1 1 0 00-.364 1.118l1.287 3.974c.3.922-.755 1.688-1.54 1.118l-3.39-2.463a1 1 0 00-1.176 0l-3.39 2.463c-.785.57-1.84-.196-1.54-1.118l1.287-3.974a1 1 0 00-.364-1.118L2.044 9.402c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.975z" />
@@ -580,19 +597,35 @@ export default function Home() {
                       </div>
 
                       {/* Review Text */}
-                      <p className="text-gray-700 dark:text-blue-200 mb-4 flex-grow italic leading-relaxed">
+                      <p className="text-gray-700 dark:text-gray-200 mb-4 flex-grow italic leading-relaxed relative z-10 text-base">
                         “{item.review}”
                       </p>
 
                       {/* Reviewer Info */}
-                      <div className="flex items-center mt-4">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 text-lg dark:text-blue-100">
+                      <div className="flex items-center mt-6 relative z-10">
+                        <div className="flex-shrink-0">
+                          <div
+                            className="
+                    w-12 h-12 rounded-full 
+                    bg-gradient-to-r from-blue-500 to-purple-600 
+                    flex items-center justify-center text-white text-lg font-semibold shadow-md
+                  "
+                          >
+                            {item.name.charAt(0)}
+                          </div>
+                        </div>
+                        <div className="ml-4 text-left">
+                          <h4 className="font-semibold text-gray-900 text-lg dark:text-white leading-tight">
                             {item.name}
                           </h4>
-                          <p className="text-sm text-gray-500 ">{item.role}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {item.role}
+                          </p>
                         </div>
                       </div>
+
+                      {/* Bottom Accent Line */}
+                      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
                     </div>
                   </div>
                 ))}
@@ -602,17 +635,18 @@ export default function Home() {
             {/* Navigation arrows */}
             <button
               onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 disabled:opacity-40"
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:scale-110 hover:bg-blue-50 dark:hover:bg-gray-700 transition disabled:opacity-40"
               disabled={currentIndex === 0}
             >
-              <FaArrowLeft />
+              <FaArrowLeft className="text-gray-700 dark:text-gray-300" />
             </button>
+
             <button
               onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 disabled:opacity-40"
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:scale-110 hover:bg-blue-50 dark:hover:bg-gray-700 transition disabled:opacity-40"
               disabled={currentIndex >= reviews.length - cardsPerView}
             >
-              <FaArrowRight />
+              <FaArrowRight className="text-gray-700 dark:text-gray-300" />
             </button>
           </div>
         </section>
