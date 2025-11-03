@@ -5,7 +5,7 @@ export interface Teacher {
   department: string;
   userId: string;
   password: string;
-  id?: number
+  id?: number;
 }
 
 export interface CollegeInfo {
@@ -210,14 +210,13 @@ export interface BackendStudentDetails {
   secondYear: YearData;
   thirdYear: YearData;
   fourthYear: YearData;
-  teacherSignature:string,
+  teacherSignature: string;
 }
 
 export interface TeacherVerifyTableProps {
   data?: YearData;
   signature?: string | null;
 }
-
 
 export interface SuperAdminSignupFormData {
   email: string;
@@ -260,7 +259,6 @@ export type SuperAdminFormErrors = {
   roll?: string;
 };
 
-
 export interface loginError {
   roll?: string;
   password?: string;
@@ -275,8 +273,6 @@ export type Department = {
   name: string;
   created_at: string; // ISO string
 };
-
-
 
 export interface AllDetails {
   superadmin: SuperAdmin;
@@ -324,12 +320,11 @@ export type TeachersResponse = {
   teachers: Teacher[];
 };
 
-
 export type StudentYearData = {
-  year: string;       // e.g. "1st Year", "2nd Year", etc.
-  count: number;      // total activities or points
-  submit: number;     // submitted count
-  remain: number;     // remaining count
+  year: string; // e.g. "1st Year", "2nd Year", etc.
+  count: number; // total activities or points
+  submit: number; // submitted count
+  remain: number; // remaining count
 };
 export type StudentYearDataArray = StudentYearData[];
 
@@ -359,14 +354,13 @@ export interface TeacherSideBarProps {
 
 export type teacherGetDetails = {
   teacher: TeacherSideBarProps;
-  studentData: StudentYearDataArray
+  studentData: StudentYearDataArray;
 };
 export interface SuperadminSidebarData {
   id?: number;
   name?: string;
   email?: string;
 }
-
 
 export type StudentPointData = {
   uploaded: number;
@@ -389,14 +383,12 @@ export type StudentData = {
   };
 };
 
-export type StudentResponseofGetDetails= {
-  name:string;roll_no:string;
-  current_year:number;
+export type StudentResponseofGetDetails = {
+  name: string;
+  roll_no: string;
+  current_year: number;
   data: StudentData;
-  
 };
-
-
 
 // Subpoint inside an activity (if any)
 export interface ActivitySubpoint {
@@ -423,14 +415,4 @@ export interface YearWiseActivityStructure {
   secondyear: YearActivity[];
   thirdyear: YearActivity[];
   fourthyear: YearActivity[];
-}
-
-
-export interface PaymentPlan {
-  id: number;
-  plan_name: string;
-  total_students: number;
-  amount_per_student: string; // from database as string (NUMERIC)
-  total_amount: number;       // from database as string (NUMERIC)
-  created_at: string;         // ISO timestamp as string
 }

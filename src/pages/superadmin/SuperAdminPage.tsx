@@ -9,7 +9,6 @@ import {
 
 import type {
   AllDetails,
-  PaymentPlan,
   SuperadminSidebarData,
   Teacher,
 } from "@/components/types/superadminType";
@@ -27,7 +26,6 @@ import { getLoggedInSuperadminId } from "@/utils/auth";
 import { PiCurrencyInrBold } from "react-icons/pi";
 
 import { useNavigate } from "react-router-dom";
-//import premium from '../../../public/assets/premium_2x-min-removebg-preview.png'
 import { deleteApi, getApi, postApi } from "@/api";
 
 import { useToast } from "@/contexts/ToastContext";
@@ -209,17 +207,9 @@ const SuperAdminPage = () => {
       setAllTeacher(res?.data?.teachers);
     });
   };
-  const [paymentDetails, setPaymentDetails] = useState<PaymentPlan[]>();
-  const getPlanDetails = async () => {
-    await getApi("superadmin/getPlans").then((res) => {
-      console.log("res isn payment:::", res?.data);
-      setPaymentDetails(res?.data);
-    });
-  };
 
   useEffect(() => {
     getAllDetails();
-    getPlanDetails();
   }, []);
   console.log("data::", allDetails);
 
@@ -240,8 +230,6 @@ const SuperAdminPage = () => {
     }
   }, [selectedSection]);
 
-  console.log("payment details::", paymentDetails);
-
   const handleCreatePayment = async (amount: number) => {
     console.log("amount", amount, typeof amount);
     try {
@@ -257,17 +245,6 @@ const SuperAdminPage = () => {
       console.error("Payment creation failed", error);
     }
   };
-  /* const getAllDept = async () => {
-    await getApi("superadmin/getAllDepartments").then((res) => {
-      console.log("dept", res.data);
-    });
-  }; */
-  /* 
-  useEffect(() => {
-    getAllDept();
-  }, []); */
-
-  console.log("paymentDetails", Number(paymentDetails?.[0]?.total_amount));
 
   return (
     <div
@@ -649,155 +626,6 @@ const SuperAdminPage = () => {
                     </div>
                   </div>
                   <div className="w-full max-w-7xl mx-auto px-4 py-12">
-                    {/* <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 perspective-[1200px]">
-                      <div className="bg-gradient-to-br from-[#ffffff] via-[#ebf4ff] to-[#ffffff] shadow-lg border border-gray-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:-rotate-y-3 transition-transform duration-300">
-                        <div>
-                          <h4 className="text-sm uppercase font-bold text-blue-600 mb-1">
-                            {paymentDetails && paymentDetails[0]?.plan_name}{" "}
-                            Plan
-                          </h4>
-                          <div className="flex items-center gap-2 mb-3">
-                            <HiUserGroup className="h-6 w-6 text-blue-500" />
-                            <h3 className="text-xl font-bold text-gray-800">
-                              Up to
-                              {paymentDetails &&
-                                paymentDetails[0]?.total_students}{" "}
-                              Students
-                            </h3>
-                          </div>
-                          <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
-                            <li>
-                              ₹
-                              {paymentDetails &&
-                                paymentDetails[0]?.amount_per_student}{" "}
-                              per student
-                            </li>
-                            <li>Email support</li>
-                            <li>Basic analytics</li>
-                          </ul>
-                          <p className="text-sm text-gray-400 line-through">
-                            ₹24,000/year
-                          </p>
-                          <p className="text-3xl font-bold text-green-600">
-                            ₹{paymentDetails && paymentDetails[0]?.total_amount}
-                            /year
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            const amount = Number(
-                              paymentDetails?.[0]?.total_amount
-                            );
-                            if (!isNaN(amount)) {
-                              handleCreatePayment(amount);
-                            }
-                          }}
-                          className="mt-6 w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition"
-                        >
-                          Choose Standard
-                        </button>
-                      </div>
-
-                      <div className="bg-gradient-to-br from-[#fff9db] via-[#fff4bf] to-[#fef08a] shadow-2xl border-3 border-yellow-400 rounded-2xl p-6 flex flex-col h-[350px] justify-between scale-105 z-10 hover:scale-[1.07] transition-transform duration-300">
-                        <div>
-                          <h4 className="text-sm uppercase font-bold text-yellow-700 mb-1">
-                            {paymentDetails && paymentDetails[1]?.plan_name}{" "}
-                            Plan
-                          </h4>
-                          <div className="flex items-center gap-2 mb-3">
-                            <FaStar className="h-6 w-6 text-yellow-500" />
-                            <h3 className="text-xl font-bold text-gray-900">
-                              Up to{" "}
-                              {paymentDetails &&
-                                paymentDetails[1]?.total_students}{" "}
-                              Students
-                            </h3>
-                          </div>
-                          <ul className="text-sm text-gray-800 list-disc pl-5 space-y-1 mb-4">
-                            <li>
-                              ₹
-                              {paymentDetails &&
-                                paymentDetails[1]?.amount_per_student}{" "}
-                              per student
-                            </li>
-                            <li>Priority email support</li>
-                            <li>Advanced reporting dashboard</li>
-                            <li>Data export feature</li>
-                          </ul>
-                          <p className="text-sm text-gray-500 line-through">
-                            ₹54,000/year
-                          </p>
-                          <p className="text-3xl font-bold text-yellow-700">
-                            ₹{paymentDetails && paymentDetails[1]?.total_amount}
-                            /year
-                          </p>
-                        </div>
-                        
-                        <button
-                          onClick={() => {
-                            const amount = Number(
-                              paymentDetails?.[1]?.total_amount
-                            );
-                            if (!isNaN(amount)) {
-                              handleCreatePayment(amount);
-                            }
-                          }}
-                          className="mt-6 w-full bg-yellow-500 text-white rounded-lg py-2 font-medium hover:bg-yellow-600 transition"
-                        >
-                          Choose Premium
-                        </button>
-                      </div>
-
-                      <div className="bg-gradient-to-br from-[#fef2e8] via-white to-[#ffd9cf] shadow-lg border border-yellow-300 rounded-2xl p-6 flex flex-col h-[350px] justify-between hover:scale-105 hover:rotate-y-3 transition-transform duration-300">
-                        <div>
-                          <h4 className="text-sm uppercase font-bold text-indigo-600 mb-1">
-                            {paymentDetails && paymentDetails[2]?.plan_name}{" "}
-                            Plan
-                          </h4>
-                          <div className="flex items-center gap-2 mb-3">
-                            <HiOutlineUserGroup className="h-6 w-6 text-indigo-500" />
-                            <h3 className="text-xl font-bold text-gray-800">
-                              Up to{" "}
-                              {paymentDetails &&
-                                paymentDetails[2]?.total_students}{" "}
-                              Students
-                            </h3>
-                          </div>
-                          <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 mb-4">
-                            <li>
-                              ₹
-                              {paymentDetails &&
-                                paymentDetails[2]?.amount_per_student}{" "}
-                              per student
-                            </li>
-                            <li>Dedicated account manager</li>
-                            <li>Full API access</li>
-                            <li>Custom integrations</li>
-                          </ul>
-                          <p className="text-sm text-gray-400 line-through">
-                            ₹75,000/year
-                          </p>
-                          <p className="text-3xl font-bold text-green-600">
-                            ₹{paymentDetails && paymentDetails[2]?.total_amount}
-                            /year
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            const amount = Number(
-                              paymentDetails?.[2]?.total_amount
-                            );
-                            if (!isNaN(amount)) {
-                              handleCreatePayment(amount);
-                            }
-                          }}
-                          className="mt-6 w-full bg-indigo-600 text-white rounded-lg py-2 font-medium hover:bg-indigo-700 transition"
-                        >
-                          Choose Enterprise
-                        </button>
-                      </div>
-                    </div> */}
-
                     <PricingSection
                       data={allDetails?.superadmin ? allDetails : ""}
                     />
