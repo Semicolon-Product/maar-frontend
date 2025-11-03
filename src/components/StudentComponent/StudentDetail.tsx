@@ -113,7 +113,7 @@ console.log("year=>>",year)
           <div className="flex flex-col items-center md:items-end gap-3 mt-[-20px]">
             {/* Signature Preview Box */}
             <div
-              className="border-2 border-dotted border-green-400 p-2 rounded  shadow-sm"
+              className="border-1 border-dotted border-gray-400 p-2 rounded  shadow-sm"
               style={{ height: "100px", width: "300px" }}
             >
               {previewUrl ? (
@@ -137,40 +137,43 @@ console.log("year=>>",year)
 
             {/* Upload Input + Button */}
 
-            {!studentData?.signature && (
-              <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-                <input
-                  id="signatureUpload"
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    if (file) {
-                      const maxSizeMB = 1;
-                      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+            <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+              <input
+                id="signatureUpload"
+                type="file"
+                accept="image/*,application/pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] ?? null;
+                  if (file) {
+                    const maxSizeMB = 1;
+                    const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-                      if (file.size > maxSizeBytes) {
-                        alert(`File size should not exceed ${maxSizeMB} MB`);
-                        e.target.value = ""; // reset input
-                        return;
-                      }
-
-                      setSignatureFile(file);
-                      setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                    if (file.size > maxSizeBytes) {
+                      alert(`File size should not exceed ${maxSizeMB} MB`);
+                      e.target.value = ""; // reset input
+                      return;
                     }
-                  }}
-                  className="text-sm file:bg-green-600 file:text-white file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-green-100 rounded border border-green-300 p-0 w-full sm:w-auto"
-                />
 
-                <button
-                  type="button"
-                  onClick={handleSignatureUpload}
-                  className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded shadow cursor-pointer"
-                >
-                  Upload
-                </button>
-              </div>
-            )}
+                    setSignatureFile(file);
+                    setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                  }
+                }}
+                className="text-sm text-gray-500
+                 file:bg-gray-600
+                  file:text-gray-300 file:rounded-l 
+                  file:px-4 file:py-1 file:border-0 
+                  file:cursor-pointer bg-gray-200 dark:bg-gray-700 rounded 
+                    p-0 w-full sm:w-auto"
+              />
+
+              <button
+                type="button"
+                onClick={handleSignatureUpload}
+                className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-1 rounded shadow cursor-pointer"
+              >
+                Upload
+              </button>
+            </div>
 
             {/* {fileError && !signatureFile && (
                                 <span className='text-red-500 text-[15px]'>Please Select File!</span>

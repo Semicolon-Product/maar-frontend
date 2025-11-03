@@ -74,16 +74,16 @@ const StudentDetails = () => {
             />
           )}
         </div>
-        <div className="text-center text-xs text-gray-400 py-4 border-t border-gray-400">
-          © {new Date().getFullYear()} Abc Pvt Ltd
+        <div className="text-center text-xs text-gray-400 py-4 ">
+          © {new Date().getFullYear()} Makautins
         </div>
       </div>
 
       {/* Sidebar for Mobile */}
       {isSidebarOpen && (
-        <div className="flex absolute inset-0 bg-gray-900 text-white w-64 pt-2 md:hidden top-0 h-screen z-[999] flex-col">
+        <div className="flex absolute inset-0 text-white w-64  md:hidden top-0 h-screen z-[999] flex-col">
           {/* Scrollable menu */}
-          <div className="flex-1 overflow-y-auto px-2">
+          <div className="flex-1 overflow-y-auto ">
             {studentDetails && (
               <SidebarContent
                 onClose={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -103,7 +103,7 @@ const StudentDetails = () => {
         {/* Top bar with menu icon */}
         <div className="flex justify-end p-0 pb-0">
           <Button
-            className="text-black bg-transparent hover:bg-gray-100 md:hidden block"
+            className="text-gray-800 dark:text-gray-400 bg-transparent hover:bg-gray-100 md:hidden block"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <IoReorderThree className="text-xl scale-150" />
@@ -180,7 +180,17 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   ];
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-lg rounded-r-2xl overflow-hidden transition-all duration-300">
+    <div
+      className="flex flex-col h-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-lg rounded-r-2xl overflow-hidden transition-all duration-300"
+      style={{
+        backgroundImage:
+          "url(\"data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.6'%3E%3Cpath d='M2 0h2v12H2V0zm1 20c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM9 8c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-1 4h2v12H8V12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        backgroundRepeat: "repeat",
+        backgroundSize: "auto",
+        backgroundBlendMode: "overlay", // ensures transparency blends with bg color
+      }}
+    >
+      {" "}
       {/* Profile Section */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
@@ -231,7 +241,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           </svg>
         </button>
       </motion.div>
-
       {/* Sidebar Menu */}
       <ul className="flex-1 px-3 py-4 space-y-1">
         {yearItems.map(({ id, label, icon: Icon }) => (
@@ -258,16 +267,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           </motion.li>
         ))}
       </ul>
-
       {/* Theme Switch */}
-      <div className="flex items-center justify-between mt-auto px-5 py-3 border-t border-gray-300 dark:border-gray-700">
+      <div className="flex items-center justify-between mt-auto px-5 py-3   dark:border-gray-700">
         <span className="text-sm font-medium">Theme</span>
         <ThemeToggleSwitch />
-      </div>
-
-      {/* Footer */}
-      <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
-        © {new Date().getFullYear()} Student Portal
       </div>
     </div>
   );
