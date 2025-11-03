@@ -61,7 +61,7 @@ const TeacherPage = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900 dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')] dark:bg-cover dark:bg-center dark:bg-fixed transition-colors duration-500">
-      <div className="hidden md:block bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto shadow-lg shadow-black/20">
+      <div className="hidden md:block bg-gray-800 text-white w-64  h-screen sticky top-0 overflow-y-auto shadow-lg shadow-black/20">
         <SidebarContent
           data={teacherDetails?.teacher}
           selectedSection={selectedSection}
@@ -112,7 +112,7 @@ const TeacherPage = () => {
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Top bar: h2 on left, menu icon on right */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-0">
+        <div className="flex items-center justify-between  pt-4 pb-0">
           {/* Sidebar Toggle (Mobile Only) */}
           <div className="md:hidden">
             <button
@@ -297,7 +297,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
 
       {/* Footer */}
       <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
-        © {new Date().getFullYear()} Abc Pvt Ltd
+        © {new Date().getFullYear()} MAKAUTians
       </div>
     </div>
   );

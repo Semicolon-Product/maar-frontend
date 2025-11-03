@@ -33,6 +33,7 @@ import { deleteApi, getApi, postApi } from "@/api";
 import { useToast } from "@/contexts/ToastContext";
 import ThemeToggleSwitch from "@/components/ThemeToggleButton";
 import { AnimatePresence, motion } from "framer-motion";
+import PricingSection from "@/components/PricingSection";
 interface SidebarContentProps {
   details?: SuperadminSidebarData;
   selectedSection: string;
@@ -278,7 +279,7 @@ const SuperAdminPage = () => {
     >
       <div className="flex h-[100vh] overflow-hidden">
         {/* Sidebar for Desktop */}
-        <div className="hidden md:block text-white w-64 px-2 pt-2 h-screen sticky top-0 overflow-y-auto">
+        <div className="hidden md:block text-white w-64  h-screen sticky top-0 overflow-y-auto">
           <SidebarContent
             details={allDetails?.superadmin}
             selectedSection={selectedSection}
@@ -288,7 +289,7 @@ const SuperAdminPage = () => {
 
         {/* Sidebar for Mobile */}
         {isSidebarOpen && (
-          <div className="flex absolute inset-0  text-white w-64 px-2 pt-2 md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
+          <div className="flex absolute inset-0  text-white w-64  md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
             {/* Close icon */}
 
             {/* Sidebar content below the icon */}
@@ -797,6 +798,10 @@ const SuperAdminPage = () => {
                       </div>
                     </div> */}
 
+                    <PricingSection
+                      data={allDetails?.superadmin ? allDetails : ""}
+                    />
+
                     {/* Contact Section */}
                     <div className="mt-10 bg-yellow-50 dark:bg-yellow-950 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
                       <p className="text-sm text-gray-800 dark:text-gray-200 font-medium">
@@ -1084,7 +1089,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
 
       {/* Footer */}
       <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
-        © {new Date().getFullYear()} Abc Pvt Ltd
+        © {new Date().getFullYear()} MAKAUTians
       </div>
     </div>
   );
