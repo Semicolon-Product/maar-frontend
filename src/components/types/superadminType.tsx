@@ -1,12 +1,13 @@
 // types/Teacher.ts
 
-export interface Teacher {
+/* export interface Teacher {
   name: string;
   department: string;
   userId: string;
   password: string;
   id?: number;
-}
+  mobile_no?: string;
+} */
 
 export interface CollegeInfo {
   college_name: string;
@@ -315,6 +316,7 @@ export interface Teacher {
   signature: string | null;
   superadmin_id: number;
   department: string;
+  password: string;
 }
 export type TeachersResponse = {
   teachers: Teacher[];

@@ -49,17 +49,17 @@ const SuperAdminPage = () => {
   const [teacherData, setTeacherData] = useState<{
     id?: number;
     name: string;
-    dept: string;
+    department: string;
     email: string;
     password: string;
-    mobileNo: string;
+    mobile_no: string | null;
   }>({
     id: undefined,
     name: "",
-    dept: "",
+    department: "",
     email: "",
     password: "",
-    mobileNo: "",
+    mobile_no: "",
   });
 
   //-----------add teacher
@@ -68,10 +68,10 @@ const SuperAdminPage = () => {
     setTeacherData({
       id: undefined,
       name: "",
-      dept: "",
+      department: "",
       email: "",
       password: "",
-      mobileNo: "",
+      mobile_no: "",
     });
     setShowAddModal(true);
   };
@@ -80,6 +80,7 @@ const SuperAdminPage = () => {
 
   const handleTeacherEdit = (teacher: Teacher) => {
     setIsEditMode(true);
+    setTeacherData(teacher);
     console.log("teacher", teacher);
     setShowAddModal(true);
   };
@@ -87,10 +88,10 @@ const SuperAdminPage = () => {
   const handleClear = () => {
     setTeacherData({
       name: "",
-      dept: "",
+      department: "",
       email: "",
       password: "",
-      mobileNo: "",
+      mobile_no: "",
     });
   };
 
@@ -112,7 +113,7 @@ const SuperAdminPage = () => {
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [selectedTeacher, setSelectedTeacher] = useState<any>(null);
   const [allTeacher, setAllTeacher] = useState<Teacher[]>();
   const getAllTeacher = async () => {
     await getApi("teacher/getAllTeacher").then((res) => {
@@ -145,21 +146,21 @@ const SuperAdminPage = () => {
 
   const [errors, setErrors] = useState({
     name: false,
-    dept: false,
+    department: false,
     email: false,
     password: false,
-    mobileNo: false,
+    mobile_no: false,
   });
 
   const handleAddTeacher = async () => {
-    const { name, dept, email, password, mobileNo } = teacherData;
+    const { name, department, email, password, mobile_no } = teacherData;
 
     const newErrors = {
       name: !name,
-      dept: !dept,
+      department: !department,
       email: !email,
       password: !password,
-      mobileNo: !mobileNo,
+      mobile_no: !mobile_no,
     };
 
     setErrors(newErrors);
@@ -168,10 +169,10 @@ const SuperAdminPage = () => {
     try {
       const payload = {
         teacher_name: name,
-        department: dept,
+        department: department,
         email: email,
         password: password,
-        mobile_no: mobileNo,
+        mobile_no: mobile_no,
       };
       await postApi("teacher/create", payload).then((res) => {
         console.log("res in teacher create::", res);
@@ -188,7 +189,7 @@ const SuperAdminPage = () => {
   const handleUpdateTeacher = async () => {
     /* const updatedData = {
       name: teacherData.name,
-      department: teacherData.dept,
+      department: teacherData.department,
       userId: teacherData.userId,
       password: teacherData.password
     }; */
@@ -329,7 +330,7 @@ const SuperAdminPage = () => {
                               name: e.target.value,
                             }))
                           }
-                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                          className={`w-full text-gray-700 px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
                             errors.name
                               ? "border-red-500 ring-red-500"
                               : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
@@ -344,15 +345,15 @@ const SuperAdminPage = () => {
                         </label>
                         <input
                           type="text"
-                          value={teacherData.dept}
+                          value={teacherData.department}
                           onChange={(e) =>
                             setTeacherData((prev) => ({
                               ...prev,
-                              dept: e.target.value,
+                              department: e.target.value,
                             }))
                           }
-                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
-                            errors.dept
+                          className={`w-full text-gray-700 px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.department
                               ? "border-red-500 ring-red-500"
                               : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
                           }`}
@@ -373,7 +374,7 @@ const SuperAdminPage = () => {
                               email: e.target.value,
                             }))
                           }
-                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                          className={`w-full text-gray-700 px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
                             errors.email
                               ? "border-red-500 ring-red-500"
                               : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
@@ -395,7 +396,7 @@ const SuperAdminPage = () => {
                               password: e.target.value,
                             }))
                           }
-                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                          className={`w-full text-gray-700 px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
                             errors.password
                               ? "border-red-500 ring-red-500"
                               : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
@@ -410,15 +411,15 @@ const SuperAdminPage = () => {
                         </label>
                         <input
                           type="text"
-                          value={teacherData.mobileNo}
+                          value={teacherData.mobile_no ?? ""}
                           onChange={(e) =>
                             setTeacherData((prev) => ({
                               ...prev,
-                              mobileNo: e.target.value,
+                              mobile_no: e.target.value,
                             }))
                           }
-                          className={`w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
-                            errors.mobileNo
+                          className={`w-full text-gray-700 px-4 py-2 rounded-md border focus:outline-none focus:ring-1 ${
+                            errors.mobile_no
                               ? "border-red-500 ring-red-500"
                               : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
                           }`}
