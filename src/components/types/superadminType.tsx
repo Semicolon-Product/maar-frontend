@@ -301,10 +301,14 @@ export interface Payment {
   id: number;
   institute_id: number;
   amount_paid: number;
+  email: string | null;
   student_quota: number;
   students_registered: number;
   paid_on: string; // ISO date string
   valid_until: string; // ISO date string
+  is_approve: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Teacher {

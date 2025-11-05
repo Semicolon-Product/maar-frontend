@@ -22,11 +22,10 @@ import {
   Zap,
 } from "lucide-react";
 
-import { getLoggedInSuperadminId } from "@/utils/auth";
 import { PiCurrencyInrBold } from "react-icons/pi";
 
 import { useNavigate } from "react-router-dom";
-import { deleteApi, getApi, postApi } from "@/api";
+import { deleteApi, getApi, postApi, putApi } from "@/api";
 
 import { useToast } from "@/contexts/ToastContext";
 import ThemeToggleSwitch from "@/components/ThemeToggleButton";
@@ -81,7 +80,7 @@ const SuperAdminPage = () => {
   const handleTeacherEdit = (teacher: Teacher) => {
     setIsEditMode(true);
     setTeacherData(teacher);
-    console.log("teacher", teacher);
+    //console.log("teacher", teacher);
     setShowAddModal(true);
   };
 
@@ -117,15 +116,15 @@ const SuperAdminPage = () => {
   const [allTeacher, setAllTeacher] = useState<Teacher[]>();
   const getAllTeacher = async () => {
     await getApi("teacher/getAllTeacher").then((res) => {
-      console.log("get all teacher res::", res);
+      //console.log("get all teacher res::", res);
       setAllTeacher(res?.teachers);
     });
   };
   const handleDeleteTeacher = (teacher: Teacher) => {
-    console.log("Delete", teacher);
+    //console.log("Delete", teacher);
     setShowDeleteModal(!showDeleteModal);
     setSelectedTeacher(teacher);
-    console.log("Delete activity", teacher);
+    //console.log("Delete activity", teacher);
     getAllTeacher();
   };
 
@@ -140,9 +139,9 @@ const SuperAdminPage = () => {
     });
   };
 
-  const superadminId = getLoggedInSuperadminId();
+  //const superadminId = getLoggedInSuperadminId();
 
-  console.log("Superadminid", superadminId);
+  // console.log("Superadminid", superadminId);
 
   const [errors, setErrors] = useState({
     name: false,
@@ -187,23 +186,35 @@ const SuperAdminPage = () => {
   };
 
   const handleUpdateTeacher = async () => {
-    /* const updatedData = {
-      name: teacherData.name,
-      department: teacherData.department,
-      userId: teacherData.userId,
-      password: teacherData.password
-    }; */
+    try {
+      const updatedData = {
+        name: teacherData.name,
+        email: teacherData.email,
+        mobile_no: teacherData.mobile_no, // include if your backend expects it
+        department: teacherData.department,
+        password: teacherData.password,
+      };
 
-    if (!teacherData.id) {
-      console.error("Teacher ID is missing for update");
-      return;
+      const response = await putApi(
+        `teacher/update/${teacherData.id}`,
+        updatedData
+      );
+      console.log("Update success:", response);
+      toast.success("Teacher Updated Successfully!");
+      handleClear();
+      setShowAddModal(false);
+      getAllTeacher();
+
+      // Optionally show a success message or refresh data here
+    } catch (error) {
+      console.error("Error updating teacher:", error);
     }
   };
 
   const [allDetails, setAllDetails] = useState<AllDetails>();
   const getAllDetails = async () => {
     await getApi("superadmin/getDetails").then((res) => {
-      console.log("in page::", res);
+      //console.log("in page::", res);
       setAllDetails(res?.data);
       setAllTeacher(res?.data?.teachers);
     });
@@ -212,7 +223,7 @@ const SuperAdminPage = () => {
   useEffect(() => {
     getAllDetails();
   }, []);
-  console.log("data::", allDetails);
+  //console.log("data::", allDetails);
 
   //console.log("all teachers", backendAllTeachers);
 
@@ -578,8 +589,18 @@ const SuperAdminPage = () => {
                           <PiCurrencyInrBold className="text-orange-500  text-xl" />
                           Current Plan
                         </h3>
-                        <span className="text-sm font-medium text-white bg-orange-500 dark:bg-amber-800 px-3 py-1 rounded-full">
-                          Premium Plan
+                        <span
+                          className={`text-sm font-medium text-white px-3 py-1 rounded-full 
+    ${
+      allDetails?.payment?.is_approve
+        ? "bg-green-500 dark:bg-green-700"
+        : "bg-orange-500 dark:bg-amber-800"
+    }
+  `}
+                        >
+                          {allDetails?.payment?.is_approve
+                            ? "Active"
+                            : "Not Active"}
                         </span>
                       </div>
 

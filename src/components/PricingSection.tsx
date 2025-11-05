@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import CloseIcon from "./CloseIcon";
 interface PricingSectionProps {
   data: any; // 👈 accept email as prop
 }
 
 const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
   const [students, setStudents] = useState<number>(0);
-
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [transactionId, setTransactionId] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
+  const [amount, setAmount] = useState<number>(0);
 
   const basePrice = 13;
   const discountedPrice = students > 400 ? 11 : basePrice;
   const totalCost = students * discountedPrice;
+  useEffect(() => {
+    setAmount(totalCost);
+  }, [totalCost]);
 
   const pricingTiers = [
     { min: 1, max: 400, price: 13 },
@@ -22,6 +27,25 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
+  };
+
+  const handleDeleteFile = () => {
+    setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleSubmit = async () => {
+    const payload = {
+      students,
+      transactionId,
+      file,
+      amount,
+      insttitute_name: data.institute_name,
+      email: data.email,
+    };
+    console.log("payload::", payload);
   };
 
   return (
@@ -138,6 +162,22 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
                 required
               />
             </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Amount Paid
+              </label>
+              <input
+                id="amount"
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+                required
+              />
+            </div>
 
             {/* Transaction ID */}
             <div>
@@ -165,19 +205,30 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
               >
                 Upload Payment Screenshot
               </label>
-              <input
-                id="fileUpload"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleFileChange}
-                className="w-full text-gray-700 dark:text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
-                required
-              />
-              {file && (
-                <p className="text-xs mt-2 text-green-600 dark:text-green-400">
-                  Uploaded: {file.name}
-                </p>
-              )}
+              <div className="flex ">
+                <input
+                  ref={fileInputRef}
+                  id="fileUpload"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={handleFileChange}
+                  className="w-full text-gray-700 dark:text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
+                  required
+                />
+                {file && (
+                  <div className="flex">
+                    {/* <p className="text-xs mt-2 text-green-600 dark:text-green-400">
+                    Uploaded: {file.name}
+                  </p> */}
+                    <CloseIcon
+                      size={25}
+                      color="red"
+                      className="mt-1"
+                      onClick={() => handleDeleteFile()}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* QR Section */}
@@ -212,6 +263,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
 
             {/* Submit Button */}
             <button
+              onClick={() => handleSubmit()}
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg py-3 transition mt-4"
             >

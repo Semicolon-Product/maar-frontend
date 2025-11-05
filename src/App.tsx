@@ -54,14 +54,7 @@ function App() {
         />
         <Route path="/adminLogin" element={<LoginAdministrator />} />
 
-        <Route
-          path="/administrator"
-          element={
-            <ProtectedRoute>
-              <Administrator />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/administrator" element={<Administrator />} />
       </Routes>
     </>
   );

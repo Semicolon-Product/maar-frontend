@@ -1,30 +1,21 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-
-import { useEffect, useState } from "react";
-import { FaChalkboardTeacher } from "react-icons/fa";
-
-import { superadminStyle } from "../styles/style";
+import { useEffect, useRef, useState } from "react";
+import { FaChalkboardTeacher, FaCloudUploadAlt } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 import { FileUpload, getApi, postApi } from "@/api";
 import type {
-  StudentBasicInfo,
   StudentYearData,
   StudentYearDataArray,
   Teacher,
   YearlyStudentData,
 } from "../types/superadminType";
 import { useToast } from "@/contexts/ToastContext";
+import { MdOutlineSaveAlt } from "react-icons/md";
+import { Trash } from "lucide-react";
 
 const TeacherDetails = (teacherDetails: any) => {
   //console.log("from props::",teacherDetails.data.studentData)
   const toast = useToast();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [teacherDataApi, setTeacherDataApi] = useState<Teacher>();
   const [studentData, setStudentData] = useState<StudentYearDataArray>();
 
@@ -33,28 +24,7 @@ const TeacherDetails = (teacherDetails: any) => {
     setStudentData(teacherDetails?.data?.studentData);
   }, [teacherDetails]);
 
-  //const [year, setYear] = useState("1");
-  // const [excelFile, setExcelFile] = useState<File | null>(null);
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
-
-  /* const handleSubmit = async (e) => {
-        e.preventDefault();
-
-         if (!excelFile || !signatureFile) {
-           alert("Please upload both Excel file and signature");
-           return;
-         }
-
-        const formData = new FormData();
-        formData.append("year", year);
-        formData.append("excel", excelFile);
-        formData.append("signature", signatureFile);
-        for (let pair of formData.entries()) {
-            console.log(`${pair[0]}:`, pair[1]);
-        }
-
-
-    }; */
 
   const [formData, setFormData] = useState({
     name: "",
@@ -78,7 +48,7 @@ const TeacherDetails = (teacherDetails: any) => {
     await postApi("student/createIndividual", formData)
       .then((res) => {
         console.log("res in create", res);
-        toast.success(res.message);
+        toast.success(res?.message);
         getAllStudent();
       })
       .catch((err) => {
@@ -89,7 +59,6 @@ const TeacherDetails = (teacherDetails: any) => {
 
   const getAllStudent = async () => {
     await getApi("student/getAllStudents").then((res) => {
-      console.log("res all studetn", res);
       setStudents(res?.data);
     });
   };
@@ -110,9 +79,6 @@ const TeacherDetails = (teacherDetails: any) => {
     const v = year % 100;
     return `${year}${suffix[(v - 20) % 10] || suffix[v] || suffix[0]} Year`;
   };
-  console.log("students all", students);
-  console.log("students all", typeof students);
-  console.log("selected::::", typeof selectedYear);
 
   const [fileError, setFileError] = useState(false);
   const handleSignatureUpload = async () => {
@@ -130,8 +96,100 @@ const TeacherDetails = (teacherDetails: any) => {
     });
   };
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [csvData, setCsvData] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const handleRemoveRow = (index: number) => {
+    setCsvData((prev) => prev.filter((_, i) => i !== index));
+  };
+  console.log("csvdata", csvData);
+  // --- Parse CSV manually ---
+  const parseCSV = (text: string) => {
+    // Detect delimiter automatically (comma or tab)
+    const firstLine = text.split("\n")[0];
+    const delimiter = firstLine.includes("\t") ? "\t" : ",";
 
-  console.log("teacherDataApi?.signature", teacherDataApi?.signature);
+    const lines = text.trim().split("\n");
+
+    // Helper function to split CSV safely (handles quoted values)
+    const splitCSVLine = (line: string) => {
+      const result: string[] = [];
+      let current = "";
+      let insideQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === delimiter && !insideQuotes) {
+          result.push(current.trim());
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result.map((v) => v.replace(/^"|"$/g, "")); // remove outer quotes
+    };
+
+    // Read headers and normalize them
+    const headers = splitCSVLine(lines[0]).map((h) => h.trim().toLowerCase());
+
+    // Expected headers
+    const expectedHeaders = [
+      "name",
+      "email",
+      "university_roll_no",
+      "mobile_no",
+    ];
+
+    // Validate headers
+    const missingHeaders = expectedHeaders.filter((h) => !headers.includes(h));
+    if (missingHeaders.length > 0) {
+      throw new Error(`Missing required headers: ${missingHeaders.join(", ")}`);
+    }
+
+    // Parse each line into an object
+    const rows = lines.slice(1).map((line) => {
+      const values = splitCSVLine(line);
+      const row: Record<string, string> = {
+        Name: "",
+        Email: "",
+        University_Roll_No: "",
+        Mobile_No: "",
+      };
+
+      headers.forEach((header, i) => {
+        const normalized = header.replace(/\s|_/g, "").toLowerCase();
+        const value = values[i]?.trim() || "";
+
+        if (normalized === "name") row.Name = value;
+        if (normalized === "email") row.Email = value;
+        if (normalized === "universityrollno") row.University_Roll_No = value;
+        if (normalized === "mobileno" || normalized === "mobile") {
+          const mobile = value.replace(/\D/g, ""); // remove non-digits
+          row.Mobile_No = mobile ? `+91${mobile}` : "";
+        }
+      });
+
+      return row;
+    });
+
+    return rows;
+  };
+
+  const handleExcelFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      const parsed = parseCSV(text);
+      setCsvData(parsed);
+      setShowModal(true);
+    };
+    reader.readAsText(file);
+  };
   return (
     <div>
       <div className="p-4 space-y-8  min-h-screen">
@@ -237,70 +295,95 @@ const TeacherDetails = (teacherDetails: any) => {
           ))}
         </div>
 
-        {/*  <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto border border-red-200">
-                    <h2 className="text-2xl font-semibold mb-4 text-red-600 flex gap-2"><FaCloudUploadAlt className='mt-1' /> Upload Student Data</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto  transition-colors duration-300">
+          <h2 className="text-2xl font-semibold mb-4 text-red-600 dark:text-red-400 flex gap-2">
+            <FaCloudUploadAlt className="mt-1" /> Upload Student Data
+          </h2>
 
-                    <div className="flex flex-col md:flex-row gap-6">
-                        
-                        <div className="bg-red-50 border border-red-300 p-4 rounded-md text-sm text-gray-800 md:w-2/5">
-                            <h3 className="font-semibold mb-2">Excel File Format:</h3>
-                            <ul className="list-disc list-inside space-y-1">
-                                <li>Allowed formats: <strong>.xlsx</strong>, <strong>.xls</strong></li>
-                                <li>Headers must be:
-                                    <ul className="ml-4 list-disc">
-                                        <li><code>Name</code></li>
-                                        <li><code>Email</code></li>
-                                        <li><code>University_Roll_No</code></li>
-                                        <li><code>Mobile_No</code></li>
-                                    </ul>
-                                </li>
-                                <li>Each student in a new row.</li>
-                                <li>No blank required fields.</li>
-                                <li>Check email & mobile formats.</li>
-                            </ul>
-                        </div>
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Left Instruction Panel */}
+            <div className="bg-red-50 dark:bg-gray-800 border border-red-300 dark:border-gray-700 p-4 rounded-md text-sm text-gray-800 dark:text-gray-200 md:w-2/5">
+              <h3 className="font-semibold mb-2 text-red-600 dark:text-red-400">
+                Excel File Format:
+              </h3>
+              <ul className="list-disc list-inside space-y-1">
+                <li>
+                  Allowed formats: <strong>.xlsx</strong>, <strong>.xls</strong>
+                </li>
+                <li>
+                  Headers must be:
+                  <ul className="ml-4 list-disc">
+                    <li>
+                      <code>Name</code>
+                    </li>
+                    <li>
+                      <code>Email</code>
+                    </li>
+                    <li>
+                      <code>University_Roll_No</code>
+                    </li>
+                    <li>
+                      <code>Mobile_No</code>
+                    </li>
+                  </ul>
+                </li>
+                <li>Each student in a new row.</li>
+                <li>No blank required fields.</li>
+                <li>Check email & mobile formats.</li>
+              </ul>
+            </div>
 
-                       
-                        <form className="flex flex-col gap-4 md:w-3/5" onSubmit={handleSubmit}>
-                           
-                            <div>
-                                <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1">Select Year</label>
-                                <select
-                                    id="year"
-                                    onChange={(e) => setYear(e.target.value)}
-                                    className="w-full p-2 rounded border border-gray-300 bg-red-50 focus:ring-1 focus:ring-red-300"
-                                >
-                                    <option value="">--Select--</option>
-                                    <option value="1st Year">1st Year</option>
-                                    <option value="2nd Year">2nd Year</option>
-                                    <option value="3rd Year">3rd Year</option>
-                                    <option value="4th Year">4th Year</option>
-                                </select>
-                            </div>
+            {/* Right Form Section */}
+            <form className="flex flex-col gap-4 md:w-3/5">
+              {/* Year Selection */}
+              <div>
+                <label
+                  htmlFor="year"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
+                  Select Year
+                </label>
+                <select
+                  id="year"
+                  className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-red-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-1 focus:ring-red-400 transition"
+                >
+                  <option value="">--Select--</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
 
-                            
-                            <div>
-                                <label htmlFor="fileUpload" className="block text-sm font-medium text-gray-700 mb-1">Upload Excel File</label>
-                                <input
-                                    id="fileUpload"
-                                    type="file"
-                                    accept=".xlsx,.xls"
-                                    onChange={(e) => setExcelFile(e.target.files[0])}
-                                    className="w-full p-2 rounded border border-gray-300 bg-red-50 focus:ring-1 focus:ring-red-300"
-                                />
-                            </div>
+              {/* File Upload */}
+              <div>
+                <label
+                  htmlFor="fileUpload"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
+                  Upload Excel File
+                </label>
+                <input
+                  id="fileUpload"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleExcelFileSelect}
+                  accept=".csv"
+                  className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-red-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-1 focus:ring-red-400 transition cursor-pointer"
+                />
+              </div>
 
-                           
-                            <button
-                                type="submit"
-                                className="mt-2 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md py-2"
-                            >
-                                <MdOutlineSaveAlt className="text-lg" />
-                                Save
-                            </button>
-                        </form>
-                    </div>
-                </div> */}
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="mt-2 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white font-semibold rounded-md py-2 transition"
+              >
+                <MdOutlineSaveAlt className="text-lg" />
+                Save
+              </button>
+            </form>
+          </div>
+        </div>
 
         <div className="max-w-4xl mx-auto py-6 space-y-6  rounded-xl">
           <form
@@ -382,81 +465,125 @@ const TeacherDetails = (teacherDetails: any) => {
             </div>
           )}
           {selectedYear && students?.[selectedYear] && (
-            <TableContainer component={Paper}>
-              <Table sx={{ fontSize: "22px" }}>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: "#2a4054", height: "30px" }}>
-                    <TableCell sx={superadminStyle.headerStyle}>Name</TableCell>
-                    <TableCell sx={superadminStyle.headerStyle}>
-                      Email
-                    </TableCell>
-                    <TableCell sx={superadminStyle.headerStyle}>
-                      Roll No
-                    </TableCell>
-                    <TableCell sx={superadminStyle.headerStyle}>
-                      Mobile No
-                    </TableCell>
-                    <TableCell sx={superadminStyle.headerStyle}>Year</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {students[selectedYear]?.map(
-                    (student: StudentBasicInfo, index: number) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          background: index % 2 ? "#eceff1" : "white",
-                        }}
-                      >
-                        <TableCell
-                          sx={{
-                            ...superadminStyle.cellStyle,
-                            py: { xs: "10px", sm: "4px" },
-                          }}
-                        >
-                          {student.name}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            ...superadminStyle.cellStyle,
-                            py: { xs: "10px", sm: "4px" },
-                          }}
-                        >
-                          {student.email}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            ...superadminStyle.cellStyle,
-                            py: { xs: "10px", sm: "4px" },
-                          }}
-                        >
-                          {student.roll_no}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            ...superadminStyle.cellStyle,
-                            py: { xs: "10px", sm: "4px" },
-                          }}
-                        >
-                          {student.mobile_no}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            ...superadminStyle.cellStyle,
-                            py: { xs: "10px", sm: "4px" },
-                          }}
-                        >
-                          {student.admission_year}
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <div className="overflow-x-auto bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+              <table className="w-full text-sm md:text-base text-left text-gray-700 dark:text-gray-300">
+                <thead className="bg-blue-900 dark:bg-blue-800 text-white">
+                  <tr>
+                    <th className="px-4 py-3 font-semibold">Name</th>
+                    <th className="px-4 py-3 font-semibold">Email</th>
+                    <th className="px-4 py-3 font-semibold">Roll No</th>
+                    <th className="px-4 py-3 font-semibold">Mobile No</th>
+                    <th className="px-4 py-3 font-semibold">Year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students[selectedYear]?.map((student, index) => (
+                    <tr
+                      key={index}
+                      className={`${
+                        index % 2 === 0
+                          ? "bg-gray-50 dark:bg-gray-800"
+                          : "bg-white dark:bg-gray-700"
+                      } hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors`}
+                    >
+                      <td className="px-4 py-3">{student.name}</td>
+                      <td className="px-4 py-3">{student.email}</td>
+                      <td className="px-4 py-3">{student.roll_no}</td>
+                      <td className="px-4 py-3">{student.mobile_no}</td>
+                      <td className="px-4 py-3">{student.admission_year}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-11/12 max-w-5xl p-5 transition-all"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+            >
+              <h2 className="text-xl font-semibold mb-4 text-center text-gray-800 dark:text-gray-100">
+                Imported CSV Data
+              </h2>
+
+              {/* Table */}
+              <div className="overflow-auto max-h-96 rounded-lg">
+                <table className="min-w-full text-sm text-left border-collapse">
+                  <thead className="bg-gray-100 dark:bg-gray-800 sticky top-0">
+                    <tr className="uppercase text-gray-700 dark:text-gray-300">
+                      <th className="px-4 py-2">#</th>
+                      <th className="px-4 py-2">Name</th>
+                      <th className="px-4 py-2">Email</th>
+                      <th className="px-4 py-2">University_Roll_No</th>
+                      <th className="px-4 py-2">Mobile_No</th>
+                      <th className="px-4 py-2">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {csvData.map((row, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-gray-700/30 hover:bg-gray-700/10  transition"
+                      >
+                        <td className="px-4 py-2">{idx + 1}</td>
+                        <td className="px-4 py-2">{row.Name}</td>
+                        <td className="px-4 py-2">{row.Email}</td>
+                        <td className="px-4 py-2 truncate max-w-[200px]">
+                          {row.University_Roll_No}
+                        </td>
+                        <td className="px-4 py-2 truncate max-w-[200px]">
+                          {row.Mobile_No}
+                        </td>
+                        <td className="px-4 py-2 text-right">
+                          <button
+                            onClick={() => handleRemoveRow(idx)}
+                            className="cursor-pointer"
+                            title="Remove"
+                          >
+                            <Trash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="flex justify-end mt-5 gap-3">
+                <button
+                  onClick={() => {
+                    setShowModal(false);
+                    setCsvData([]);
+                  }}
+                  className="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 transition"
+                >
+                  Close
+                </button>
+                <button
+                  //onClick={handleImport}
+                  disabled={csvData.length === 0}
+                  className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md transition"
+                >
+                  Import
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -53,11 +53,6 @@ const TeacherPage = () => {
     navigate("/");
   }
   //console.log("in page ::",teacherDetails)
-  console.log(
-    "backendAllStudentDetails",
-    backendAllStudentDetails?.teacherSignature
-  );
-  console.log("teacjer deital::", teacherDetails);
 
   return (
     <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900 dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')] dark:bg-cover dark:bg-center dark:bg-fixed transition-colors duration-500">

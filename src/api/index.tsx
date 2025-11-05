@@ -19,7 +19,7 @@ export const getApi = async (endpoint: string) => {
         "Content-Type": "application/json",
       },
     });
-    console.log("res== in get", response);
+
     return response.data;
   } catch (error: any) {
     console.error("API GET Error:", error);
