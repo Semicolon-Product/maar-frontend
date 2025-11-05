@@ -114,12 +114,12 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
   //---------------------teacher university portal-------------------------------
 
-  const [credentials, setCredentials] = useState({
+  /*  const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
-
-  const handleChange = (e: any) => {
+ */
+  /*  const handleChange = (e: any) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
@@ -130,7 +130,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
       roll: credentials.username,
       password: credentials.password,
     });
-  };
+  }; */
 
   return (
     <div>
@@ -447,10 +447,10 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                     </React.Fragment>
                   ))
                 ) : (
-                  <tr>
+                  <tr className="">
                     <td
                       colSpan={8}
-                      className="text-center py-2 italic text-gray-500 dark:text-gray-300"
+                      className="text-center py-2 italic  text-gray-500 dark:text-gray-300"
                     >
                       No Student Present!
                     </td>
@@ -462,7 +462,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
         </div>
       </div>
 
-      <div className="max-w-sm mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+      {/* <div className="max-w-sm mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
         <h2 className="text-xl font-semibold text-center text-gray-700 dark:text-gray-200 mb-6">
           Teacher University Credential
         </h2>
@@ -513,7 +513,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
             Submit
           </button>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -18,7 +18,7 @@ const TeacherDetails = (teacherDetails: any) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [teacherDataApi, setTeacherDataApi] = useState<Teacher>();
   const [studentData, setStudentData] = useState<StudentYearDataArray>();
-
+  const [year, setYear] = useState("");
   useEffect(() => {
     setTeacherDataApi(teacherDetails?.data?.teacher);
     setStudentData(teacherDetails?.data?.studentData);
@@ -35,17 +35,22 @@ const TeacherDetails = (teacherDetails: any) => {
   });
 
   const [students, setStudents] = useState<YearlyStudentData>();
-
+  const handleDownloadTemplate = () => {
+    const csvHeaders = ["Name,Email,Mobile_No,University_Roll_No"];
+    const csvContent = csvHeaders.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "student_template_csv.csv";
+    link.click();
+  };
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmitStudent = async (e: any) => {
     e.preventDefault();
-
-    console.log("submit data::", formData);
-    //setFormData({ name: "", email: "", rollNo: "", mobileNo: "", year: "" });
-    await postApi("student/createIndividual", formData)
+    await postApi("student/create", formData)
       .then((res) => {
         console.log("res in create", res);
         toast.success(res?.message);
@@ -101,7 +106,7 @@ const TeacherDetails = (teacherDetails: any) => {
   const handleRemoveRow = (index: number) => {
     setCsvData((prev) => prev.filter((_, i) => i !== index));
   };
-  console.log("csvdata", csvData);
+
   // --- Parse CSV manually ---
   const parseCSV = (text: string) => {
     // Detect delimiter automatically (comma or tab)
@@ -190,6 +195,45 @@ const TeacherDetails = (teacherDetails: any) => {
     };
     reader.readAsText(file);
   };
+  const handleImportCsvData = async () => {
+    try {
+      console.log("csv", csvData);
+      console.log("currentYear", year);
+
+      if (!year) {
+        toast.error("Please select a year before importing.");
+        return;
+      }
+
+      if (!csvData || csvData.length === 0) {
+        toast.error("No CSV data found to import.");
+        return;
+      }
+
+      // Convert CSV data to your desired format
+      const formattedData = csvData.map((item) => ({
+        email: item.Email?.trim() || "",
+        mobileNo: item.Mobile_No?.trim() || "",
+        name: item.Name?.trim() || "",
+        rollNo: item.University_Roll_No?.trim() || "",
+        year: year,
+      }));
+
+      // API call
+      const res = await postApi("student/create/many", formattedData);
+      toast.success("Students imported successfully!");
+      console.log("res in many", res);
+    } catch (error) {
+      console.error("Error importing students:", error);
+
+      toast.error("Failed to import students.");
+    } finally {
+      // ✅ reset state and close modal
+      setCsvData([]);
+      setShowModal(false); // assuming your modal visibility is managed by this state
+    }
+  };
+
   return (
     <div>
       <div className="p-4 space-y-8  min-h-screen">
@@ -335,6 +379,14 @@ const TeacherDetails = (teacherDetails: any) => {
 
             {/* Right Form Section */}
             <form className="flex flex-col gap-4 md:w-3/5">
+              <label
+                //htmlFor="fileUpload"
+                className="block text-sm font-medium text-red-700 dark:text-red-300 mb-1 cursor-pointer"
+                onClick={handleDownloadTemplate}
+              >
+                📥 Download Template CSV File
+              </label>
+
               {/* Year Selection */}
               <div>
                 <label
@@ -344,14 +396,16 @@ const TeacherDetails = (teacherDetails: any) => {
                   Select Year
                 </label>
                 <select
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
                   id="year"
                   className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-red-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-1 focus:ring-red-400 transition"
                 >
                   <option value="">--Select--</option>
-                  <option value="1st Year">1st Year</option>
-                  <option value="2nd Year">2nd Year</option>
-                  <option value="3rd Year">3rd Year</option>
-                  <option value="4th Year">4th Year</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
                 </select>
               </div>
 
@@ -385,7 +439,17 @@ const TeacherDetails = (teacherDetails: any) => {
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto py-6 space-y-6  rounded-xl">
+        <div className="max-w-4xl mx-auto py-4 space-y-4  rounded-xl">
+          <h4
+            className="
+            font-semibold tracking-tight
+            text-gray-900 dark:text-gray-100
+            bg-clip-text
+            transition-colors duration-200
+          "
+          >
+            Create Student — Individual
+          </h4>
           <form
             onSubmit={handleSubmitStudent}
             className="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -433,7 +497,7 @@ const TeacherDetails = (teacherDetails: any) => {
               className="border p-2 rounded w-full bg-white dark:bg-gray-800"
               required
             >
-              <option value="">Select Admission Year</option>
+              <option value="">Select Current Year</option>
               <option value="1">1st Year </option>
               <option value="2">2nd Year </option>
               <option value="3">3rd Year </option>
@@ -573,7 +637,7 @@ const TeacherDetails = (teacherDetails: any) => {
                   Close
                 </button>
                 <button
-                  //onClick={handleImport}
+                  onClick={handleImportCsvData}
                   disabled={csvData.length === 0}
                   className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md transition"
                 >
