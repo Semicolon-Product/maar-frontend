@@ -352,7 +352,7 @@ const TeacherDetails = (teacherDetails: any) => {
               </h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>
-                  Allowed formats: <strong>.xlsx</strong>, <strong>.xls</strong>
+                  Allowed formats: <strong>.csv</strong>
                 </li>
                 <li>
                   Headers must be:
@@ -379,13 +379,12 @@ const TeacherDetails = (teacherDetails: any) => {
 
             {/* Right Form Section */}
             <form className="flex flex-col gap-4 md:w-3/5">
-              <label
-                //htmlFor="fileUpload"
-                className="block text-sm font-medium text-red-700 dark:text-red-300 mb-1 cursor-pointer"
+              <span
+                className="text-sm font-medium w-fit text-red-700 hover:text-red-500 dark:text-red-400 dark:hover:text-red-500 mb-1 cursor-pointer inline "
                 onClick={handleDownloadTemplate}
               >
                 📥 Download Template CSV File
-              </label>
+              </span>
 
               {/* Year Selection */}
               <div>
@@ -460,7 +459,7 @@ const TeacherDetails = (teacherDetails: any) => {
               placeholder="Name"
               value={formData.name}
               onChange={handleChange}
-              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              className="border text-gray-800 dark:text-gray-100 p-2 rounded w-full bg-white dark:bg-gray-800"
               required
             />
             <input
@@ -469,7 +468,7 @@ const TeacherDetails = (teacherDetails: any) => {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              className="border text-gray-800 dark:text-gray-100 p-2 rounded w-full bg-white dark:bg-gray-800"
               required
             />
             <input
@@ -478,7 +477,7 @@ const TeacherDetails = (teacherDetails: any) => {
               placeholder="University Roll No"
               value={formData.rollNo}
               onChange={handleChange}
-              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              className="border text-gray-800 dark:text-gray-100 p-2 rounded w-full bg-white dark:bg-gray-800"
               required
             />
             <input
@@ -487,14 +486,14 @@ const TeacherDetails = (teacherDetails: any) => {
               placeholder="Mobile No"
               value={formData.mobileNo}
               onChange={handleChange}
-              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              className="border text-gray-800 dark:text-gray-100 p-2 rounded w-full bg-white dark:bg-gray-800"
               required
             />
             <select
               name="year"
               value={formData.year}
               onChange={handleChange}
-              className="border p-2 rounded w-full bg-white dark:bg-gray-800"
+              className="border p-2 text-gray-800 dark:text-gray-100 rounded w-full bg-white dark:bg-gray-800"
               required
             >
               <option value="">Select Current Year</option>
