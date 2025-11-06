@@ -64,7 +64,7 @@ const StudentDetails = () => {
   return (
     <div className="flex h-[100vh] overflow-hidden">
       {/* Sidebar for Desktop */}
-      <div className="hidden md:flex flex-col bg-gray-800 text-white w-64 px-2 pt-2 h-screen sticky top-0">
+      <div className="hidden md:flex flex-col  bg-gray-800 text-white w-64  h-screen sticky top-0">
         <div className="flex-1 overflow-y-auto">
           {studentDetails && (
             <SidebarContent

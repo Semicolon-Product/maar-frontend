@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaChalkboardTeacher, FaCloudUploadAlt } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileUpload, getApi, postApi } from "@/api";
+import { getApi, postApi } from "@/api";
 import type {
   StudentYearData,
   StudentYearDataArray,
@@ -11,11 +11,12 @@ import type {
 import { useToast } from "@/contexts/ToastContext";
 import { MdOutlineSaveAlt } from "react-icons/md";
 import { Trash } from "lucide-react";
+import CloseIcon from "../CloseIcon";
 
 const TeacherDetails = (teacherDetails: any) => {
-  //console.log("from props::",teacherDetails.data.studentData)
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const signatureRef = useRef<HTMLInputElement | null>(null);
   const [teacherDataApi, setTeacherDataApi] = useState<Teacher>();
   const [studentData, setStudentData] = useState<StudentYearDataArray>();
   const [year, setYear] = useState("");
@@ -25,7 +26,6 @@ const TeacherDetails = (teacherDetails: any) => {
   }, [teacherDetails]);
 
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -96,9 +96,9 @@ const TeacherDetails = (teacherDetails: any) => {
     const formData = new FormData();
     formData.append("signature", signatureFile); // field name must match multer's .single('signature')
 
-    await FileUpload("teacher/uploadSignature", formData).then((res) => {
+    /* await FileUpload("teacher/uploadSignature", formData).then((res) => {
       console.log("res of upload==>>", res);
-    });
+    }); */
   };
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -261,15 +261,33 @@ const TeacherDetails = (teacherDetails: any) => {
             <div className="flex flex-col items-center md:items-end gap-3">
               {/* Signature Preview Box */}
               <div
-                className="border-2 border-dotted border-blue-400 p-2 rounded shadow-sm"
+                className="border-2 border-dotted border-blue-400 p-2 rounded shadow-sm relative flex items-center justify-center"
                 style={{ height: "100px", width: "300px" }}
               >
                 {previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Signature Preview"
-                    className="h-full w-full object-contain"
-                  />
+                  <div className="relative w-full h-full">
+                    {/* Close Icon */}
+                    <button
+                      onClick={() => {
+                        setPreviewUrl(null);
+                        setSignatureFile(null);
+                        if (signatureRef.current) {
+                          signatureRef.current.value = "";
+                        }
+                      }} // your function to clear preview
+                      className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-black transition"
+                      title="Remove Image"
+                    >
+                      <CloseIcon size={16} />
+                    </button>
+
+                    {/* Image Preview */}
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="h-full w-full object-contain rounded"
+                    />
+                  </div>
                 ) : teacherDataApi?.signature ? (
                   <img
                     src={teacherDataApi.signature}
@@ -287,6 +305,7 @@ const TeacherDetails = (teacherDetails: any) => {
               <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
                 <input
                   id="signatureUpload"
+                  ref={signatureRef}
                   type="file"
                   accept="image/*"
                   onChange={(e) => {

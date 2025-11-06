@@ -1,7 +1,8 @@
 import { FileUpload } from "@/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
 import type { Institute } from "../types/superadminType";
+import CloseIcon from "../CloseIcon";
 
 type StudentPointsByYear = {
   uploaded: number;
@@ -30,6 +31,7 @@ type ChildProps = {
 };
 
 const StudentDetail: React.FC<ChildProps> = (student: any) => {
+  const signatureRef = useRef<HTMLInputElement | null>(null);
   const [studentData, setStudentData] = useState<StudentData>();
   useEffect(() => {
     setStudentData(student.student);
@@ -117,11 +119,26 @@ console.log("year=>>",year)
               style={{ height: "100px", width: "300px" }}
             >
               {previewUrl ? (
-                <img
-                  src={previewUrl}
-                  alt="Signature Preview"
-                  className="h-full w-full object-contain"
-                />
+                <div className="relative w-full h-full">
+                  <button
+                    onClick={() => {
+                      setPreviewUrl(null);
+                      setSignatureFile(null);
+                      if (signatureRef.current) {
+                        signatureRef.current.value = "";
+                      }
+                    }} // your function to clear preview
+                    className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-black transition"
+                    title="Remove Image"
+                  >
+                    <CloseIcon size={16} />
+                  </button>
+                  <img
+                    src={previewUrl}
+                    alt="Signature Preview"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
               ) : studentData?.signature ? (
                 <img
                   src={studentData.signature}
@@ -141,7 +158,8 @@ console.log("year=>>",year)
               <input
                 id="signatureUpload"
                 type="file"
-                accept="image/*,application/pdf"
+                ref={signatureRef}
+                accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files?.[0] ?? null;
                   if (file) {

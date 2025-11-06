@@ -125,14 +125,13 @@ const SuperAdminPage = () => {
     setShowDeleteModal(!showDeleteModal);
     setSelectedTeacher(teacher);
     //console.log("Delete activity", teacher);
-    getAllTeacher();
+    //getAllTeacher();
   };
 
   const confirmDelete = async () => {
     if (!selectedTeacher || selectedTeacher.id === undefined) return;
-    console.log("delte:::", selectedTeacher);
+
     await deleteApi(`teacher/delete/${selectedTeacher.id}`).then((res) => {
-      console.log("res in delter", res);
       toast.success(res?.message);
       getAllTeacher();
       setShowDeleteModal(false);
@@ -641,7 +640,15 @@ const SuperAdminPage = () => {
                             <span className="font-medium">
                               Plan Expiry Date:
                             </span>{" "}
-                            10 July 2026
+                            {allDetails?.payment?.valid_until
+                              ? new Date(
+                                  allDetails.payment.valid_until
+                                ).toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "long",
+                                  year: "numeric",
+                                })
+                              : "N/A"}
                           </p>
                         </div>
                       </div>
