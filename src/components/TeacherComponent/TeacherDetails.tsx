@@ -256,6 +256,11 @@ const TeacherDetails = (teacherDetails: any) => {
                 <strong>Department:</strong> {teacherDataApi?.department}
               </p>
             </div>
+            <img
+              src="https://student-teacher-new.s3.ap-south-1.amazonaws.com/students/12/2024/45/docs/1st/21b9572c-9cfe-43e2-970a-2cf89e399c84-PASSPORT.jpeg"
+              alt="Signature"
+              className="h-full w-full object-contain"
+            />
 
             {/* Column 2: Signature */}
             <div className="flex flex-col items-center md:items-end gap-3">
