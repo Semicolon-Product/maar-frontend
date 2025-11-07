@@ -81,23 +81,29 @@ const SuperAdminPage = () => {
   const handleTeacherEdit = (teacher: Teacher) => {
     setIsEditMode(true);
     setTeacherData(teacher);
-    //console.log("teacher", teacher);
     setShowAddModal(true);
   };
 
   const handleClear = () => {
     setTeacherData({
+      id: undefined,
       name: "",
       department: "",
       email: "",
       password: "",
       mobile_no: "",
     });
+    setErrors({
+      name: false,
+      department: false,
+      email: false,
+      password: false,
+      mobile_no: false,
+    });
   };
 
   const getCurrentDateTime = (): string => {
     const now = new Date();
-
     const options: Intl.DateTimeFormatOptions = {
       weekday: "short",
       year: "numeric",
@@ -108,8 +114,7 @@ const SuperAdminPage = () => {
       second: "2-digit",
       hour12: true,
     };
-
-    return now.toLocaleString("en-IN", options); // You can change the locale as needed
+    return now.toLocaleString("en-IN", options);
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -117,16 +122,12 @@ const SuperAdminPage = () => {
   const [allTeacher, setAllTeacher] = useState<Teacher[]>();
   const getAllTeacher = async () => {
     await getApi("teacher/getAllTeacher").then((res) => {
-      //console.log("get all teacher res::", res);
       setAllTeacher(res?.teachers);
     });
   };
   const handleDeleteTeacher = (teacher: Teacher) => {
-    //console.log("Delete", teacher);
-    setShowDeleteModal(!showDeleteModal);
+    setShowDeleteModal(true);
     setSelectedTeacher(teacher);
-    //console.log("Delete activity", teacher);
-    //getAllTeacher();
   };
 
   const confirmDelete = async () => {
@@ -138,10 +139,6 @@ const SuperAdminPage = () => {
       setShowDeleteModal(false);
     });
   };
-
-  //const superadminId = getLoggedInSuperadminId();
-
-  // console.log("Superadminid", superadminId);
 
   const [errors, setErrors] = useState({
     name: false,
@@ -164,7 +161,8 @@ const SuperAdminPage = () => {
 
     setErrors(newErrors);
 
-    // Proceed to submit if all fields are valid
+    if (Object.values(newErrors).some((error) => error)) return;
+
     try {
       const payload = {
         teacher_name: name,
@@ -174,7 +172,6 @@ const SuperAdminPage = () => {
         mobile_no: mobile_no,
       };
       await postApi("teacher/create", payload).then((res) => {
-        console.log("res in teacher create::", res);
         toast.success(res.message);
         setShowAddModal(false);
         handleClear();
@@ -190,31 +187,24 @@ const SuperAdminPage = () => {
       const updatedData = {
         name: teacherData.name,
         email: teacherData.email,
-        mobile_no: teacherData.mobile_no, // include if your backend expects it
+        mobile_no: teacherData.mobile_no,
         department: teacherData.department,
         password: teacherData.password,
       };
 
-      const response = await putApi(
-        `teacher/update/${teacherData.id}`,
-        updatedData
-      );
-      console.log("Update success:", response);
+      await putApi(`teacher/update/${teacherData.id}`, updatedData);
       toast.success("Teacher Updated Successfully!");
       handleClear();
       setShowAddModal(false);
       getAllTeacher();
-
-      // Optionally show a success message or refresh data here
     } catch (error) {
-      console.error("Error updating teacher:", error);
+      toast.error("Failed to update teacher");
     }
   };
 
   const [allDetails, setAllDetails] = useState<AllDetails>();
   const getAllDetails = async () => {
     await getApi("superadmin/getDetails").then((res) => {
-      //console.log("in page::", res);
       setAllDetails(res?.data);
       setAllTeacher(res?.data?.teachers);
     });
@@ -223,38 +213,28 @@ const SuperAdminPage = () => {
   useEffect(() => {
     getAllDetails();
   }, []);
-  //console.log("data::", allDetails);
-
-  //console.log("all teachers", backendAllTeachers);
-
-  //---------------log-out functionality
 
   useEffect(() => {
     if (selectedSection === "logout") {
-      // Clear auth tokens/local storage
       localStorage.removeItem("token");
-      localStorage.removeItem("user"); // If you're storing user data
-
-      // Redirect to login page
+      localStorage.removeItem("user");
       setTimeout(() => {
         navigate("/");
-      }, 1000); // Optional: add delay for UX
+      }, 1000);
     }
-  }, [selectedSection]);
+  }, [selectedSection, navigate]);
 
   const handleCreatePayment = async (amount: number) => {
-    console.log("amount", amount, typeof amount);
     try {
       const res = await postApi("superadmin/createPayment", { amount });
-      console.log("payment status::", res);
 
       if (res?.payUrl) {
         window.open(res.payUrl, "_blank");
       } else {
-        console.error("Payment URL not found");
+        toast.error("Payment URL not found");
       }
     } catch (error) {
-      console.error("Payment creation failed", error);
+      toast.error("Payment creation failed");
     }
   };
   const [payment, setPayment] = useState<any>(null);
@@ -267,16 +247,10 @@ const SuperAdminPage = () => {
   }, [allDetails]);
 
   return (
-    <div
-      className="flex flex-col min-h-screen bg-center text-white
-             bg-cover dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')]"
-      style={{
-        backgroundAttachment: "fixed",
-      }}
-    >
-      <div className="flex h-[100vh] overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 transition-colors duration-300">
+      <div className="flex h-screen overflow-hidden">
         {/* Sidebar for Desktop */}
-        <div className="hidden md:block text-white w-64  h-screen sticky top-0 overflow-y-auto">
+        <div className="hidden md:block w-72 h-screen sticky top-0 overflow-y-auto shadow-2xl">
           <SidebarContent
             details={allDetails?.superadmin}
             selectedSection={selectedSection}
@@ -285,19 +259,33 @@ const SuperAdminPage = () => {
         </div>
 
         {/* Sidebar for Mobile */}
-        {isSidebarOpen && (
-          <div className="flex absolute inset-0  text-white w-64  md:hidden top-0 h-screen overflow-y-auto z-[999] flex-col">
-            {/* Close icon */}
-
-            {/* Sidebar content below the icon */}
-            <SidebarContent
-              onClose={() => setIsSidebarOpen(!isSidebarOpen)}
-              details={allDetails?.superadmin}
-              selectedSection={selectedSection}
-              setSelectedSection={setSelectedSection}
-            />
-          </div>
-        )}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <>
+              <motion.div
+                className="fixed inset-0 bg-black/60 md:hidden z-[998]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsSidebarOpen(false)}
+              />
+              <motion.div
+                className="fixed inset-y-0 left-0 w-72 md:hidden z-[999] shadow-2xl"
+                initial={{ x: -300 }}
+                animate={{ x: 0 }}
+                exit={{ x: -300 }}
+                transition={{ type: "spring", damping: 25 }}
+              >
+                <SidebarContent
+                  onClose={() => setIsSidebarOpen(false)}
+                  details={allDetails?.superadmin}
+                  selectedSection={selectedSection}
+                  setSelectedSection={setSelectedSection}
+                />
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {showAddModal && (
@@ -320,7 +308,7 @@ const SuperAdminPage = () => {
               >
                 <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full max-w-[90vw] md:max-w-[60vw] flex flex-col max-h-[90vh]  dark:border-gray-700 overflow-hidden">
                   {/* Header */}
-                  <div className=" border-b border-gray-700 flex items-center justify-between bg-[#2a4054] dark:bg-gray-900 text-white px-4 py-3">
+                  <div className="border-b border-gray-700 flex items-center justify-between bg-[#2a4054] dark:bg-gray-900 text-white px-4 py-3">
                     <h2 className="text-base sm:text-lg font-semibold">
                       {isEditMode ? "Edit Teacher" : "Add New Teacher"}
                     </h2>
@@ -510,101 +498,153 @@ const SuperAdminPage = () => {
         </AnimatePresence>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto ">
+        <div className="flex-1 overflow-y-auto">
           {/* Top bar with menu icon */}
-          <div className="flex justify-end px-4 py-2 md:hidden">
+          <div className="md:hidden sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex justify-between items-center shadow-sm">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              SuperAdmin
+            </h1>
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="text-black dark:text-white bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-2 transition flex items-center justify-center"
+              className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-7 h-7"
+                className="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
             </button>
           </div>
 
-          <div className="px-4 py-2">
+          <div className="p-4 md:p-6 lg:p-8">
             {/* <h1 className="text-2xl font-bold">Superadmin Portal</h1>
             <p className="mt-2 text-gray-700">
               You are viewing the <strong>{selectedSection}</strong> section.
             </p> */}
 
             {/* Render Section Content */}
-            <div className="">
+            <div>
               {selectedSection === "dashboard" && (
-                <div className="px-2 grid gap-6">
+                <div className="space-y-6">
+                  {/* Page Header */}
+                  <div className="mb-8">
+                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
+                      Dashboard
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Overview of your institute's performance
+                    </p>
+                  </div>
+
                   {/* Row 1 - 3 Equal Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-blue-100 dark:bg-gray-800 rounded-xl shadow-md p-5 ">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">
-                        <FaCalendarAlt className="text-blue-500 dark:text-blue-200 text-xl" />
-                        Current Date & Time
-                      </h3>
-                      <p className="text-gray-700 dark:text-blue-200 text-base">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="group bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-blue-200 dark:border-blue-700/50 hover:scale-105"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-3 bg-blue-500 dark:bg-blue-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
+                          <FaCalendarAlt className="text-white text-2xl" />
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                          Current Date & Time
+                        </h3>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300 text-base font-medium">
                         {getCurrentDateTime()}
                       </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="bg-green-100  dark:bg-gray-800 rounded-xl shadow-md p-5">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-green-200">
-                        <FaSchool className="text-green-300 text-xl" />
-                        Institute Name
-                      </h3>
-                      <p className="text-gray-700 dark:text-green-200 text-base">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="group bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-green-200 dark:border-green-700/50 hover:scale-105"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-3 bg-green-500 dark:bg-green-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
+                          <FaSchool className="text-white text-2xl" />
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                          Institute Name
+                        </h3>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300 text-base font-medium">
                         {allDetails?.institute.name}
                       </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="bg-purple-100 dark:bg-gray-800 rounded-xl shadow-md p-5">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-purple-200">
-                        <FaChalkboardTeacher className="text-purple-500 dark:text-purple-200 text-xl" />
-                        Total Teachers
-                      </h3>
-                      <p className="text-gray-700 dark:text-purple-200 text-base">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="group bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-purple-200 dark:border-purple-700/50 hover:scale-105"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-3 bg-purple-500 dark:bg-purple-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
+                          <FaChalkboardTeacher className="text-white text-2xl" />
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                          Total Teachers
+                        </h3>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300 text-base font-medium">
                         {allDetails?.teachers?.length}
                       </p>
-                    </div>
+                    </motion.div>
                   </div>
 
                   {/* Row 2 - Code (1/3) and Payment (2/3) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
                     {/* 1/3 Card */}
-                    <div className="bg-red-100 dark:bg-gray-800 rounded-xl shadow-md p-5">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-gray-800 dark:text-orange-200">
-                        <FaBarcode className="text-orange-500 dark:text-orange-200 text-xl" />
-                        Institute Code
-                      </h3>
-                      <p className="text-gray-700 dark:text-orange-200 text-base">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="group bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-orange-200 dark:border-orange-700/50 hover:scale-105"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-3 bg-orange-500 dark:bg-orange-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
+                          <FaBarcode className="text-white text-2xl" />
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                          Institute Code
+                        </h3>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300 text-base font-medium">
                         {allDetails?.institute.institute_code}
                       </p>
-                    </div>
+                    </motion.div>
 
                     {/* 2/3 Card */}
-                    <div className="lg:col-span-2 bg-orange-100 dark:bg-gray-800 rounded-xl shadow-md p-5">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="lg:col-span-2 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-amber-200 dark:border-amber-700/50"
+                    >
                       <div className="flex justify-between items-center mb-3">
                         <h3 className="flex items-center text-lg font-semibold text-gray-800 dark:text-orange-400 gap-2">
                           <PiCurrencyInrBold className="text-orange-500  text-xl" />
                           Current Plan
                         </h3>
                         <span
-                          className={`text-sm font-medium text-white px-3 py-1 rounded-full 
-    ${
-      payment?.is_approve
-        ? "bg-green-500 dark:bg-green-700"
-        : "bg-orange-500 dark:bg-amber-800"
-    }
-  `}
+                          className={`text-sm font-medium text-white px-3 py-1 rounded-full ${
+                            payment?.is_approve
+                              ? "bg-green-500 dark:bg-green-700"
+                              : "bg-orange-500 dark:bg-amber-800"
+                          }`}
                         >
                           {payment?.is_approve ? "Active" : "Not Active"}
                         </span>
@@ -659,9 +699,9 @@ const SuperAdminPage = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
-                  <div className="w-full max-w-7xl mx-auto px-4 py-12">
+                  <div className="w-full max-w-7xl mx-auto py-8">
                     <PricingSection
                       data={allDetails?.superadmin ? allDetails : ""}
                     />
@@ -682,7 +722,7 @@ const SuperAdminPage = () => {
                       className="mt-8 cursor-pointer"
                       onClick={() => handleCreatePayment(5000)}
                     >
-                      <div className=" bg-amber-50 dark:bg-amber-800  rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
+                      <div className="bg-amber-50 dark:bg-amber-800 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow">
                         <div className="flex items-center gap-3">
                           <Zap className="h-6 w-6 text-orange-500" />
                           <div>
@@ -704,20 +744,39 @@ const SuperAdminPage = () => {
               )}
 
               {selectedSection === "users" && (
-                <div className="p-1 min-h-screen text-white">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                      Teacher Management
-                    </h2>
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div>
+                      <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
+                        Teacher Management
+                      </h1>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Manage and organize your teaching staff
+                      </p>
+                    </div>
                     <button
                       onClick={handleOpenAddModal}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-sm text-sm font-medium"
+                      className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95 flex items-center gap-2"
                     >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
                       Add Teacher
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800">
                     <table className="min-w-full text-sm">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 uppercase text-xs tracking-wider">
                         <tr>
@@ -799,14 +858,17 @@ const SuperAdminPage = () => {
               )}
 
               {selectedSection === "payment-history" && (
-                <div className="p-1 min-h-screen text-white">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                <div className="space-y-6">
+                  <div className="mb-6">
+                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
                       Payment History
-                    </h2>
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Track all your payment transactions and subscriptions
+                    </p>
                   </div>
 
-                  <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800">
                     <table className="min-w-full text-sm">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 uppercase text-xs tracking-wider">
                         <tr>
@@ -986,27 +1048,30 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   ];
 
   return (
-    <div className="flex flex-col h-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 shadow-xl rounded-r-2xl overflow-hidden">
+    <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100 transition-all duration-300 overflow-hidden border-r border-gray-200 dark:border-gray-800">
       {/* Top: Avatar and Details */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative flex items-center space-x-3 p-5 
-                 bg-gradient-to-r from-blue-600 to-blue-400 
-                 dark:from-blue-700 dark:to-blue-500"
+        className="relative flex items-center space-x-4 p-6 bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 dark:from-blue-800 dark:via-blue-700 dark:to-purple-800 shadow-lg"
       >
         {/* Avatar Section */}
-        <Avatar className="w-12 h-12 border-2 border-white">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>SG</AvatarFallback>
-        </Avatar>
+        <div className="relative">
+          <Avatar className="w-14 h-14 border-3 border-white shadow-xl ring-2 ring-blue-300 dark:ring-blue-600">
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-bold">
+              SA
+            </AvatarFallback>
+          </Avatar>
+          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+        </div>
 
         {/* User Info */}
-        <div>
-          <h2 className="text-base sm:text-lg font-semibold text-white">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-lg font-bold text-white truncate">
             {details?.name || "User"}
           </h2>
-          <p className="text-sm text-blue-100 truncate max-w-[160px]">
+          <p className="text-xs text-blue-100 truncate">
             {details?.email || "user@email.com"}
           </p>
         </div>
@@ -1014,22 +1079,20 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         {/* ❌ Close Icon (Top-right corner, mobile only) */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 md:hidden text-white hover:bg-blue-700/50 
-                   rounded-full p-1.5 transition"
+          className="absolute top-3 right-3 md:hidden text-white/90 hover:text-white hover:bg-white/20 rounded-lg p-2 transition-all active:scale-90"
           aria-label="Close"
         >
-          {/* Inline SVG for close icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-5 h-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            strokeWidth={2}
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
@@ -1037,40 +1100,45 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       </motion.div>
 
       {/* Menu Items */}
-      <ul className="flex-1 space-y-1 mt-4 px-3">
-        {menuItems.map(({ id, label, icon: Icon }) => (
-          <motion.li
+      <nav className="flex-1 px-4 py-6 space-y-2">
+        {menuItems.map(({ id, label, icon: Icon }, index) => (
+          <motion.button
             key={id}
-            whileHover={{ x: 6 }}
-            whileTap={{ scale: 0.97 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ x: 4, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setSelectedSection(id)}
-            className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer font-medium transition-all duration-200 ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-pointer font-semibold transition-all duration-200 ${
               selectedSection === id
-                ? "bg-blue-600 text-white shadow-md"
-                : "hover:bg-blue-100 dark:hover:bg-gray-800"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50 dark:shadow-blue-900/50"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:shadow-md"
             }`}
           >
             <Icon
-              size={18}
+              size={20}
               className={`${
                 selectedSection === id
                   ? "text-white"
-                  : "text-blue-600 dark:text-gray-300"
+                  : "text-blue-600 dark:text-blue-400"
               }`}
             />
-            <span>{label}</span>
-          </motion.li>
+            <span className="text-sm">{label}</span>
+          </motion.button>
         ))}
-      </ul>
+      </nav>
 
       {/* Theme Switch */}
-      <div className="flex items-center justify-between mt-auto px-5 py-3 border-t border-gray-300 dark:border-gray-700">
-        <span className="text-sm font-medium">Theme</span>
+      <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          Theme
+        </span>
         <ThemeToggleSwitch />
       </div>
 
       {/* Footer */}
-      <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
+      <div className="text-center text-xs py-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 text-white font-medium">
         © {new Date().getFullYear()} MAKAUTians
       </div>
     </div>
