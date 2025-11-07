@@ -1,15 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import CloseIcon from "./CloseIcon";
+import { FileUpload, handleDeleteFile, postApi } from "@/api";
+import { useToast } from "@/contexts/ToastContext";
 interface PricingSectionProps {
   data: any; // 👈 accept email as prop
 }
 
 const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
+  const toast = useToast();
   const [students, setStudents] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [transactionId, setTransactionId] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [amount, setAmount] = useState<number>(0);
+  const [uploadedFile, setUploadedFile] = useState<{
+    url: string;
+    key: string;
+  } | null>(null);
 
   const basePrice = 13;
   const discountedPrice = students > 400 ? 11 : basePrice;
@@ -24,28 +31,65 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
     { min: 801, max: null, price: 11 },
   ];
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
-  };
+    console.log("selectedFile:", selectedFile);
 
-  const handleDeleteFile = () => {
-    setFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    if (selectedFile) {
+      const currentPaymentId = transactionId || Date.now();
+
+      try {
+        const res = await FileUpload("upload?type=payment", {
+          superadminId: data?.superadmin?.id,
+          paymentId: currentPaymentId,
+          file: selectedFile,
+        });
+
+        console.log("API response:", res);
+        setUploadedFile({ url: res.fileUrl, key: res.key });
+      } catch (error) {
+        console.error("File upload error:", error);
+      }
     }
   };
 
+  console.log(data?.superadmin?.id);
   const handleSubmit = async () => {
-    const payload = {
-      students,
-      transactionId,
-      file,
-      amount,
-      insttitute_name: data.institute_name,
-      email: data.email,
-    };
-    console.log("payload::", payload);
+    try {
+      if (!uploadedFile) {
+        console.warn("No file uploaded yet!");
+        return;
+      }
+
+      // If no transactionId, use current timestamp
+      const currentTransactionId = transactionId || Date.now().toString();
+
+      const payload = {
+        student_quota: students,
+        transaction_id: currentTransactionId,
+        schreenshot_url: uploadedFile.url,
+        amount_paid: amount,
+        email: data?.email,
+      };
+
+      console.log("Submitting payment payload:", payload);
+
+      const res = await postApi("superadmin/new-payment", payload);
+
+      if (res?.success) {
+        console.log("✅ Payment success:", res);
+        toast.success("Payment record added successfully!");
+      } else {
+        console.error("❌ Payment failed:", res);
+        toast.error(
+          res?.message || "Something went wrong while adding payment!"
+        );
+      }
+    } catch (error) {
+      console.error("🚨 Error while submitting payment:", error);
+      alert("Server error! Please try again.");
+    }
   };
 
   return (
@@ -89,187 +133,188 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
           </header>
 
           {/* Form */}
-          <form className="space-y-5">
-            {/* Student Count */}
-            <div>
-              <label
-                htmlFor="studentCount"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Number of Students
-              </label>
+
+          {/* Student Count */}
+          <div>
+            <label
+              htmlFor="studentCount"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Number of Students
+            </label>
+            <input
+              id="studentCount"
+              //type="number"
+              min={1}
+              value={students}
+              onChange={(e) => setStudents(Number(e.target.value) || 0)}
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+              required
+            />
+          </div>
+
+          {/* Summary Box */}
+          <div className="bg-gray-100 text-black dark:text-white dark:bg-gray-800/60 rounded-lg p-4 text-sm">
+            <div className="flex justify-between mb-1">
+              <span>Price per Student:</span>
+              <span className="font-semibold">₹{discountedPrice}</span>
+            </div>
+            <div className="flex justify-between mb-1">
+              <span>Total Students:</span>
+              <span className="font-semibold">{students}</span>
+            </div>
+            <div className="flex justify-between border-t border-gray-300 dark:border-gray-700 pt-2 text-base">
+              <span className="font-medium">Total Cost:</span>
+              <span className="font-bold text-blue-600 dark:text-blue-400">
+                ₹{totalCost.toLocaleString("en-IN")}
+              </span>
+            </div>
+          </div>
+
+          {/* Institute Name */}
+          <div>
+            <label
+              htmlFor="institute"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Institute Name
+            </label>
+            <input
+              id="institute"
+              type="text"
+              value={data?.institute?.name}
+              //onChange={(e) => setInstitute(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Registered Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={data?.superadmin?.email}
+              //onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Amount Paid
+            </label>
+            <input
+              id="amount"
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+              required
+            />
+          </div>
+
+          {/* Transaction ID */}
+          <div>
+            <label
+              htmlFor="transactionId"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Transaction ID
+            </label>
+            <input
+              id="transactionId"
+              type="text"
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+              required
+            />
+          </div>
+
+          {/* File Upload */}
+          <div>
+            <label
+              htmlFor="fileUpload"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Upload Payment Screenshot
+            </label>
+            <div className="flex ">
               <input
-                id="studentCount"
-                //type="number"
-                min={1}
-                value={students}
-                onChange={(e) => setStudents(Number(e.target.value) || 0)}
-                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
+                ref={fileInputRef}
+                id="fileUpload"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleFileChange}
+                className="w-full text-gray-700 dark:text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
                 required
               />
-            </div>
-
-            {/* Summary Box */}
-            <div className="bg-gray-100 text-black dark:text-white dark:bg-gray-800/60 rounded-lg p-4 text-sm">
-              <div className="flex justify-between mb-1">
-                <span>Price per Student:</span>
-                <span className="font-semibold">₹{discountedPrice}</span>
-              </div>
-              <div className="flex justify-between mb-1">
-                <span>Total Students:</span>
-                <span className="font-semibold">{students}</span>
-              </div>
-              <div className="flex justify-between border-t border-gray-300 dark:border-gray-700 pt-2 text-base">
-                <span className="font-medium">Total Cost:</span>
-                <span className="font-bold text-blue-600 dark:text-blue-400">
-                  ₹{totalCost.toLocaleString("en-IN")}
-                </span>
-              </div>
-            </div>
-
-            {/* Institute Name */}
-            <div>
-              <label
-                htmlFor="institute"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Institute Name
-              </label>
-              <input
-                id="institute"
-                type="text"
-                value={data?.institute?.name}
-                //onChange={(e) => setInstitute(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
-                required
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Registered Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={data?.superadmin?.email}
-                //onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Amount Paid
-              </label>
-              <input
-                id="amount"
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
-                required
-              />
-            </div>
-
-            {/* Transaction ID */}
-            <div>
-              <label
-                htmlFor="transactionId"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Transaction ID
-              </label>
-              <input
-                id="transactionId"
-                type="text"
-                value={transactionId}
-                onChange={(e) => setTransactionId(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-blue-500 transition"
-                required
-              />
-            </div>
-
-            {/* File Upload */}
-            <div>
-              <label
-                htmlFor="fileUpload"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Upload Payment Screenshot
-              </label>
-              <div className="flex ">
-                <input
-                  ref={fileInputRef}
-                  id="fileUpload"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={handleFileChange}
-                  className="w-full text-gray-700 dark:text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
-                  required
-                />
-                {file && (
-                  <div className="flex">
-                    {/* <p className="text-xs mt-2 text-green-600 dark:text-green-400">
+              {file && (
+                <div className="flex">
+                  {/* <p className="text-xs mt-2 text-green-600 dark:text-green-400">
                     Uploaded: {file.name}
                   </p> */}
-                    <CloseIcon
-                      size={25}
-                      color="red"
-                      className="mt-1"
-                      onClick={() => handleDeleteFile()}
-                    />
-                  </div>
-                )}
-              </div>
+                  <CloseIcon
+                    size={25}
+                    color="red"
+                    className="mt-1"
+                    onClick={() => {
+                      if (uploadedFile?.key)
+                        handleDeleteFile(uploadedFile?.key);
+                    }}
+                  />
+                </div>
+              )}
             </div>
+          </div>
 
-            {/* QR Section */}
-            <div className="flex flex-col items-center mt-6 space-y-2">
-              <img
-                src="/QR.jpeg"
-                alt="UPI QR"
-                className="w-50 h-55 rounded-lg border border-gray-300 dark:border-gray-700 shadow-md"
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                Scan & Pay using UPI
-              </p>
-              <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                UPI ID:{" "}
-                <span className="font-semibold">ghoshsekhar6296-1@okicici</span>
-              </p>
-            </div>
+          {/* QR Section */}
+          <div className="flex flex-col items-center mt-6 space-y-2">
+            <img
+              src="/QR.jpeg"
+              alt="UPI QR"
+              className="w-50 h-55 rounded-lg border border-gray-300 dark:border-gray-700 shadow-md"
+            />
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              Scan & Pay using UPI
+            </p>
+            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+              UPI ID:{" "}
+              <span className="font-semibold">ghoshsekhar6296-1@okicici</span>
+            </p>
+          </div>
 
-            {/* Pricing Tiers */}
-            <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-              <p className="font-medium mb-2">Pricing Tiers:</p>
-              <ul className="list-disc list-inside space-y-1">
-                {pricingTiers.map((tier, i) => (
-                  <li key={i}>
-                    {tier.max
-                      ? `${tier.min}–${tier.max} students → ₹${tier.price}/student`
-                      : `${tier.min}+ students → ₹${tier.price}/student`}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Pricing Tiers */}
+          <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
+            <p className="font-medium mb-2">Pricing Tiers:</p>
+            <ul className="list-disc list-inside space-y-1">
+              {pricingTiers.map((tier, i) => (
+                <li key={i}>
+                  {tier.max
+                    ? `${tier.min}–${tier.max} students → ₹${tier.price}/student`
+                    : `${tier.min}+ students → ₹${tier.price}/student`}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            {/* Submit Button */}
-            <button
-              onClick={() => handleSubmit()}
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg py-3 transition mt-4"
-            >
-              Submit Payment Details
-            </button>
-          </form>
+          {/* Submit Button */}
+          <button
+            onClick={() => handleSubmit()}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg py-3 transition mt-4"
+          >
+            Submit Payment Details
+          </button>
         </div>
       </div>
     </section>

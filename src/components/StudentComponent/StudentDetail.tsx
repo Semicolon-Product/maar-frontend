@@ -1,8 +1,9 @@
-import { FileUpload } from "@/api";
+import { FileUpload, handleDeleteFile, postApi } from "@/api";
 import { useEffect, useRef, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
 import type { Institute } from "../types/superadminType";
 import CloseIcon from "../CloseIcon";
+import { useToast } from "@/contexts/ToastContext";
 
 type StudentPointsByYear = {
   uploaded: number;
@@ -10,7 +11,9 @@ type StudentPointsByYear = {
 };
 
 type StudentData = {
+  id: string;
   name: string;
+  teacher_id: string;
   roll_no: string;
   mobile_no: string;
   signature: string | null;
@@ -31,6 +34,7 @@ type ChildProps = {
 };
 
 const StudentDetail: React.FC<ChildProps> = (student: any) => {
+  const toast = useToast();
   const signatureRef = useRef<HTMLInputElement | null>(null);
   const [studentData, setStudentData] = useState<StudentData>();
   useEffect(() => {
@@ -49,20 +53,34 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
   );
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [signatureFile, setSignatureFile] = useState<File | null>(null);
-
+  //const [signatureFile, setSignatureFile] = useState<File | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<{
+    url: string;
+    key: string;
+  } | null>(null);
   const handleSignatureUpload = async () => {
-    const formData = new FormData();
-    formData.append("signature", signatureFile ?? new Blob());
-
-    await FileUpload("student/uploadSignature", formData).then((res) => {
-      console.log("res in upload==>>", res);
-    });
+    try {
+      await postApi("student/upload-signature", {
+        signature: uploadedFile?.url,
+        admissionYear: studentData?.admission_year,
+        teacherId: studentData?.teacher_id,
+      }).then((res) => {
+        //console.log(res);
+        if (res?.success === true) toast.success(res?.message);
+      });
+    } catch (error) {}
   };
-
-  /*  const handleClick=(year:any)=>{
-console.log("year=>>",year)
-  } */
+  const fileUploadtoS3 = async (file: any) => {
+    if (file) {
+      await FileUpload("signature?type=student", {
+        file,
+        teacherId: studentData?.id,
+      }).then((res) => {
+        console.log("res=>>", res);
+        setUploadedFile({ url: res.fileUrl, key: res.key });
+      });
+    }
+  };
 
   return (
     <div className="p-4 max-w-5xl mx-auto  dark:bg-gray-900 min-h-screen">
@@ -122,12 +140,15 @@ console.log("year=>>",year)
                 <div className="relative w-full h-full">
                   <button
                     onClick={() => {
+                      if (uploadedFile?.key)
+                        handleDeleteFile(uploadedFile?.key);
                       setPreviewUrl(null);
-                      setSignatureFile(null);
+                      // setSignatureFile(null);
                       if (signatureRef.current) {
                         signatureRef.current.value = "";
                       }
-                    }} // your function to clear preview
+                      setUploadedFile(null);
+                    }}
                     className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-black transition"
                     title="Remove Image"
                   >
@@ -172,8 +193,9 @@ console.log("year=>>",year)
                       return;
                     }
 
-                    setSignatureFile(file);
-                    setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                    //setSignatureFile(file);
+                    setPreviewUrl(URL.createObjectURL(file));
+                    fileUploadtoS3(file);
                   }
                 }}
                 className="text-sm text-gray-500

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaChalkboardTeacher, FaCloudUploadAlt } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { getApi, postApi } from "@/api";
+import { FileUpload, getApi, handleDeleteFile, postApi } from "@/api";
 import type {
   StudentYearData,
   StudentYearDataArray,
@@ -20,12 +20,16 @@ const TeacherDetails = (teacherDetails: any) => {
   const [teacherDataApi, setTeacherDataApi] = useState<Teacher>();
   const [studentData, setStudentData] = useState<StudentYearDataArray>();
   const [year, setYear] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<{
+    url: string;
+    key: string;
+  } | null>(null);
   useEffect(() => {
     setTeacherDataApi(teacherDetails?.data?.teacher);
     setStudentData(teacherDetails?.data?.studentData);
   }, [teacherDetails]);
 
-  const [signatureFile, setSignatureFile] = useState<File | null>(null);
+  //const [signatureFile, setSignatureFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -85,20 +89,26 @@ const TeacherDetails = (teacherDetails: any) => {
     return `${year}${suffix[(v - 20) % 10] || suffix[v] || suffix[0]} Year`;
   };
 
-  const [fileError, setFileError] = useState(false);
-  const handleSignatureUpload = async () => {
-    if (!signatureFile) {
-      setFileError(true);
-      return;
+  const fileUploadtoS3 = async (file: any) => {
+    if (file) {
+      await FileUpload("signature?type=teacher", {
+        file,
+        teacherId: teacherDataApi?.id,
+      }).then((res) => {
+        //console.log("res=>>", res);
+        setUploadedFile({ url: res.fileUrl, key: res.key });
+      });
     }
-    console.log("signatureFile==>>>>", signatureFile);
-
-    const formData = new FormData();
-    formData.append("signature", signatureFile); // field name must match multer's .single('signature')
-
-    /* await FileUpload("teacher/uploadSignature", formData).then((res) => {
-      console.log("res of upload==>>", res);
-    }); */
+  };
+  const handleSignatureUpload = async () => {
+    try {
+      await postApi("teacher/upload-signature", {
+        signature: uploadedFile?.url,
+      }).then((res) => {
+        //console.log(res);
+        if (res?.success === true) toast.success(res?.message);
+      });
+    } catch (error) {}
   };
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -256,11 +266,6 @@ const TeacherDetails = (teacherDetails: any) => {
                 <strong>Department:</strong> {teacherDataApi?.department}
               </p>
             </div>
-            <img
-              src="https://student-teacher-new.s3.ap-south-1.amazonaws.com/students/12/2024/45/docs/1st/21b9572c-9cfe-43e2-970a-2cf89e399c84-PASSPORT.jpeg"
-              alt="Signature"
-              className="h-full w-full object-contain"
-            />
 
             {/* Column 2: Signature */}
             <div className="flex flex-col items-center md:items-end gap-3">
@@ -274,12 +279,15 @@ const TeacherDetails = (teacherDetails: any) => {
                     {/* Close Icon */}
                     <button
                       onClick={() => {
+                        if (uploadedFile?.key)
+                          handleDeleteFile(uploadedFile?.key);
                         setPreviewUrl(null);
-                        setSignatureFile(null);
+                        // setSignatureFile(null);
                         if (signatureRef.current) {
                           signatureRef.current.value = "";
                         }
-                      }} // your function to clear preview
+                        setUploadedFile(null);
+                      }}
                       className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-black transition"
                       title="Remove Image"
                     >
@@ -318,8 +326,9 @@ const TeacherDetails = (teacherDetails: any) => {
                     const file = e.target.files?.[0] ?? null;
 
                     if (file) {
-                      setSignatureFile(file);
-                      setPreviewUrl(URL.createObjectURL(file)); // preview without upload
+                      //uuuuu setSignatureFile(file);
+                      setPreviewUrl(URL.createObjectURL(file));
+                      fileUploadtoS3(file);
                     }
                   }}
                   className="text-sm file:bg-blue-300 dark:file:bg-blue-800 file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-blue-100 dark:bg-blue-900 rounded border border-blue-300 p-0 w-full sm:w-auto"
@@ -333,11 +342,6 @@ const TeacherDetails = (teacherDetails: any) => {
                   Upload
                 </button>
               </div>
-              {fileError && !signatureFile && (
-                <span className="text-red-500 text-[15px]">
-                  Please Select File!
-                </span>
-              )}
             </div>
           </div>
         </div>
