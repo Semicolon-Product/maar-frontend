@@ -1,7 +1,7 @@
 import axios from "axios";
-//export const BASE_URL = "http://localhost:5000/api/";
+export const BASE_URL = "http://localhost:5000/api/";
 
-export const BASE_URL = "https://api.makautstudents.help/api/";
+//export const BASE_URL = "https://api.makautstudents.help/api/";
 
 interface ApiPayload {
   [key: string]: any;
@@ -82,9 +82,6 @@ export const FileUpload = async (
     localStorage.setItem("token", response.data.data.token);
   }
 
-  console.log("in postApi token:", response.data?.data?.token);
-  console.log("in postApi response:", response);
-
   return response.data;
 };
 
@@ -140,5 +137,14 @@ export const putApi = async (
   } catch (error: any) {
     console.error("PUT API Error:", error);
     throw error.response?.data || error;
+  }
+};
+export const handleDeleteFile = async (key: string) => {
+  try {
+    await postApi("upload/delete", {
+      key: key,
+    });
+  } catch (err) {
+    console.error("Delete failed:", err);
   }
 };
