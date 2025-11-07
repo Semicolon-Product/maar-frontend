@@ -111,6 +111,7 @@ const Login = () => {
       const res = await postApi("superadmin/register", payload);
       console.log("res", res);
       toast.success(res.message || "Signup successful");
+      setSuperAdminLogin(!superadminLogin);
     } catch (error: any) {
       console.log("Signup Error:", error);
       toast.error(

@@ -31,6 +31,7 @@ import { useToast } from "@/contexts/ToastContext";
 import ThemeToggleSwitch from "@/components/ThemeToggleButton";
 import { AnimatePresence, motion } from "framer-motion";
 import PricingSection from "@/components/PricingSection";
+import { processPaymentData } from "@/utils/paymentUtils";
 interface SidebarContentProps {
   details?: SuperadminSidebarData;
   selectedSection: string;
@@ -256,6 +257,14 @@ const SuperAdminPage = () => {
       console.error("Payment creation failed", error);
     }
   };
+  const [payment, setPayment] = useState<any>(null);
+
+  useEffect(() => {
+    if (allDetails?.payment) {
+      const paymentSummary = processPaymentData(allDetails.payment);
+      setPayment(paymentSummary);
+    }
+  }, [allDetails]);
 
   return (
     <div
@@ -591,15 +600,13 @@ const SuperAdminPage = () => {
                         <span
                           className={`text-sm font-medium text-white px-3 py-1 rounded-full 
     ${
-      allDetails?.payment?.is_approve
+      payment?.is_approve
         ? "bg-green-500 dark:bg-green-700"
         : "bg-orange-500 dark:bg-amber-800"
     }
   `}
                         >
-                          {allDetails?.payment?.is_approve
-                            ? "Active"
-                            : "Not Active"}
+                          {payment?.is_approve ? "Active" : "Not Active"}
                         </span>
                       </div>
 
@@ -609,13 +616,13 @@ const SuperAdminPage = () => {
                           <p className="text-sm text-gray-700 dark:text-gray-300">
                             Total Quota:{" "}
                             <span className="font-medium">
-                              {allDetails?.payment?.student_quota ?? 0}
+                              {payment?.totalQuota ?? 0}
                             </span>
                           </p>
                           <p className="text-sm text-gray-700 dark:text-gray-300">
                             Registered Students:{" "}
                             <span className="font-medium">
-                              {allDetails?.payment?.students_registered ?? 0}
+                              {payment?.totalStudentsRegistered ?? 0}
                             </span>
                           </p>
                         </div>
@@ -626,9 +633,9 @@ const SuperAdminPage = () => {
                             <span className="font-medium">
                               Last Payment Date:
                             </span>{" "}
-                            {allDetails?.payment?.paid_on
+                            {payment?.recentPayment?.paid_on
                               ? new Date(
-                                  allDetails.payment.paid_on
+                                  payment?.recentPayment?.paid_on
                                 ).toLocaleDateString("en-GB", {
                                   day: "2-digit",
                                   month: "long",
@@ -640,9 +647,9 @@ const SuperAdminPage = () => {
                             <span className="font-medium">
                               Plan Expiry Date:
                             </span>{" "}
-                            {allDetails?.payment?.valid_until
+                            {payment?.recentPayment?.valid_until
                               ? new Date(
-                                  allDetails.payment.valid_until
+                                  payment?.recentPayment?.valid_until
                                 ).toLocaleDateString("en-GB", {
                                   day: "2-digit",
                                   month: "long",
@@ -791,6 +798,119 @@ const SuperAdminPage = () => {
                 </div>
               )}
 
+              {selectedSection === "payment-history" && (
+                <div className="p-1 min-h-screen text-white">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      Payment History
+                    </h2>
+                  </div>
+
+                  <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 uppercase text-xs tracking-wider">
+                        <tr>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
+                            Payment ID
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
+                            Amount Paid
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
+                            Student Quota
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
+                            Students Registered
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
+                            Paid On
+                          </th>
+                          <th className="py-3 px-4 text-left whitespace-nowrap">
+                            Valid Until
+                          </th>
+                          <th className="py-3 px-4 text-center whitespace-nowrap">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+
+                      {allDetails?.payment && allDetails.payment.length > 0 ? (
+                        <tbody>
+                          {allDetails.payment.map(
+                            (payment: any, index: number) => (
+                              <tr
+                                key={payment.id}
+                                className={`${
+                                  index % 2 === 0
+                                    ? "bg-white dark:bg-gray-900"
+                                    : "bg-gray-50 dark:bg-gray-800"
+                                } hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
+                              >
+                                <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
+                                  #{payment.id}
+                                </td>
+                                <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
+                                  ₹{payment.amount_paid}
+                                </td>
+                                <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
+                                  {payment.student_quota}
+                                </td>
+                                <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
+                                  {payment.students_registered}
+                                </td>
+                                <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
+                                  {new Date(payment.paid_on).toLocaleDateString(
+                                    "en-GB",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                    }
+                                  )}
+                                </td>
+                                <td className="py-3 px-4 text-gray-800 dark:text-gray-100">
+                                  {new Date(
+                                    payment.valid_until
+                                  ).toLocaleDateString("en-GB", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  })}
+                                </td>
+                                <td className="py-3 px-4 text-center">
+                                  <span
+                                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                      payment.is_approve
+                                        ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                                        : "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300"
+                                    }`}
+                                  >
+                                    {payment.is_approve
+                                      ? "Approved"
+                                      : "Pending"}
+                                  </span>
+                                </td>
+                              </tr>
+                            )
+                          )}
+                        </tbody>
+                      ) : (
+                        <tbody>
+                          <tr>
+                            <td
+                              colSpan={7}
+                              className="text-center py-6 italic text-gray-500 dark:text-gray-400"
+                            >
+                              No payment history available.
+                            </td>
+                          </tr>
+                        </tbody>
+                      )}
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {selectedSection === "logout" && <div>Logging out...</div>}
             </div>
           </div>
@@ -857,6 +977,11 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "users", label: "Manage Users", icon: Users },
+    {
+      id: "payment-history",
+      label: "Payment History",
+      icon: PiCurrencyInrBold,
+    },
     { id: "logout", label: "Logout", icon: LogOut },
   ];
 

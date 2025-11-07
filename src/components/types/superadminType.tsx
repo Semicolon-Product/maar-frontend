@@ -278,7 +278,7 @@ export type Department = {
 export interface AllDetails {
   superadmin: SuperAdmin;
   institute: Institute;
-  payment: Payment;
+  payment: Payment[];
   teachers: Teacher[];
 }
 
