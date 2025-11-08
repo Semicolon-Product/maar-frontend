@@ -111,6 +111,10 @@ const TeacherDetails = (teacherDetails: any) => {
     }
   };
   const handleSignatureUpload = async () => {
+    if (!uploadedFile) {
+      toast.error("Please select a signature file to upload.");
+      return;
+    }
     try {
       await postApi("teacher/upload-signature", {
         signature: uploadedFile?.url,
@@ -373,9 +377,12 @@ const TeacherDetails = (teacherDetails: any) => {
                 />
 
                 <button
+                  disabled={!uploadedFile}
                   type="button"
                   onClick={handleSignatureUpload}
-                  className="px-5 py-2 rounded bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95"
+                  className="px-5 py-2 rounded font-semibold text-white shadow-lg transition-all active:scale-95 
+    bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 
+    disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   Upload
                 </button>
