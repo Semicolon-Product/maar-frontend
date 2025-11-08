@@ -12,6 +12,7 @@ import { useToast } from "@/contexts/ToastContext";
 import { MdOutlineSaveAlt } from "react-icons/md";
 import { Trash } from "lucide-react";
 import CloseIcon from "../CloseIcon";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const TeacherDetails = (teacherDetails: any) => {
   const toast = useToast();
@@ -74,6 +75,15 @@ const TeacherDetails = (teacherDetails: any) => {
   useEffect(() => {
     getAllStudent();
   }, []);
+
+  useEffect(() => {
+    if (students) {
+      const years = Object.keys(students).sort((a: any, b: any) => a - b);
+      if (years.length > 0) {
+        setSelectedYear(years[0]);
+      }
+    }
+  }, [students]);
 
   const [selectedYear, setSelectedYear] = useState<string>("");
 
@@ -207,9 +217,6 @@ const TeacherDetails = (teacherDetails: any) => {
   };
   const handleImportCsvData = async () => {
     try {
-      console.log("csv", csvData);
-      console.log("currentYear", year);
-
       if (!year) {
         toast.error("Please select a year before importing.");
         return;
@@ -230,9 +237,13 @@ const TeacherDetails = (teacherDetails: any) => {
       }));
 
       // API call
-      const res = await postApi("student/create/many", formattedData);
-      toast.success("Students imported successfully!");
-      console.log("res in many", res);
+      await postApi("student/create/many", formattedData).then((res) => {
+        if (Array.isArray(res.details)) {
+          res.details.forEach((item: any) => {
+            if (item?.status === "failed") toast.error(item.message);
+          });
+        }
+      });
     } catch (error) {
       console.error("Error importing students:", error);
 
@@ -245,34 +256,64 @@ const TeacherDetails = (teacherDetails: any) => {
   };
 
   return (
-    <div>
-      <div className="p-4 space-y-8  min-h-screen">
-        {/* Teacher Info Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto ">
-          <h2 className="text-2xl font-semibold mb-6 border-b pb-2 flex gap-1">
-            <FaChalkboardTeacher className="mt-2 " /> Teacher Information
-          </h2>
+    <>
+      <div className="space-y-6">
+        {/* Page Header */}
+        <div className="mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
+            Dashboard
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Manage your profile and student records
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2  items-center ">
+        {/* Teacher Info Card */}
+        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-md shadow-xl p-6 md:p-8 border border-gray-200 dark:border-gray-700/50">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-3 bg-blue-500 dark:bg-blue-600 rounded-xl shadow-lg">
+              <FaChalkboardTeacher className="text-white text-2xl" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+              Teacher Information
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* Column 1: Teacher Info */}
-            <div className="space-y-2 ">
-              <p>
-                <strong>Name:</strong> {teacherDataApi?.name}
-              </p>
-              <p>
-                <strong>Email:</strong> {teacherDataApi?.email}
-              </p>
-              <p>
-                <strong>Department:</strong> {teacherDataApi?.department}
-              </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-2">
+                <span className="font-semibold text-gray-700 dark:text-gray-300 min-w-[100px]">
+                  Name:
+                </span>
+                <span className="text-gray-900 dark:text-gray-100">
+                  {teacherDataApi?.name}
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="font-semibold text-gray-700 dark:text-gray-300 min-w-[100px]">
+                  Email:
+                </span>
+                <span className="text-gray-900 dark:text-gray-100 break-all">
+                  {teacherDataApi?.email}
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="font-semibold text-gray-700 dark:text-gray-300 min-w-[100px]">
+                  Department:
+                </span>
+                <span className="text-gray-900 dark:text-gray-100">
+                  {teacherDataApi?.department}
+                </span>
+              </div>
             </div>
 
             {/* Column 2: Signature */}
-            <div className="flex flex-col items-center md:items-end gap-3">
+            <div className="flex flex-col items-center md:items-end gap-4">
               {/* Signature Preview Box */}
               <div
-                className="border-2 border-dotted border-blue-400 p-2 rounded shadow-sm relative flex items-center justify-center"
-                style={{ height: "100px", width: "300px" }}
+                className="border-1 border-dashed border-blue-400 dark:border-blue-600 p-3 rounded-md shadow-lg bg-white dark:bg-gray-800 relative flex items-center justify-center"
+                style={{ height: "120px", width: "300px" }}
               >
                 {previewUrl ? (
                   <div className="relative w-full h-full">
@@ -315,29 +356,26 @@ const TeacherDetails = (teacherDetails: any) => {
               </div>
 
               {/* Upload Input + Button */}
-              <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
                 <input
                   id="signatureUpload"
                   ref={signatureRef}
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    //const file = e.target.files[0] ?? null;
                     const file = e.target.files?.[0] ?? null;
-
                     if (file) {
-                      //uuuuu setSignatureFile(file);
                       setPreviewUrl(URL.createObjectURL(file));
                       fileUploadtoS3(file);
                     }
                   }}
-                  className="text-sm file:bg-blue-300 dark:file:bg-blue-800 file:rounded-l file:px-4 file:py-1 file:border-0 file:cursor-pointer bg-blue-100 dark:bg-blue-900 rounded border border-blue-300 p-0 w-full sm:w-auto"
+                  className="text-sm file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold file:bg-gradient-to-r file:from-blue-600 file:to-purple-600 file:text-white hover:file:from-blue-700 hover:file:to-purple-700 file:cursor-pointer bg-white dark:bg-gray-800 rounded border-1 border-gray-300 dark:border-gray-600 p-1 w-full sm:w-auto"
                 />
 
                 <button
                   type="button"
                   onClick={handleSignatureUpload}
-                  className="bg-blue-600 hover:bg-blue-700  text-sm px-4 py-1 rounded shadow"
+                  className="px-5 py-2 rounded bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95"
                 >
                   Upload
                 </button>
@@ -347,30 +385,42 @@ const TeacherDetails = (teacherDetails: any) => {
         </div>
 
         {/* Student Info Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {studentData?.map((item: StudentYearData, index: number) => (
-            <div
+            <motion.div
               key={index}
-              className="bg-blue-50 dark:bg-gray-800 rounded-xl shadow p-4 text-center space-y-2 "
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="group bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-blue-200 dark:border-blue-700/50 hover:scale-101"
             >
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-blue-100">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-blue-100 mb-3">
                 {item.year}
               </h3>
-              <p className="text-2xl font-bold text-blue-700">{item.count}</p>
-              <p className="text-sm text-green-500 font-semibold">
-                Submitted: {item.submit}
+              <p className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-4">
+                {item.count}
               </p>
-              <p className="text-sm text-red-500 font-semibold">
-                Remaining: {item.remain}
-              </p>
-            </div>
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-green-600 dark:text-green-400">
+                  ✓ Submitted: {item.submit}
+                </p>
+                <p className="text-sm font-semibold text-red-600 dark:text-red-400">
+                  ⏳ Remaining: {item.remain}
+                </p>
+              </div>
+            </motion.div>
           ))}
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 w-full max-w-4xl mx-auto  transition-colors duration-300">
-          <h2 className="text-2xl font-semibold mb-4 text-red-600 dark:text-red-400 flex gap-2">
-            <FaCloudUploadAlt className="mt-1" /> Upload Student Data
-          </h2>
+        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded shadow-xl p-6 md:p-8 border border-gray-200 dark:border-gray-700/50">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-3 bg-red-500 dark:bg-red-600 rounded-xl shadow-lg">
+              <FaCloudUploadAlt className="text-white text-2xl" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+              Upload Student Data
+            </h2>
+          </div>
 
           <div className="flex flex-col md:flex-row gap-6">
             {/* Left Instruction Panel */}
@@ -457,7 +507,7 @@ const TeacherDetails = (teacherDetails: any) => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="mt-2 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white font-semibold rounded-md py-2 transition"
+                className="mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded py-3 shadow-lg hover:shadow-xl transition-all active:scale-95"
               >
                 <MdOutlineSaveAlt className="text-lg" />
                 Save
@@ -466,9 +516,9 @@ const TeacherDetails = (teacherDetails: any) => {
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto py-4 space-y-4  rounded-xl">
-          <h4
-            className="
+        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded shadow-xl p-6 md:p-8 border border-gray-200 dark:border-gray-700/50">
+          <h3
+            className=" pb-2
             font-semibold tracking-tight
             text-gray-900 dark:text-gray-100
             bg-clip-text
@@ -476,7 +526,7 @@ const TeacherDetails = (teacherDetails: any) => {
           "
           >
             Create Student — Individual
-          </h4>
+          </h3>
           <form
             onSubmit={handleSubmitStudent}
             className="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -533,30 +583,35 @@ const TeacherDetails = (teacherDetails: any) => {
 
             <button
               type="submit"
-              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded w-full shadow-lg hover:shadow-xl transition-all active:scale-95"
             >
               Save
             </button>
           </form>
 
           {availableYears.length > 0 && (
-            <div className="flex justify-end mb-4">
-              <select
+            <div className="flex justify-start my-2 rounded p-2">
+              <RadioGroup
                 value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="border p-2 rounded bg-white dark:bg-gray-800"
+                onValueChange={setSelectedYear}
+                className="flex flex-wrap gap-4"
               >
-                <option value="">Select Year</option>
                 {availableYears.map((year) => (
-                  <option key={year} value={year}>
-                    {formatYear(parseInt(year))}
-                  </option>
+                  <div key={year} className="flex items-center space-x-2">
+                    <RadioGroupItem value={year} id={`year-${year}`} />
+                    <label
+                      htmlFor={`year-${year}`}
+                      className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
+                    >
+                      {formatYear(parseInt(year))}
+                    </label>
+                  </div>
                 ))}
-              </select>
+              </RadioGroup>
             </div>
           )}
           {selectedYear && students?.[selectedYear] && (
-            <div className="overflow-x-auto bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+            <div className="overflow-auto bg-white dark:bg-gray-900 rounded shadow-xl border border-gray-200 dark:border-gray-700/50">
               <table className="w-full text-sm md:text-base text-left text-gray-700 dark:text-gray-300">
                 <thead className="bg-blue-900 dark:bg-blue-800 text-white">
                   <tr>
@@ -675,7 +730,7 @@ const TeacherDetails = (teacherDetails: any) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 

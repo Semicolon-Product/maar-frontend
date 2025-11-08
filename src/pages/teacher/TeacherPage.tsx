@@ -55,8 +55,8 @@ const TeacherPage = () => {
   //console.log("in page ::",teacherDetails)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-blue-100/70 dark:bg-gray-900 dark:bg-[url('https://imapro.in/bahrain/global/bg.svg')] dark:bg-cover dark:bg-center dark:bg-fixed transition-colors duration-500">
-      <div className="hidden md:block bg-gray-800 text-white w-64  h-screen sticky top-0 overflow-y-auto shadow-lg shadow-black/20">
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 transition-colors duration-300">
+      <div className="hidden md:block w-72 h-screen sticky top-0 overflow-y-auto shadow-2xl">
         <SidebarContent
           data={teacherDetails?.teacher}
           selectedSection={selectedSection}
@@ -64,39 +64,31 @@ const TeacherPage = () => {
         />
       </div>
 
-      {/* ✅ Sidebar for Mobile (Dynamic + Animated) */}
+      {/* Sidebar for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (
           <>
-            {/* Background overlay (click to close) */}
             <motion.div
-              className="fixed inset-0 bg-black/60  z-[998]"
+              className="fixed inset-0 bg-black/60 md:hidden z-[998]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsSidebarOpen(false)}
             />
-
-            {/* Sidebar Slide-in Panel */}
             <motion.div
-              initial={{ x: "-100%" }}
+              className="fixed inset-y-0 left-0 w-72 md:hidden z-[999] shadow-2xl"
+              initial={{ x: -300 }}
               animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 120, damping: 20 }}
-              className="fixed top-0 left-0 z-[999] w-72 h-full 
-                   bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100
-                   shadow-2xl flex flex-col rounded-r-2xl overflow-y-auto"
+              exit={{ x: -300 }}
+              transition={{ type: "spring", damping: 25 }}
             >
-              {/* Top: Profile Header + Close Button */}
-
-              {/* Sidebar Menu Items */}
               <SidebarContent
-                onClose={() => setIsSidebarOpen(!isSidebarOpen)}
+                onClose={() => setIsSidebarOpen(false)}
                 data={teacherDetails?.teacher}
                 selectedSection={selectedSection}
                 setSelectedSection={(section) => {
                   setSelectedSection(section);
-                  setIsSidebarOpen(false); // ✅ close sidebar when a section is clicked (mobile UX)
+                  setIsSidebarOpen(false);
                 }}
               />
             </motion.div>
@@ -106,43 +98,25 @@ const TeacherPage = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        {/* Top bar: h2 on left, menu icon on right */}
-        <div className="flex items-center justify-between  pt-4 pb-0">
-          {/* Sidebar Toggle (Mobile Only) */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 
-                 dark:from-gray-800 dark:to-gray-700 shadow-sm 
-                 hover:shadow-md transition-all duration-300 
-                 hover:scale-105 active:scale-95"
-              aria-label="Toggle Sidebar"
-            >
-              <IoReorderThree className="text-2xl text-gray-700 dark:text-gray-100" />
-            </button>
-          </div>
-
-          {/* Dynamic Page Title */}
-          {selectedSection && selectedSection !== "dashboard" && (
-            <motion.h2
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-lg md:text-2xl font-semibold tracking-wide 
-                 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
-                 bg-clip-text text-transparent select-none
-                 drop-shadow-sm px-3 py-1 rounded-md"
-            >
-              {selectedSection === "first" && "First Year Student Data"}
-              {selectedSection === "second" && "Second Year Student Data"}
-              {selectedSection === "third" && "Third Year Student Data"}
-              {selectedSection === "four" && "Fourth Year Student Data"}
-            </motion.h2>
-          )}
+        {/* Top bar */}
+        <div className="md:hidden sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex justify-between items-center shadow-sm">
+          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+            {selectedSection === "dashboard" && "Teacher Portal"}
+            {selectedSection === "first" && "First Year"}
+            {selectedSection === "second" && "Second Year"}
+            {selectedSection === "third" && "Third Year"}
+            {selectedSection === "four" && "Fourth Year"}
+          </h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
+          >
+            <IoReorderThree className="w-6 h-6" />
+          </button>
         </div>
 
         {/* Content */}
-        <div className="p-0">
+        <div className="p-2 md:p-6 lg:p-8">
           <div className="mt-0">
             {selectedSection === "dashboard" && (
               <TeacherDetails data={teacherDetails} />
@@ -204,94 +178,98 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   ];
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-lg rounded-r-2xl overflow-hidden transition-all duration-300">
+    <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100 transition-all duration-300 overflow-hidden border-r border-gray-200 dark:border-gray-800">
       {/* Profile Section */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative flex items-center space-x-3 p-5 
-                 bg-gradient-to-r from-blue-600 to-blue-500 
-                 dark:from-blue-700 dark:to-blue-600"
+        className="relative flex items-center space-x-4 p-6 bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 dark:from-blue-800 dark:via-blue-700 dark:to-purple-800 shadow-lg"
       >
-        {/* Profile Section */}
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white">
+        {/* Avatar */}
+        <div className="relative">
+          <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-white shadow-xl ring-2 ring-blue-300 dark:ring-blue-600">
             <img
               src="https://github.com/shadcn.png"
               alt="Avatar"
               className="w-full h-full object-cover"
             />
           </div>
-          <div>
-            <h2 className="text-white font-semibold text-base sm:text-lg">
-              {data?.name || "Teacher"}
-            </h2>
-            <p className="text-blue-100 text-sm truncate max-w-[160px]">
-              {data?.email || "teacher@example.com"}
-            </p>
-          </div>
+          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
         </div>
 
-        {/* ❌ Close Button (Top-Right, Mobile Only) */}
+        {/* User Info */}
+        <div className="flex-1 min-w-0">
+          <h2 className="text-lg font-bold text-white truncate">
+            {data?.name || "Teacher"}
+          </h2>
+          <p className="text-xs text-blue-100 truncate">
+            {data?.email || "teacher@example.com"}
+          </p>
+        </div>
+
+        {/* Close Button (Mobile Only) */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 md:hidden text-white 
-                   hover:bg-blue-700 p-1.5 rounded-full transition"
+          className="absolute top-3 right-3 md:hidden text-white/90 hover:text-white hover:bg-white/20 rounded-lg p-2 transition-all active:scale-90"
           aria-label="Close Sidebar"
         >
-          {/* Inline SVG for cross icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-5 h-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            strokeWidth={2}
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
         </button>
       </motion.div>
 
-      {/* Sidebar Menu */}
-      <ul className="flex-1 px-3 py-4 space-y-1">
-        {menuItems.map(({ id, label, icon: Icon }) => (
-          <motion.li
+      {/* Menu Items */}
+      <nav className="flex-1 px-4 py-6 space-y-2">
+        {menuItems.map(({ id, label, icon: Icon }, index) => (
+          <motion.button
             key={id}
-            whileHover={{ x: 6 }}
-            whileTap={{ scale: 0.97 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ x: 4, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setSelectedSection(id)}
-            className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer font-medium transition-all duration-200 ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-full cursor-pointer font-semibold transition-all duration-200 ${
               selectedSection === id
-                ? "bg-blue-600 text-white shadow-md"
-                : "hover:bg-blue-100 dark:hover:bg-gray-800"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50 dark:shadow-blue-900/50"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:shadow-md"
             }`}
           >
             <Icon
-              size={18}
+              size={20}
               className={`${
                 selectedSection === id
                   ? "text-white"
-                  : "text-blue-600 dark:text-gray-300"
+                  : "text-blue-600 dark:text-blue-400"
               }`}
             />
-            <span>{label}</span>
-          </motion.li>
+            <span className="text-sm">{label}</span>
+          </motion.button>
         ))}
-      </ul>
+      </nav>
 
       {/* Theme Switch */}
-      <div className="flex items-center justify-between mt-auto px-5 py-3 border-t border-gray-300 dark:border-gray-700">
-        <span className="text-sm font-medium">Theme</span>
+      <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          Theme
+        </span>
         <ThemeToggleSwitch />
       </div>
 
       {/* Footer */}
-      <div className="text-center text-xs py-3 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
+      <div className="text-center text-xs py-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 text-white font-medium">
         © {new Date().getFullYear()} MAKAUTians
       </div>
     </div>

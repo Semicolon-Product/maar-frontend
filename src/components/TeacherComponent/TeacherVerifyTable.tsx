@@ -14,7 +14,7 @@ import { generateAllReports } from "@/pdfs/generateAllReports";
 import { BsFileEarmarkPdfFill, BsTrash } from "react-icons/bs";
 import dayjs from "dayjs";
 import { postApi } from "@/api";
-import { PhoneCallIcon } from "lucide-react";
+import { PhoneCallIcon, Users } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
 import DocsModal from "../DocsModal";
 
@@ -53,11 +53,10 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
   //-----------docs show modal
 
   const handleSubmit = async () => {
-    console.log("selectedIds==>>", selectedIds);
     await postApi("student/detailsVerified", { ids: selectedIds }).then(
       (res) => {
-        console.log("res of verifiend:::", res);
         toast.success(res?.message);
+        setSelectedIds([]);
       }
     );
   };
@@ -78,20 +77,18 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
   const handleDeleteActivity = (activity: IndividualActivity) => {
     selectedActivityRef.current = activity;
-    setShowDeleteModal(!showDeleteModal);
-    // console.log("Delete activity", activity)
+    setShowDeleteModal(true);
   };
+
   const handleConfirmDelete = async () => {
-    console.log("new delete");
     const activity = selectedActivityRef.current;
     if (!activity) return;
 
     try {
       const res = await postApi("student/detailsDelete", { id: activity?.id });
-      console.log(res);
       toast.success(res.message);
     } catch (err) {
-      console.error("Error:", err);
+      toast.error("Failed to delete activity");
     } finally {
       setShowDeleteModal(false);
       selectedActivityRef.current = null;
@@ -141,107 +138,132 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
       />
 
       {showDeleteModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/60 dark:bg-black/70  z-50">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-sm p-6 border border-gray-200 dark:border-gray-700 transition-all duration-300">
-            {/* Title */}
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-              Confirm Delete
-            </h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 dark:bg-black/70 z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700 overflow-hidden"
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <BsTrash className="w-5 h-5 text-white" />
+                </div>
+                <h2 className="text-xl font-semibold text-white">
+                  Confirm Deletion
+                </h2>
+              </div>
+            </div>
 
-            {/* Description */}
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              Are you sure you want to delete this activity?
-            </p>
+            {/* Content */}
+            <div className="px-6 py-6">
+              <p className="text-gray-600 dark:text-gray-300 text-center">
+                Are you sure you want to delete this activity? This action
+                cannot be undone.
+              </p>
+            </div>
 
             {/* Buttons */}
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-800">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 font-medium"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 font-medium shadow-lg hover:shadow-xl"
               >
-                Delete
+                Delete Activity
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
-      <div className="relative">
-        {/* Top-right image */}
-        <div className="flex justify-between items-start md:items-center px-2 md:px-4 py-2 flex-wrap">
-          {/* Left side: status section */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-gray-700 max-w-[80%]">
-            {/* Submit & Remain */}
-            <div className="flex gap-2">
-              <p className="text-green-600">Submit: {status?.totalSubmitted}</p>
-              <p className="text-red-600">
-                Remain: {status?.totalNotSubmitted}
-              </p>
+      <div className="relative bg-white dark:bg-gray-900 rounded-md  border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {/* Top section with gradient background */}
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 dark:from-blue-700 dark:via-purple-700 dark:to-blue-900 px-6 py-1">
+          <div className="flex justify-between items-start md:items-center flex-wrap gap-4">
+            {/* Left side: status section */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-white">
+              {/* Submit & Remain */}
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <span>Submitted: {status?.totalSubmitted}</span>
+                </div>
+                <div className="w-px h-4 bg-white/30"></div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                  <span>Pending: {status?.totalNotSubmitted}</span>
+                </div>
+              </div>
+
+              {/* Verified */}
+              <div className="flex items-center gap-2 bg-green-500/50 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                <CheckCircleIcon sx={{ color: "#10b981", fontSize: 18 }} />
+                <span>Verified: {status?.totalFullyVerified}</span>
+              </div>
+
+              {/* Pending Count */}
+              <div className="flex items-center gap-2 bg-red-500/20 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                <CancelIcon sx={{ color: "#ef4444", fontSize: 18 }} />
+                <span>
+                  Unverified:{" "}
+                  {status!.totalStudents! - status!.totalFullyVerified!}
+                </span>
+              </div>
             </div>
 
-            {/* Verified */}
-            <div className="flex items-center gap-1 text-green-600">
-              Verified:
-              <CheckCircleIcon sx={{ color: "green", fontSize: 18 }} />(
-              {status?.totalFullyVerified})
-            </div>
+            {/* Right side: download icon */}
+            <div className="flex justify-end cursor-pointer">
+              <div className="relative group inline-block">
+                <button
+                  onClick={() =>
+                    generateAllReports(students ?? [], signature ?? "")
+                  }
+                  className="p-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-200 hover:scale-105 shadow-lg"
+                >
+                  <BsFileEarmarkPdfFill className="text-white" size={20} />
+                </button>
 
-            {/* Pending */}
-            <div className="flex items-center gap-1 text-red-600">
-              Pending:
-              <CancelIcon sx={{ color: "#c9352a", fontSize: 18 }} />(
-              {status!.totalStudents! - status!.totalFullyVerified!})
-            </div>
-          </div>
-
-          {/* Right side: download icon */}
-          <div className="flex justify-end cursor-pointer">
-            <div className="relative group inline-block">
-              <button
-                onClick={() =>
-                  generateAllReports(students ?? [], signature ?? "")
-                }
-                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-              >
-                <BsFileEarmarkPdfFill className="text-red-600" size={25} />
-              </button>
-
-              <div
-                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap 
-               bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 
-               group-hover:opacity-100 transition-opacity duration-200"
-              >
-                Download All Students Report
+                <div
+                  className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 whitespace-nowrap
+                 bg-gray-900 text-white text-xs rounded-lg py-2 px-3 opacity-0
+                 group-hover:opacity-100 transition-all duration-200 shadow-xl border border-gray-700"
+                >
+                  Download All Reports
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mx-2 md:mx-5">
-          <div className="overflow-x-auto rounded-md">
-            <table className="min-w-full   text-base ">
-              <thead className="bg-[#2a4054] border text-white">
-                <tr className="h-10">
+        <div className="p-2">
+          <div className="overflow-x-auto rounded  border border-gray-200 dark:border-gray-700">
+            <table className="min-w-full text-base bg-white dark:bg-gray-900">
+              <thead className="bg-gradient-to-r from-slate-800 to-slate-900 dark:from-slate-700 dark:to-slate-800 text-white">
+                <tr className="h-8">
                   {[
                     "Sr No",
                     "Student Name",
                     "Roll No",
                     "Mobile No",
-                    "Total Acquired Points",
+                    "Total Points",
                     "Report",
                     "Status",
-                    "Expand",
+                    "Actions",
                   ].map((label) => (
                     <th
                       key={label}
-                      className="px-2 py-1  font-bold whitespace-nowrap uppercase text-center"
+                      className="px-4 py-3 font-semibold whitespace-nowrap uppercase text-center text-sm tracking-wide"
                     >
                       {label}
                     </th>
@@ -254,88 +276,124 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                   students.map((student, index) => (
                     <React.Fragment key={index}>
                       <tr
-                        className={`border ${
+                        className={`border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 ${
                           index % 2
-                            ? "bg-gray-100 dark:bg-gray-800"
-                            : "bg-white dark:bg-gray-800"
+                            ? "bg-gray-50 dark:bg-gray-800/50"
+                            : "bg-white dark:bg-gray-900"
                         }`}
                       >
-                        <td className="px-2 py-1 text-center">{index + 1}</td>
-                        <td className="px-2 py-1  text-center">
+                        <td className="px-4 py-2 text-center font-medium text-gray-900 dark:text-gray-100">
+                          {index + 1}
+                        </td>
+                        <td className="px-4 py-2 text-center font-medium text-gray-900 dark:text-gray-100">
                           {student.name}
                         </td>
-                        <td className="px-2 py-1  text-center">
+                        <td className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
                           {student.roll_no}
                         </td>
-                        <td className="px-2 py-1  text-center">
+                        <td className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
                           {student.mobile_no}
                         </td>
-                        <td className="px-2 py-1  text-center">
-                          {student.activities?.reduce(
-                            (total, item) => total + (item.point || 0),
-                            0
-                          )}
+                        <td className="px-4 py-2 text-center">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            {student.activities?.reduce(
+                              (total, item) => total + (item.point || 0),
+                              0
+                            )}
+                          </span>
                         </td>
-                        <td className="px-2 py-1  text-center">
+                        <td className="px-4 py-2 text-center">
                           <button
-                            className="text-red-600 hover:text-red-800"
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 transition-colors duration-200 group"
                             onClick={() => downloadIndividualReport(student)}
                           >
-                            <BsFileEarmarkPdfFill size={20} className="mt-1" />
+                            <BsFileEarmarkPdfFill
+                              size={18}
+                              className="text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform"
+                            />
                           </button>
                         </td>
-                        <td className="px-2 py-1  text-center">
-                          {student.status ? (
-                            <CheckCircleIcon className="text-green-600" />
-                          ) : (
-                            <CancelIcon className="text-red-600 " />
-                          )}
+                        <td className="px-4 py-2 text-center">
+                          <div className="flex justify-center">
+                            {student.status ? (
+                              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                <CheckCircleIcon className="w-4 h-4 mr-1" />
+                                Verified
+                              </div>
+                            ) : (
+                              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                <CancelIcon className="w-4 h-4 mr-1" />
+                                Pending
+                              </div>
+                            )}
+                          </div>
                         </td>
-                        <td className="px-2 py-1  text-center">
+                        <td className="px-4 py-2 text-center">
                           <button
                             onClick={() =>
                               setOpenIndex(openIndex === index ? null : index)
                             }
+                            className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 group"
                           >
                             {openIndex === index ? (
-                              <KeyboardArrowUpIcon />
+                              <KeyboardArrowUpIcon className="text-gray-600 dark:text-gray-300 group-hover:scale-110 transition-transform" />
                             ) : (
-                              <KeyboardArrowDownIcon />
+                              <KeyboardArrowDownIcon className="text-gray-600 dark:text-gray-300 group-hover:scale-110 transition-transform" />
                             )}
                           </button>
                         </td>
                       </tr>
 
-                      {/* Collapse Row */}
+                      {/* Expandable Activities Row */}
                       {openIndex === index && (
-                        <tr className="bg-gray-50 dark:bg-gray-900 border   ">
+                        <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-b border-gray-200 dark:border-gray-700">
                           <td colSpan={8} className="p-0">
                             <motion.div
-                              initial={{ height: 0 }}
+                              initial={{ height: 0, opacity: 0 }}
                               animate={{
                                 height: openIndex === index ? "auto" : 0,
+                                opacity: openIndex === index ? 1 : 0,
                               }}
-                              transition={{ duration: 0.3 }}
+                              transition={{ duration: 0.4, ease: "easeInOut" }}
                               className="overflow-hidden"
                             >
-                              <div className="p-2">
-                                <strong>Activities:</strong>
+                              <div className="p-6">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                                    <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm">
+                                      {student.activities?.length}
+                                    </span>
+                                  </div>
+                                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                                    Student Activities
+                                  </h3>
+                                </div>
                                 {student.activities?.length ? (
-                                  <div className="overflow-x-auto mt-1">
-                                    <table className="min-w-full border border-gray-300 dark:border-gray-600 text-sm">
-                                      <thead className="bg-gray-800  text-white">
-                                        <tr className="h-8">
-                                          <th className="px-2 py-1">
+                                  <div className="overflow-x-auto rounded-md shadow-md border border-gray-200 dark:border-gray-700">
+                                    <table className="min-w-full bg-white dark:bg-gray-800 text-sm  overflow-hidden">
+                                      <thead className="bg-gradient-to-r from-slate-700 to-slate-800 dark:from-slate-600 dark:to-slate-700 text-white">
+                                        <tr className="h-10">
+                                          <th className="px-4 py-2 font-semibold text-left">
                                             Serial No.
                                           </th>
-                                          <th className="px-2 py-1">
+                                          <th className="px-4 py-2 font-semibold text-left">
                                             Activity Name
                                           </th>
-                                          <th className="px-2 py-1">Date</th>
-                                          <th className="px-2 py-1">Points</th>
-                                          <th className="px-2 py-1">Docs</th>
-                                          <th className="px-2 py-1">Verify</th>
-                                          <th className="px-2 py-1">Delete</th>
+                                          <th className="px-4 py-2 font-semibold text-center">
+                                            Date
+                                          </th>
+                                          <th className="px-4 py-2 font-semibold text-center">
+                                            Points
+                                          </th>
+                                          <th className="px-4 py-2 font-semibold text-center">
+                                            Documents
+                                          </th>
+                                          <th className="px-4 py-2 font-semibold text-center">
+                                            Verify
+                                          </th>
+                                          <th className="px-4 py-2 font-semibold text-center">
+                                            Actions
+                                          </th>
                                         </tr>
                                       </thead>
                                       <tbody>
@@ -343,23 +401,25 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                           (activity, idx) => (
                                             <tr
                                               key={idx}
-                                              className={`${
+                                              className={`transition-colors duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 ${
                                                 idx % 2
-                                                  ? "bg-gray-100 dark:bg-gray-800"
-                                                  : "bg-white dark:bg-gray-700"
+                                                  ? "bg-gray-50 dark:bg-gray-700/50"
+                                                  : "bg-white dark:bg-gray-800"
                                               } ${
                                                 !activity.is_active
-                                                  ? "line-through text-red-600"
+                                                  ? "opacity-60 line-through"
                                                   : ""
                                               }`}
                                             >
-                                              <td className="px-2 py-1">
+                                              <td className="px-4 py-2 text-gray-900 dark:text-gray-100 font-medium">
                                                 {activity.activity_serial_no}
                                               </td>
-                                              <td className="px-2 py-1 whitespace-pre-wrap">
-                                                {activity.activity_name}
+                                              <td className="px-4 py-2 text-gray-700 dark:text-gray-300 max-w-xs">
+                                                <div className="whitespace-pre-wrap break-words">
+                                                  {activity.activity_name}
+                                                </div>
                                               </td>
-                                              <td className="px-2 py-1">
+                                              <td className="px-4 py-2 text-center text-gray-600 dark:text-gray-400">
                                                 {activity.activity_date
                                                   ? dayjs(
                                                       activity.activity_date
@@ -368,31 +428,37 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                                       "DD-MMM-YYYY"
                                                     )}
                                               </td>
-                                              <td className="px-2 py-1">
-                                                {activity.point}
+                                              <td className="px-4 py-2 text-center">
+                                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                  {activity.point}
+                                                </span>
                                               </td>
-                                              <td
-                                                className={`px-2 py-1 cursor-pointer ${
-                                                  !activity.is_active
-                                                    ? "text-red-600"
-                                                    : "text-blue-500"
-                                                } underline`}
-                                                onClick={() =>
-                                                  handleDocsModal(activity)
-                                                }
-                                              >
-                                                {activity.activity_name.length >
-                                                30
-                                                  ? `${activity.activity_name.slice(
-                                                      0,
-                                                      30
-                                                    )}...`
-                                                  : activity.activity_name}
+                                              <td className="px-4 py-2 text-center">
+                                                <button
+                                                  className={`inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-200 ${
+                                                    !activity.is_active
+                                                      ? "bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800"
+                                                      : "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800"
+                                                  }`}
+                                                  onClick={() =>
+                                                    handleDocsModal(activity)
+                                                  }
+                                                >
+                                                  <span
+                                                    className={`text-xs font-medium ${
+                                                      !activity.is_active
+                                                        ? "text-red-600 dark:text-red-400"
+                                                        : "text-blue-600 dark:text-blue-400"
+                                                    }`}
+                                                  >
+                                                    View
+                                                  </span>
+                                                </button>
                                               </td>
-                                              <td className="px-2 py-1 text-center">
+                                              <td className="px-4 py-2 text-center">
                                                 <input
                                                   type="checkbox"
-                                                  className="accent-blue-600 w-3 h-3"
+                                                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                   checked={
                                                     selectedIds.includes(
                                                       activity.id
@@ -405,16 +471,19 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                                   }
                                                 />
                                               </td>
-                                              <td className="px-2 py-1 text-center">
+                                              <td className="px-4 py-2 text-center">
                                                 <button
-                                                  className="text-black hover:text-gray-500 dark:text-white dark:hover:text-gray-200"
+                                                  className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 transition-colors duration-200 group"
                                                   onClick={() =>
                                                     handleDeleteActivity(
                                                       activity
                                                     )
                                                   }
                                                 >
-                                                  <BsTrash size={16} />
+                                                  <BsTrash
+                                                    size={14}
+                                                    className="text-red-600 dark:text-red-200 group-hover:scale-110 transition-transform"
+                                                  />
                                                 </button>
                                               </td>
                                             </tr>
@@ -422,22 +491,35 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                                         )}
                                       </tbody>
                                     </table>
-                                    <div className="flex justify-end mt-1">
+                                    <div className="flex justify-end mt-4">
                                       <button
-                                        className="px-4 py-1 rounded bg-[#00809D] hover:bg-[#669ba7] text-white"
+                                        className="inline-flex items-center px-4 py-2 rounded m-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 "
                                         onClick={handleSubmit}
                                       >
-                                        Verify
+                                        <CheckCircleIcon className="w-5 h-5 mr-2" />
+                                        Verify Selected
                                       </button>
                                     </div>
                                   </div>
                                 ) : (
-                                  <p className="mt-1 italic text-gray-500 dark:text-gray-300 flex items-center gap-1">
-                                    <strong>{student.name}</strong> has not
-                                    submitted any activity. Please contact at{" "}
-                                    <PhoneCallIcon className="w-4 h-4" />{" "}
-                                    <strong>{student.mobile_no}</strong>.
-                                  </p>
+                                  <div className="text-center py-8">
+                                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                      <PhoneCallIcon className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                                    </div>
+                                    <p className="text-gray-600 dark:text-gray-300 text-lg font-medium mb-2">
+                                      No Activities Submitted
+                                    </p>
+                                    <p className="text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
+                                      Contact{" "}
+                                      <strong className="text-blue-600 dark:text-blue-400">
+                                        {student.name}
+                                      </strong>{" "}
+                                      at{" "}
+                                      <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                                        {student.mobile_no}
+                                      </span>
+                                    </p>
+                                  </div>
                                 )}
                               </div>
                             </motion.div>
@@ -447,12 +529,20 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
                     </React.Fragment>
                   ))
                 ) : (
-                  <tr className="">
-                    <td
-                      colSpan={8}
-                      className="text-center py-2 italic  text-gray-500 dark:text-gray-300"
-                    >
-                      No Student Present!
+                  <tr>
+                    <td colSpan={8} className="text-center py-12">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                          <Users className="w-10 h-10 text-gray-400 dark:text-gray-500" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                          No Students Found
+                        </h3>
+                        <p className="text-gray-500 dark:text-gray-400 max-w-md">
+                          There are currently no students enrolled in this year.
+                          Students will appear here once they join the program.
+                        </p>
+                      </div>
                     </td>
                   </tr>
                 )}
