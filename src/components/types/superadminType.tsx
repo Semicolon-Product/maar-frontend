@@ -167,6 +167,7 @@ export interface StudentYearlyDetailsProps {
   data: any; // Replace `any` with a proper type if available
   currentyear?: number;
   year: number;
+  student: any;
 }
 export interface IndividualActivity {
   id: number;

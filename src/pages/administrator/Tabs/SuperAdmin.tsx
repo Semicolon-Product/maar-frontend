@@ -1,5 +1,3 @@
-
-
 import {
   Table,
   TableBody,
@@ -9,11 +7,11 @@ import {
   TableRow,
   Paper,
   IconButton,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
-import { getApi } from '@/api';
+import { getApi } from "@/api";
 
 interface Admin {
   id: number;
@@ -28,35 +26,45 @@ interface Admin {
   { id: 3, name: 'Amit Das', email: 'amit@example.com', createdAt: '2025-07-15' },
 ]; */
 
-
-
 const SuperAdmins = () => {
-
-  const [sumerAdmins,setSuperadmins] =  useState<Admin[]>();
-
+  const [sumerAdmins, setSuperadmins] = useState<Admin[]>();
 
   const getData = async () => {
-  await getApi("admin/getSuperAdmins").then((res)=>{
-    console.log("response is ::",res?.data);
-    setSuperadmins(res?.data);
-  })
-}
+    await getApi("admin/getSuperAdmins").then((res) => {
+      //console.log("response is ::",res?.data);
+      setSuperadmins(res?.data);
+    });
+  };
 
-useEffect(() => {
-  getData();
-}, [])
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-4 text-center ">Super Admins Details</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-center ">
+        Super Admins Details
+      </h1>
       <TableContainer component={Paper} className="shadow-md">
-        <Table size="small"> {/* Makes table rows smaller */}
-          <TableHead >
+        <Table size="small">
+          {" "}
+          {/* Makes table rows smaller */}
+          <TableHead>
             <TableRow sx={{ height: 40, background: "#2a4045" }}>
-              <TableCell sx={{ color: "white" }}><strong>ID</strong></TableCell>
-              <TableCell sx={{ color: "white" }}><strong>Name</strong></TableCell>
-              <TableCell sx={{ color: "white" }}><strong>Email</strong></TableCell>
-              <TableCell sx={{ color: "white" }}><strong>Created At</strong></TableCell>
-              <TableCell sx={{ color: "white" }} align="center"><strong>Actions</strong></TableCell>
+              <TableCell sx={{ color: "white" }}>
+                <strong>ID</strong>
+              </TableCell>
+              <TableCell sx={{ color: "white" }}>
+                <strong>Name</strong>
+              </TableCell>
+              <TableCell sx={{ color: "white" }}>
+                <strong>Email</strong>
+              </TableCell>
+              <TableCell sx={{ color: "white" }}>
+                <strong>Created At</strong>
+              </TableCell>
+              <TableCell sx={{ color: "white" }} align="center">
+                <strong>Actions</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

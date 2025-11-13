@@ -66,6 +66,7 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
   const handleClose = () => {
     setOpenDocsModal(false);
+    setCurrentActivity(null);
   };
 
   const handleDocsModal = (activity: IndividualActivity) => {

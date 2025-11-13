@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { IoReorderThree } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
-/* import InputWithLabel from '@/components/InputWithLabel';
-import AllPoints from '@/components/AllPoints';
-import NewAllPoint from '@/components/NewAllPoint'; */
 import StudentYearlyDetails from "@/components/StudentComponent/StudentYearlyDetails";
-//import { studentdata } from '@/components/data/data';
 import { LogOut } from "lucide-react";
 import { FaGraduationCap } from "react-icons/fa";
 import { BookOpen, User2, CalendarCheck2, GraduationCap } from "lucide-react";
-
 import StudentDetail from "@/components/StudentComponent/StudentDetail";
 import { getApi } from "@/api";
 import { useNavigate } from "react-router-dom";
@@ -62,9 +57,9 @@ const StudentDetails = () => {
   console.log("selectedYear", selectedYear);
 
   return (
-    <div className="flex h-[100vh] overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       {/* Sidebar for Desktop */}
-      <div className="hidden md:flex flex-col  bg-gray-800 text-white w-64  h-screen sticky top-0">
+      <div className="hidden md:flex flex-col bg-gradient-to-b from-blue-600 via-blue-700 to-blue-800 text-white w-72 h-screen shadow-xl">
         <div className="flex-1 overflow-y-auto">
           {studentDetails && (
             <SidebarContent
@@ -74,43 +69,52 @@ const StudentDetails = () => {
             />
           )}
         </div>
-        <div className="text-center text-xs text-gray-400 py-4 ">
+        <div className="text-center text-xs text-blue-200 py-4 bg-blue-800/50">
           © {new Date().getFullYear()} Makautins
         </div>
       </div>
 
       {/* Sidebar for Mobile */}
       {isSidebarOpen && (
-        <div className="flex absolute inset-0 text-white w-64  md:hidden top-0 h-screen z-[999] flex-col">
-          {/* Scrollable menu */}
-          <div className="flex-1 overflow-y-auto ">
-            {studentDetails && (
-              <SidebarContent
-                onClose={() => setIsSidebarOpen(!isSidebarOpen)}
-                selectedYear={selectedYear}
-                setSelectedYear={setSelectedYear}
-                student={studentDetails}
-              />
-            )}
+        <div className="fixed inset-0 z-[999] md:hidden">
+          <div
+            className="absolute inset-0 bg-black/50 "
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+          <div className="relative flex flex-col bg-gradient-to-b from-blue-600 via-blue-700 to-blue-800 text-white w-72 h-screen shadow-2xl">
+            <div className="flex-1 overflow-y-auto">
+              {studentDetails && (
+                <SidebarContent
+                  onClose={() => setIsSidebarOpen(!isSidebarOpen)}
+                  selectedYear={selectedYear}
+                  setSelectedYear={setSelectedYear}
+                  student={studentDetails}
+                />
+              )}
+            </div>
+            <div className="text-center text-xs text-blue-200 py-4 bg-blue-800/50">
+              © {new Date().getFullYear()} Makautins
+            </div>
           </div>
-
-          {/* Footer */}
         </div>
       )}
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto dark:bg-gray-900 ">
+      <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-900 shadow-inner">
         {/* Top bar with menu icon */}
-        <div className="flex justify-end p-0 pb-0">
+        <div className="flex justify-between items-center p-4 bg-white dark:bg-gray-900  dark:border-gray-700">
+          {/* <h1 className="text-xl font-bold text-gray-800 dark:text-white">
+            Student Dashboard
+          </h1> */}
           <Button
-            className="text-gray-800 dark:text-gray-400 bg-transparent hover:bg-gray-100 md:hidden block"
+            className="text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 md:hidden block rounded-full p-2"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
-            <IoReorderThree className="text-xl scale-150" />
+            <IoReorderThree className="text-xl" />
           </Button>
         </div>
 
-        <div className="p-0  mt-0">
+        <div className="p-6">
           {/* <p>You are in {selectedYear} year</p> */}
 
           {selectedYear === "details" && (
@@ -125,6 +129,7 @@ const StudentDetails = () => {
           {selectedYear === "1st" && (
             <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
               <StudentYearlyDetails
+                student={studentDetails}
                 data={studentdata?.firstyear}
                 currentyear={studentDetails?.current_year}
                 year={1}
@@ -134,6 +139,7 @@ const StudentDetails = () => {
           {selectedYear === "2nd" && (
             <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
               <StudentYearlyDetails
+                student={studentDetails}
                 data={studentdata?.secondyear}
                 currentyear={studentDetails?.current_year}
                 year={2}
@@ -143,6 +149,7 @@ const StudentDetails = () => {
           {selectedYear === "3rd" && (
             <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
               <StudentYearlyDetails
+                student={studentDetails}
                 data={studentdata?.thirdyear}
                 currentyear={studentDetails?.current_year}
                 year={3}
@@ -152,6 +159,7 @@ const StudentDetails = () => {
           {selectedYear === "4th" && (
             <div className="pt-1 sm:pt-4 px-6 pb-6 space-y-6 sm:space-y-8 overflow-y-auto">
               <StudentYearlyDetails
+                student={studentDetails}
                 data={studentdata?.fourthyear}
                 currentyear={studentDetails?.current_year}
                 year={4}

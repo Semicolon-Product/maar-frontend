@@ -502,7 +502,7 @@ const SuperAdminPage = () => {
           {/* Top bar with menu icon */}
           <div className="md:hidden sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex justify-between items-center shadow-sm">
             <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-              SuperAdmin
+              {allDetails?.superadmin.name}
             </h1>
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -776,8 +776,8 @@ const SuperAdminPage = () => {
                     </button>
                   </div>
 
-                  <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800">
-                    <table className="min-w-full text-sm">
+                  <div className="overflow-auto rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800">
+                    <table className="min-w-full  text-sm">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 uppercase text-xs tracking-wider">
                         <tr>
                           <th className="py-3 px-4 text-left whitespace-nowrap">
@@ -868,7 +868,7 @@ const SuperAdminPage = () => {
                     </p>
                   </div>
 
-                  <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800">
+                  <div className="overflow-auto rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800">
                     <table className="min-w-full text-sm">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 uppercase text-xs tracking-wider">
                         <tr>

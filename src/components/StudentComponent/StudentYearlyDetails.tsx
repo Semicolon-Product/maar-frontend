@@ -15,6 +15,7 @@ import CustomDropdown from "../CustomDropdown";
 import ConfirmModal from "./ConfirmModal";
 
 const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
+  student,
   data,
   currentyear,
   year,
@@ -295,9 +296,17 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
     const formData = new FormData();
     formData.append("file", file);
     formData.append("fieldName", fieldName);
+    formData.append("teacherId", student?.teacher_id);
+    formData.append("studentId", student?.id);
+    formData.append("admissionYear", student?.admission_year);
+    formData.append("yearLevel", student?.current_year);
 
     try {
-      const res = await FileUpload("student/individualFile", formData);
+      const res = await FileUpload(
+        `upload?type=student-doc&teacherId=${student?.teacher_id}&studentId=${student?.id}&admissionYear=${student?.admission_year}&yearLevel=${student?.current_year}`,
+        formData
+      );
+      //console.log("File upload response:", res);
 
       if (res.success && res.fileUrl) {
         // Replace the visible filename with fileUrl
@@ -310,6 +319,8 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
       console.error("Upload failed", err);
     }
   };
+  // console.log("formData:", formData);
+  // console.log("data:", student);
 
   // Delete from S3 + clear state
   const handleClearFile = async (fieldName: string) => {
@@ -408,7 +419,7 @@ const StudentYearlyDetails: React.FC<StudentYearlyDetailsProps> = ({
         open={open}
         onClose={() => setOpen(false)}
         onConfirm={() => {
-          console.log("Confirmed!");
+          //  console.log("Confirmed!");
           handleConfirm();
           setOpen(false);
         }}

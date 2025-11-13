@@ -22,17 +22,17 @@ const LoginAdministrator = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("Login Data:", formData);
+    //  console.log("Login Data:", formData);
     try {
       await postApi("admin/login", formData).then((res) => {
-        console.log("res==>>", res);
+        //    console.log("res==>>", res);
         toast.success(res?.message);
         localStorage.setItem("token", res?.token);
         navigate("/administrator");
       });
     } catch (error: any) {
       toast.warning(error?.response?.data?.message);
-      console.log("error", error?.response?.data?.message);
+      // console.log("error", error?.response?.data?.message);
     }
   };
 

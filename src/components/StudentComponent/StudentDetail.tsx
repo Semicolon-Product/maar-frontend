@@ -4,6 +4,7 @@ import { FaGraduationCap } from "react-icons/fa";
 import type { Institute } from "../types/superadminType";
 import CloseIcon from "../CloseIcon";
 import { useToast } from "@/contexts/ToastContext";
+import { motion } from "framer-motion";
 
 type StudentPointsByYear = {
   uploaded: number;
@@ -76,65 +77,109 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
         file,
         teacherId: studentData?.id,
       }).then((res) => {
-        console.log("res=>>", res);
+        //console.log("res=>>", res);
         setUploadedFile({ url: res.fileUrl, key: res.key });
       });
     }
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto  dark:bg-gray-900 min-h-screen">
+    <div className="max-w-5xl mx-auto dark:bg-gray-900 min-h-screen">
       {/* Student Info */}
-      <div className=" dark:bg-gray-800 shadow-md rounded-xl p-6 mb-8 border">
-        <h2 className="text-2xl font-semibold mb-6 t  pb-2 flex gap-0.5 ">
-          <FaGraduationCap className="mt-1" /> Student Profile
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-4 md:p-6 mb-8 border border-gray-100 dark:border-gray-700"
+      >
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-blue-800 dark:text-blue-400 pb-2 flex items-center gap-2">
+          <FaGraduationCap className="text-3xl" />
+          <span>Student Profile</span>
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-sm text-gray-800 dark:text-white">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-sm md:text-base text-gray-800 dark:text-gray-300">
           {/* Column 1 */}
-          <div className="space-y-3 ">
+          <div className="space-y-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 shadow-md">
             <div>
-              <span className="font-semibold">Name:</span> {studentData?.name}
+              <span className="font-semibold text-blue-800 dark:text-blue-300">
+                Name:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white">
+                {studentData?.name}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Email:</span> {studentData?.email}
+              <span className="font-semibold text-blue-800 dark:text-blue-300">
+                Email:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white break-all">
+                {studentData?.email}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Roll No:</span>{" "}
-              {studentData?.roll_no}
+              <span className="font-semibold text-blue-800 dark:text-blue-300">
+                Roll No:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white">
+                {studentData?.roll_no}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Institute:</span>{" "}
-              {studentData?.institute?.name}
+              <span className="font-semibold text-blue-800 dark:text-blue-300">
+                Institute:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white">
+                {studentData?.institute?.name}
+              </span>
             </div>
           </div>
 
           {/* Column 2 */}
-          <div className="space-y-3 ">
+          <div className="space-y-3 bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 shadow-md">
             <div>
-              <span className="font-semibold">Phone:</span>{" "}
-              {studentData?.mobile_no}
+              <span className="font-semibold text-green-800 dark:text-green-300">
+                Phone:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white">
+                {studentData?.mobile_no}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Total Uploaded Points:</span>{" "}
-              {totalUploaded}
+              <span className="font-semibold text-green-800 dark:text-green-300">
+                Total Uploaded Points:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white font-bold">
+                {totalUploaded}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Total Approved Points:</span>{" "}
-              {totalApproved}
+              <span className="font-semibold text-green-800 dark:text-green-300">
+                Total Approved Points:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white font-bold">
+                {totalApproved}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Code:</span>{" "}
-              {studentData?.institute?.institute_code}
+              <span className="font-semibold text-green-800 dark:text-green-300">
+                Code:
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white">
+                {studentData?.institute?.institute_code}
+              </span>
             </div>
           </div>
 
           {/* Column 3 - Signature */}
-          <div className="flex flex-col items-center md:items-end gap-3 mt-[-20px]">
+          <div className="flex flex-col items-center gap-3 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 shadow-md">
+            <h3 className="font-semibold text-purple-800 dark:text-purple-300 text-base">
+              Signature
+            </h3>
+
             {/* Signature Preview Box */}
             <div
-              className="border-1 border-dotted border-gray-400 p-2 rounded  shadow-sm"
-              style={{ height: "100px", width: "300px" }}
+              className="border-2 border-dashed border-purple-300 dark:border-purple-500 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm w-full"
+              style={{ height: "120px", maxWidth: "300px" }}
             >
               {previewUrl ? (
                 <div className="relative w-full h-full">
@@ -149,7 +194,7 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
                       }
                       setUploadedFile(null);
                     }}
-                    className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-black transition"
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition z-10"
                     title="Remove Image"
                   >
                     <CloseIcon size={16} />
@@ -167,15 +212,14 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
                   className="h-full w-full object-contain"
                 />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm text-center">
                   Please Upload Signature
                 </div>
               )}
             </div>
 
             {/* Upload Input + Button */}
-
-            <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
               <input
                 id="signatureUpload"
                 type="file"
@@ -198,18 +242,23 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
                     fileUploadtoS3(file);
                   }
                 }}
-                className="text-sm text-gray-500
-                 file:bg-gray-600
-                  file:text-gray-300 file:rounded-l 
-                  file:px-4 file:py-1 file:border-0 
+                className="text-sm text-gray-500 dark:text-gray-400
+                 file:bg-purple-600 file:hover:bg-purple-700
+                  file:text-white file:rounded-l file:font-semibold
+                  file:px-4 file:py-1.5 file:border-0 
                   file:cursor-pointer bg-gray-200 dark:bg-gray-700 rounded 
-                    p-0 w-full sm:w-auto"
+                  file:transition-colors p-0 w-full"
               />
 
               <button
                 type="button"
                 onClick={handleSignatureUpload}
-                className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-1 rounded shadow cursor-pointer"
+                disabled={!uploadedFile?.url}
+                className={`text-sm px-4 py-1.5 rounded shadow font-semibold transition-all whitespace-nowrap ${
+                  uploadedFile?.url
+                    ? "bg-purple-600 hover:bg-purple-700 text-white cursor-pointer hover:shadow-lg"
+                    : "bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-500 cursor-not-allowed"
+                }`}
               >
                 Upload
               </button>
@@ -220,7 +269,7 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
                             )} */}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Year-wise Cards */}
       {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-pointer ">
@@ -244,71 +293,155 @@ const StudentDetail: React.FC<ChildProps> = (student: any) => {
       </div> */}
 
       {/* Year-wise Suggestions */}
-      <div className="mt-8 bg-white border  dark:bg-gray-800 rounded-xl shadow p-6">
-        <h2 className="text-2xl font-bold text-blue-800 mb-6 text-center">
-          🌟 Recommended Activities
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-2  md:p-4 border border-gray-100 dark:border-gray-700"
+      >
+        <h2 className=" whitespace-nowrap sm:text-2xl md:text-3xl text-xl   font-bold text-blue-800 dark:text-blue-400 mb-2 md:mb-6 text-center flex items-center justify-center ">
+          <span className="">🌟</span>
+          Recommended Activities
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-gray-800">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-gray-700 dark:text-gray-300">
           {/* First Year */}
-          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
-            <h3 className="text-lg font-semibold text-blue-700 mb-2">
+          <motion.div
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-600 border border-blue-200 dark:border-gray-600 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+          >
+            <h3 className="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🎓</span>
               First Year
             </h3>
-            <ul className="list-disc pl-5 space-y-1 dark:text-blue-100">
-              <li>Enroll in short-term MOOCs (2–4 weeks)</li>
-              <li>Participate in Tech Fests or Fresher’s Welcome</li>
-              <li>Join college clubs or student chapters</li>
-              <li>Attend seminars, workshops, or discussions</li>
-              <li>Join Tree Plantation or Blood Donation camps</li>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span>Enroll in short-term MOOCs (2–4 weeks)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span>Participate in Tech Fests or Fresher's Welcome</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span>Join college clubs or student chapters</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span>Attend seminars, workshops, or discussions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span>Join Tree Plantation or Blood Donation camps</span>
+              </li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Second Year */}
-          <div className="bg-blue-50 dark:bg-gray-900 border  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
-            <h3 className="text-lg font-semibold text-blue-700 mb-2">
+          <motion.div
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-700 dark:to-gray-600 border border-green-200 dark:border-gray-600 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+          >
+            <h3 className="text-xl font-bold text-green-800 dark:text-green-300 mb-4 flex items-center gap-2">
+              <span className="text-2xl">📚</span>
               Second Year
             </h3>
-            <ul className="list-disc pl-5 space-y-1 dark:text-blue-100">
-              <li>Complete 4–8 week MOOCs</li>
-              <li>
-                Participate in college-level sports or cultural activities
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">•</span>
+                <span>Complete 4–8 week MOOCs</span>
               </li>
-              <li>Join rural reporting or relief efforts</li>
-              <li>Contribute to Blogs, Wall Magazines</li>
-              <li>Attend Entrepreneurship Awareness Workshops</li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">•</span>
+                <span>
+                  Participate in college-level sports or cultural activities
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">•</span>
+                <span>Join rural reporting or relief efforts</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">•</span>
+                <span>Contribute to Blogs, Wall Magazines</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">•</span>
+                <span>Attend Entrepreneurship Awareness Workshops</span>
+              </li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Third Year */}
-          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
-            <h3 className="text-lg font-semibold text-blue-700 mb-2">
+          <motion.div
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-gray-700 dark:to-gray-600 border border-purple-200 dark:border-gray-600 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+          >
+            <h3 className="text-xl font-bold text-purple-800 dark:text-purple-300 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🚀</span>
               Third Year
             </h3>
-            <ul className="list-disc pl-5 space-y-1 dark:text-blue-100">
-              <li>Take 8–12 week MOOCs (NPTEL, SWAYAM)</li>
-              <li>Work on Innovative Projects</li>
-              <li>Submit technical papers or articles</li>
-              <li>Attend yoga or adventure camps</li>
-              <li>Visit industries and write reports</li>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-purple-500 mt-1">•</span>
+                <span>Take 8–12 week MOOCs (NPTEL, SWAYAM)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-500 mt-1">•</span>
+                <span>Work on Innovative Projects</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-500 mt-1">•</span>
+                <span>Submit technical papers or articles</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-500 mt-1">•</span>
+                <span>Attend yoga or adventure camps</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-500 mt-1">•</span>
+                <span>Visit industries and write reports</span>
+              </li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Fourth Year */}
-          <div className="bg-blue-50 border dark:bg-gray-900  rounded-lg p-4 shadow-sm hover:shadow-md transition ">
-            <h3 className="text-lg font-semibold text-blue-700 mb-2">
+          <motion.div
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 border border-indigo-200 dark:border-gray-600 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+          >
+            <h3 className="text-xl font-bold text-indigo-800 dark:text-indigo-300 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🎯</span>
               Fourth Year
             </h3>
-            <ul className="list-disc pl-5 space-y-1 dark:text-blue-100">
-              <li>Enroll in 12-week MOOCs</li>
-              <li>Submit a business plan or prototype</li>
-              <li>Publish in national magazines</li>
-              <li>Compete in national-level competitions</li>
-              <li>Join community outreach like elderly or disabled support</li>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-indigo-500 mt-1">•</span>
+                <span>Enroll in 12-week MOOCs</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-indigo-500 mt-1">•</span>
+                <span>Submit a business plan or prototype</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-indigo-500 mt-1">•</span>
+                <span>Publish in national magazines</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-indigo-500 mt-1">•</span>
+                <span>Compete in national-level competitions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-indigo-500 mt-1">•</span>
+                <span>
+                  Join community outreach like elderly or disabled support
+                </span>
+              </li>
             </ul>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

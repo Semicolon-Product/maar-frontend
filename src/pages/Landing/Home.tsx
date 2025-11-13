@@ -56,7 +56,7 @@ export default function Home() {
       alert("Please fill in all fields and provide a rating!");
       return;
     }
-    console.log(feedbackData);
+    //console.log(feedbackData);
     toast.success("Feedback submitted successfully!");
 
     setShowFeedbackModal(false);

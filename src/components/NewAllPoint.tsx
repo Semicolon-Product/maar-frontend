@@ -69,10 +69,10 @@ const NewAllPoint = () => {
       // We use `as string` because TypeScript knows `formData[key]` could be `File | null`
       // for some keys, but for the `pointKeys` we explicitly listed, it will be a string.
       const rawValue = formData[key];
-      const value = typeof rawValue === 'string' || typeof rawValue === 'number'
-        ? parseInt(rawValue.toString(), 10)
-        : 0; // or your fallback
-
+      const value =
+        typeof rawValue === "string" || typeof rawValue === "number"
+          ? parseInt(rawValue.toString(), 10)
+          : 0; // or your fallback
 
       if (!isNaN(value)) {
         currentTotalPoints += value;
@@ -84,7 +84,7 @@ const NewAllPoint = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+    //console.log("Form Data Submitted:", formData);
     // Here you would typically send this data to a backend or process it further
   };
   const getRemainingPoints = (key: keyof StudentActivityFormData): number => {
@@ -92,7 +92,7 @@ const NewAllPoint = () => {
     const rawValue = formData[key];
 
     const selected =
-      typeof rawValue === 'string' || typeof rawValue === 'number'
+      typeof rawValue === "string" || typeof rawValue === "number"
         ? parseInt(rawValue.toString(), 10) || 0
         : 0;
     // Get selected points, default to 0 if not selected/NaN
@@ -279,10 +279,10 @@ const NewAllPoint = () => {
                     const isDisabled =
                       Number(activity[1].techFestOrganizer?.points) >
                       Number(activity[1].max) -
-                      (Number(
-                        activity[1].techFestOrganizer?.alreadyAcquired
-                      ) +
-                        Number(formData.techFestOrganizer));
+                        (Number(
+                          activity[1].techFestOrganizer?.alreadyAcquired
+                        ) +
+                          Number(formData.techFestOrganizer));
 
                     return (
                       <option

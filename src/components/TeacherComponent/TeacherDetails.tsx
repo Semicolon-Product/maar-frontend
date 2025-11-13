@@ -57,12 +57,12 @@ const TeacherDetails = (teacherDetails: any) => {
     e.preventDefault();
     await postApi("student/create", formData)
       .then((res) => {
-        console.log("res in create", res);
+        // console.log("res in create", res);
         toast.success(res?.message);
         getAllStudent();
       })
       .catch((err) => {
-        console.log("Error creating student:", err.response.data.error);
+        //console.log("Error creating student:", err.response.data.error);
         toast.error(err.response.data.error);
       });
   };

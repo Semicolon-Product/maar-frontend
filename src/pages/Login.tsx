@@ -42,7 +42,7 @@ const Login = () => {
     if (Object.keys(errors).length > 0) return;
     try {
       const res = await postApi("student/loginStudent", studentData);
-      console.log("res== in student", res);
+      //console.log("res== in student", res);
 
       toast.success(res?.message);
       if (res.status == 200)
@@ -65,7 +65,7 @@ const Login = () => {
     if (!teacherLogin.password.trim()) errors.password = "Password is required";
     setFormError(errors);
     if (Object.keys(errors).length > 0) return;
-    console.log("teacher data::", teacherLogin);
+    // console.log("teacher data::", teacherLogin);
     try {
       const res = await postApi("teacher/login", teacherLogin);
       toast.success(res?.message);
@@ -76,7 +76,7 @@ const Login = () => {
         }, 1000);
       }
 
-      console.log("res in teacher::", res);
+      //console.log("res in teacher::", res);
     } catch (error: any) {
       console.error("Login failed:", error);
       toast.error("Login failed. Please try again.");
@@ -98,7 +98,7 @@ const Login = () => {
     setFormError(errors);
 
     if (Object.keys(errors).length > 0) return;
-    console.log("Role: superadmin - signup", superAdminSignupFormData);
+    // console.log("Role: superadmin - signup", superAdminSignupFormData);
     const payload = {
       name: superAdminSignupFormData.name,
       email: superAdminSignupFormData.email,
@@ -109,11 +109,11 @@ const Login = () => {
 
     try {
       const res = await postApi("superadmin/register", payload);
-      console.log("res", res);
+      // console.log("res", res);
       toast.success(res.message || "Signup successful");
       setSuperAdminLogin(!superadminLogin);
     } catch (error: any) {
-      console.log("Signup Error:", error);
+      //  console.log("Signup Error:", error);
       toast.error(
         error?.response?.data?.message ||
           error?.message ||
@@ -131,17 +131,17 @@ const Login = () => {
     setFormError(errors);
     if (Object.keys(errors).length > 0) return;
 
-    console.log("Role: superadmin - login", superAdminLoginForm);
+    // console.log("Role: superadmin - login", superAdminLoginForm);
     try {
       await postApi("superadmin/login", superAdminLoginForm).then((res) => {
-        console.log("res", res);
+        //   console.log("res", res);
         toast.success(res.message || "Signin successful");
         setTimeout(() => {
           navigate("/superAdmin");
         }, 1000);
       });
     } catch (error: any) {
-      console.log("Sigin Error:", error);
+      // console.log("Sigin Error:", error);
       toast.error(
         error?.response?.data?.message ||
           error?.message ||

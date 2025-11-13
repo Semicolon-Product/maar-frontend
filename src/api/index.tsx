@@ -1,7 +1,7 @@
 import axios from "axios";
-//export const BASE_URL = "http://localhost:5000/api/";
+export const BASE_URL = "http://localhost:5000/api/";
 
-export const BASE_URL = "https://api.makautstudents.help/api/";
+//export const BASE_URL = "https://api.makautstudents.help/api/";
 
 interface ApiPayload {
   [key: string]: any;
@@ -54,8 +54,8 @@ export const postApi = async (
     localStorage.setItem("role", response.data.data.role);
   }
 
-  console.log("in postApi token:", response.data?.data?.token);
-  console.log("in postApi response:", response);
+  //console.log("in postApi token:", response.data?.data?.token);
+  //  console.log("in postApi response:", response);
 
   return response.data;
 };

@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import type { IndividualActivity } from "./types/superadminType";
+import { useEffect, useState } from "react";
 
 interface DocsModalProps {
   open: boolean;
@@ -12,6 +13,12 @@ const DocsModal: React.FC<DocsModalProps> = ({
   onClose,
   currentActivity,
 }) => {
+  const [url, serUrl] = useState("");
+  useEffect(() => {
+    if (currentActivity?.document_url) {
+      serUrl(currentActivity.document_url);
+    }
+  }, [currentActivity]);
   return (
     <AnimatePresence>
       {open && (
@@ -49,9 +56,9 @@ const DocsModal: React.FC<DocsModalProps> = ({
 
             {/* Body */}
             <div className="p-4 bg-gray-50 dark:bg-gray-900">
-              {currentActivity?.document_url ? (
-                <iframe
-                  src={currentActivity.document_url}
+              {url ? (
+                <embed
+                  src={url}
                   title="Document"
                   className="w-full h-[80vh] border-none rounded-md"
                 />
