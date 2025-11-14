@@ -62,12 +62,12 @@ const Payments = () => {
                 <td className="px-4 py-3">
                   <span
                     className={`px-3 py-1 text-xs font-medium rounded-full text-white ${
-                      p.is_approve
+                      p?.status === "Active"
                         ? "bg-green-500 dark:bg-green-700"
                         : "bg-orange-500 dark:bg-amber-800"
                     }`}
                   >
-                    {p.is_approve ? "Active" : "Not Active"}
+                    {p?.status}
                   </span>
                 </td>
               </tr>

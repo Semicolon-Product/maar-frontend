@@ -3,6 +3,7 @@ import type { Payment } from "@/components/types/superadminType";
 export interface ProcessedPaymentData {
   totalStudentsRegistered: number;
   totalQuota: number;
+  status: string;
   recentPayment: {
     paid_on: string;
     valid_until: string;
@@ -16,6 +17,7 @@ export const processPaymentData = (
     return {
       totalStudentsRegistered: 0,
       totalQuota: 0,
+      status: "",
       recentPayment: {
         paid_on: "",
         valid_until: "",
@@ -37,13 +39,15 @@ export const processPaymentData = (
 
   // Find the most recent payment based on paid_on date
   const sortedPayments = payments.sort(
-    (a, b) => new Date(b.paid_on).getTime() - new Date(a.paid_on).getTime()
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
   const recentPayment = sortedPayments[0];
 
   return {
     totalStudentsRegistered,
     totalQuota,
+    status: recentPayment.status,
     recentPayment: {
       paid_on: recentPayment.paid_on,
       valid_until: recentPayment.valid_until,

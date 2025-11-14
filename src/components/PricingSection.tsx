@@ -19,16 +19,27 @@ const PricingSection: React.FC<PricingSectionProps> = ({ data }) => {
   } | null>(null);
 
   const basePrice = 13;
-  const discountedPrice = students > 400 ? 11 : basePrice;
+
+  const discountedPrice =
+    students >= 1000
+      ? 8.5
+      : students >= 800
+      ? 11
+      : students >= 400
+      ? 12
+      : basePrice;
+
   const totalCost = students * discountedPrice;
+
   useEffect(() => {
     setAmount(totalCost);
   }, [totalCost]);
 
   const pricingTiers = [
-    { min: 1, max: 400, price: 13 },
-    { min: 401, max: 800, price: 12 },
-    { min: 801, max: null, price: 11 },
+    { min: 1, max: 399, price: 13 },
+    { min: 400, max: 799, price: 12 },
+    { min: 800, max: 999, price: 11 },
+    { min: 1000, max: null, price: 8.5 },
   ];
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

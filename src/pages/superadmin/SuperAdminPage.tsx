@@ -19,7 +19,6 @@ import {
   Trash2,
   Users,
   X,
-  Zap,
 } from "lucide-react";
 
 import { PiCurrencyInrBold } from "react-icons/pi";
@@ -191,6 +190,16 @@ const SuperAdminPage = () => {
         department: teacherData.department,
         password: teacherData.password,
       };
+      if (
+        !updatedData.name ||
+        !updatedData.email ||
+        !updatedData.department ||
+        !updatedData.password ||
+        !updatedData.mobile_no
+      ) {
+        toast.error("Please fill all the fields");
+        return;
+      }
 
       await putApi(`teacher/update/${teacherData.id}`, updatedData);
       toast.success("Teacher Updated Successfully!");
@@ -224,19 +233,6 @@ const SuperAdminPage = () => {
     }
   }, [selectedSection, navigate]);
 
-  const handleCreatePayment = async (amount: number) => {
-    try {
-      const res = await postApi("superadmin/createPayment", { amount });
-
-      if (res?.payUrl) {
-        window.open(res.payUrl, "_blank");
-      } else {
-        toast.error("Payment URL not found");
-      }
-    } catch (error) {
-      toast.error("Payment creation failed");
-    }
-  };
   const [payment, setPayment] = useState<any>(null);
 
   useEffect(() => {
@@ -245,7 +241,7 @@ const SuperAdminPage = () => {
       setPayment(paymentSummary);
     }
   }, [allDetails]);
-
+  console.log("payment", payment);
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 transition-colors duration-300">
       <div className="flex h-screen overflow-hidden">
@@ -641,12 +637,12 @@ const SuperAdminPage = () => {
                         </h3>
                         <span
                           className={`text-sm font-medium text-white px-3 py-1 rounded-full ${
-                            payment?.is_approve
+                            payment?.status === "Active"
                               ? "bg-green-500 dark:bg-green-700"
                               : "bg-orange-500 dark:bg-amber-800"
                           }`}
                         >
-                          {payment?.is_approve ? "Active" : "Not Active"}
+                          {payment?.status}
                         </span>
                       </div>
 
@@ -707,7 +703,7 @@ const SuperAdminPage = () => {
                     />
 
                     {/* Contact Section */}
-                    <div className="mt-10 bg-yellow-50 dark:bg-yellow-950 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
+                    {/*  <div className="mt-10 bg-yellow-50 dark:bg-yellow-950 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm">
                       <p className="text-sm text-gray-800 dark:text-gray-200 font-medium">
                         Need access for more than 5000 students?{" "}
                         <span className="text-blue-600  underline cursor-pointer hover:text-blue-800">
@@ -715,10 +711,10 @@ const SuperAdminPage = () => {
                         </span>{" "}
                         for an enterprise solution.
                       </p>
-                    </div>
+                    </div> */}
 
                     {/* Auto Submission Add-on */}
-                    <div
+                    {/* <div
                       className="mt-8 cursor-pointer"
                       onClick={() => handleCreatePayment(5000)}
                     >
@@ -738,7 +734,7 @@ const SuperAdminPage = () => {
                           ₹5,000/year
                         </p>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )}
@@ -942,14 +938,14 @@ const SuperAdminPage = () => {
                                 <td className="py-3 px-4 text-center">
                                   <span
                                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                      payment.is_approve
+                                      payment.status === "Active"
                                         ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                                        : payment.status === "Expired"
+                                        ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
                                         : "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300"
                                     }`}
                                   >
-                                    {payment.is_approve
-                                      ? "Approved"
-                                      : "Pending"}
+                                    {payment.status}
                                   </span>
                                 </td>
                               </tr>
