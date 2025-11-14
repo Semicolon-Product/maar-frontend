@@ -102,33 +102,6 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
 
   const students = data?.students;
   const status = data?.stats;
-  /*   function splitAtNearestSpace(str: any, limit = 30) {
-    if (!str || str.length <= limit) return str;
-
-    const breakpoint = str.lastIndexOf(" ", limit);
-    if (breakpoint === -1) return str; // no space, don’t break
-    return str.substring(0, breakpoint) + "\n" + str.substring(breakpoint + 1);
-  } */
-
-  //---------------------teacher university portal-------------------------------
-
-  /*  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  });
- */
-  /*  const handleChange = (e: any) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmitTeacherCredential = async (e: any) => {
-    e.preventDefault();
-    console.log("Submitted Credentials:", credentials);
-    await postApi("teacher/automateSubmit", {
-      roll: credentials.username,
-      password: credentials.password,
-    });
-  }; */
 
   return (
     <div>
@@ -552,59 +525,6 @@ const TeacherVerifyTable: React.FC<TeacherVerifyTableProps> = ({
           </div>
         </div>
       </div>
-
-      {/* <div className="max-w-sm mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-        <h2 className="text-xl font-semibold text-center text-gray-700 dark:text-gray-200 mb-6">
-          Teacher University Credential
-        </h2>
-        <hr className="border-gray-300 dark:border-gray-600" />
-
-        <form
-          onSubmit={handleSubmitTeacherCredential}
-          className="space-y-4 mt-4"
-        >
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Username:
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={credentials.username}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Password:
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors duration-200 dark:bg-blue-500 dark:hover:bg-blue-600"
-          >
-            Submit
-          </button>
-        </form>
-      </div> */}
     </div>
   );
 };

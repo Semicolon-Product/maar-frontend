@@ -5,7 +5,7 @@ import TeacherVerifyTable from "@/components/TeacherComponent/TeacherVerifyTable
 import TeacherDetails from "@/components/TeacherComponent/TeacherDetails";
 
 //import { allStudentDetails } from "@/components/data/data";
-import { GraduationCap, LayoutDashboard, LogOut } from "lucide-react";
+import { GraduationCap, LayoutDashboard, LogOut, Send } from "lucide-react";
 //import { studentdata } from "@/components/data/data";
 import { getApi } from "@/api";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import type {
 } from "@/components/types/superadminType";
 import ThemeToggleSwitch from "@/components/ThemeToggleButton";
 import { AnimatePresence, motion } from "framer-motion";
+import AutoSubmitToUniversity from "@/components/TeacherComponent/AutoSubmitToUniversity";
 
 interface SidebarContentProps {
   data?: TeacherSideBarProps;
@@ -37,7 +38,7 @@ const TeacherPage = () => {
   }, []);
   const [teacherDetails, setTeacherDetails] = useState<teacherGetDetails>();
   const getTeacherDetails = async () => {
-    await getApi("teacher/getDetails").then((res) => {
+    await getApi("teacher/get-details").then((res) => {
       setTeacherDetails(res.data);
     });
   };
@@ -49,9 +50,12 @@ const TeacherPage = () => {
     });
   };
   if (selectedSection === "logout") {
-    localStorage.removeItem("token");
-    navigate("/");
+    setTimeout(() => {
+      localStorage.removeItem("token");
+      navigate("/");
+    }, 2000); // 2000 ms = 2 seconds
   }
+
   //console.log("in page ::",teacherDetails)
 
   return (
@@ -106,6 +110,8 @@ const TeacherPage = () => {
             {selectedSection === "second" && "Second Year"}
             {selectedSection === "third" && "Third Year"}
             {selectedSection === "four" && "Fourth Year"}
+            {selectedSection === "logout" && "Logout"}
+            {selectedSection === "auto-submit" && "Submit to University"}
           </h1>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -155,6 +161,14 @@ const TeacherPage = () => {
                 Logging out...
               </p>
             )}
+            {selectedSection === "auto-submit" && (
+              <AutoSubmitToUniversity
+                firstyear={backendAllStudentDetails?.firstYear}
+                secondyear={backendAllStudentDetails?.secondYear}
+                thirdyear={backendAllStudentDetails?.thirdYear}
+                fourthyear={backendAllStudentDetails?.fourthYear}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -168,15 +182,29 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   setSelectedSection,
   onClose,
 }) => {
-  const menuItems = [
+  const menuItems: {
+    id: string;
+    label: string;
+    icon: any;
+  }[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "first", label: "First Year", icon: GraduationCap },
     { id: "second", label: "Second Year", icon: GraduationCap },
     { id: "third", label: "Third Year", icon: GraduationCap },
     { id: "four", label: "Fourth Year", icon: GraduationCap },
-    { id: "logout", label: "Logout", icon: LogOut },
   ];
 
+  if (data?.payment) {
+    menuItems.push({
+      id: "auto-submit",
+      label: "Submit to University",
+      icon: Send,
+    });
+  }
+
+  menuItems.push({ id: "logout", label: "Logout", icon: LogOut });
+
+  console.log("data", data?.payment);
   return (
     <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100 transition-all duration-300 overflow-hidden border-r border-gray-200 dark:border-gray-800">
       {/* Profile Section */}
@@ -194,7 +222,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+
+          <div className="absolute -bottom-1 -right-0 border border-white w-4 h-4 bg-green-500 rounded-full "></div>
         </div>
 
         {/* User Info */}

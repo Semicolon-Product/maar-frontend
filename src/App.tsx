@@ -14,6 +14,8 @@ import Blog from "./components/Blog";
 
 import TermCondition from "./pages/TermCondition";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Jewellery from "./pages/Jewellery/Jewellery";
+import AllProduct from "./pages/Jewellery/AllProduct";
 
 function App() {
   return (
@@ -55,6 +57,8 @@ function App() {
         <Route path="/adminLogin" element={<LoginAdministrator />} />
 
         <Route path="/administrator" element={<Administrator />} />
+        <Route path="/jewellery" element={<Jewellery />} />
+        <Route path="/jewellery/all-product" element={<AllProduct />} />
       </Routes>
     </>
   );

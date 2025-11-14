@@ -120,7 +120,7 @@ const SuperAdminPage = () => {
   const [selectedTeacher, setSelectedTeacher] = useState<any>(null);
   const [allTeacher, setAllTeacher] = useState<Teacher[]>();
   const getAllTeacher = async () => {
-    await getApi("teacher/getAllTeacher").then((res) => {
+    await getApi("teacher/get-all-teacher").then((res) => {
       setAllTeacher(res?.teachers);
     });
   };

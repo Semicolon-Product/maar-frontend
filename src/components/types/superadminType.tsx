@@ -220,6 +220,13 @@ export interface TeacherVerifyTableProps {
   signature?: string | null;
 }
 
+export interface AutoSubmitToUniversityProps {
+  firstyear?: YearData;
+  secondyear?: YearData;
+  thirdyear?: YearData;
+  fourthyear?: YearData;
+}
+
 export interface SuperAdminSignupFormData {
   email: string;
   password: string;
@@ -357,6 +364,7 @@ export interface TeacherSideBarProps {
   password_hash: string;
   signature: string | null;
   superadmin_id: number;
+  payment: boolean;
 }
 
 export type teacherGetDetails = {
