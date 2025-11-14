@@ -2,6 +2,41 @@ import { Instagram, Youtube } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+const productsData = [
+  {
+    id: 1,
+    name: "Royal Temple Necklace",
+    description: "Handcrafted gold-plated temple jewellery.",
+    price: 4500,
+    category: "Necklace",
+    image: "/jewellery/first.jpeg",
+  },
+  {
+    id: 2,
+    name: "Kundan Earrings",
+    description: "Traditional kundan earrings with pearl drops.",
+    price: 1200,
+    category: "Earrings",
+    image: "/jewellery/collection4.jpeg",
+  },
+  {
+    id: 3,
+    name: "Gold Bangles Set",
+    description: "Elegant gold-finish bangles for festive looks.",
+    price: 2200,
+    category: "Bangles",
+    image: "/jewellery/collection2.jpeg",
+  },
+  {
+    id: 4,
+    name: "Gold-Plated Wedding Ring",
+    description: "Premium quality ring with stone embellishment.",
+    price: 899,
+    category: "Rings",
+    image: "/jewellery/collection3.jpeg",
+  },
+];
+
 const Jewellery = () => {
   const navigate = useNavigate();
 
@@ -101,6 +136,51 @@ const Jewellery = () => {
               />
               <p className="text-center text-sm font-semibold mt-2 text-yellow-900">
                 {item.name}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TRENDING PRODUCTS SECTION */}
+      {/* TRENDING PRODUCTS SECTION */}
+      <section className="mt-10 px-4">
+        <h2 className="text-xl font-bold text-yellow-900 mb-4">
+          🎁 Trending Now
+        </h2>
+
+        <div className="grid grid-cols-2 gap-5">
+          {productsData.map((product) => (
+            <div
+              key={product.id}
+              onClick={() => navigate(`/jewellery/product/${product.id}`)}
+              className="relative bg-white rounded-xl shadow-lg border border-yellow-200 p-3 cursor-pointer transition transform hover:scale-[1.04] hover:shadow-xl"
+            >
+              {/* ❗ PREMIUM GOLD RIBBON */}
+              <div className="absolute -top-2 -left-2 bg-gradient-to-r from-yellow-600 to-yellow-400 text-white text-[10px] font-bold px-2 py-[2px] rounded-tr-lg rounded-bl-lg shadow-md rotate-[-8deg]">
+                TRENDING
+              </div>
+
+              {/* Product Image */}
+              <div className="relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-32 object-cover rounded-lg border border-yellow-100 shadow-sm"
+                />
+
+                {/* Light gold glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-yellow-50/10 rounded-lg pointer-events-none" />
+              </div>
+
+              {/* Product Info */}
+              <p className="text-sm font-semibold mt-2 text-yellow-900 line-clamp-1">
+                {product.name}
+              </p>
+              <p className="text-xs text-gray-500">{product.category}</p>
+
+              <p className="text-base font-bold text-gray-900 mt-1">
+                ₹ {product.price}
               </p>
             </div>
           ))}

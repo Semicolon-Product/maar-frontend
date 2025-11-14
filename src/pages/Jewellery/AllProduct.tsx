@@ -94,7 +94,7 @@ const AllProduct = () => {
         {filteredProducts.map((p) => (
           <div
             key={p.id}
-            onClick={() => navigate(`/product/${p.id}`)}
+            onClick={() => navigate(`jewellery/product/${p.id}`)}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 cursor-pointer hover:scale-105 transition"
           >
             <img

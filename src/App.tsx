@@ -16,6 +16,7 @@ import TermCondition from "./pages/TermCondition";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Jewellery from "./pages/Jewellery/Jewellery";
 import AllProduct from "./pages/Jewellery/AllProduct";
+import ProductDetails from "./pages/Jewellery/ProductDetails";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path="/administrator" element={<Administrator />} />
         <Route path="/jewellery" element={<Jewellery />} />
         <Route path="/jewellery/all-product" element={<AllProduct />} />
+        <Route path="/jewellery/product/:id" element={<ProductDetails />} />
       </Routes>
     </>
   );
