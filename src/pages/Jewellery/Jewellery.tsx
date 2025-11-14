@@ -1,4 +1,4 @@
-import { Instagram, Youtube } from "lucide-react";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +48,6 @@ const Jewellery = () => {
 
   const [current, setCurrent] = useState(0);
 
-  // Auto-slide every 3 sec
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % banners.length);
@@ -112,8 +111,50 @@ const Jewellery = () => {
         </div>
       </div>
 
+      {/* ⭐ ABOUT SECTION */}
+      <section className="mt-10 px-5">
+        <h2 className="text-xl font-bold text-yellow-900">About Us</h2>
+        <p className="text-sm text-gray-700 mt-3 leading-relaxed">
+          At{" "}
+          <span className="font-semibold text-yellow-800">Durga Alankar</span>,
+          we celebrate the timeless beauty of Indian tradition. Every jewellery
+          piece is handcrafted with precision, passion and purity— designed to
+          make every woman feel regal, confident and truly divine.
+        </p>
+      </section>
+
+      {/* ⭐ WHY CHOOSE US */}
+      <section className="mt-10 px-5">
+        <h2 className="text-xl font-bold text-yellow-900">Why Choose Us?</h2>
+
+        <div className="mt-4 grid grid-cols-1 gap-4">
+          {[
+            {
+              title: "Authentic Craftsmanship",
+              desc: "Beautifully handcrafted jewellery made by skilled artisans.",
+            },
+            {
+              title: "Premium Quality",
+              desc: "High-quality plating and materials ensuring long-lasting shine.",
+            },
+            {
+              title: "Affordable Luxury",
+              desc: "Premium jewellery at prices that fit every budget.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="p-4 bg-white rounded-xl shadow-sm border border-yellow-100"
+            >
+              <h3 className="font-semibold text-yellow-900">{item.title}</h3>
+              <p className="text-sm text-gray-600 mt-1">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Highlighted Jewellery */}
-      <section className="mt-8 px-4">
+      <section className="mt-10 px-4">
         <h2 className="text-xl font-bold text-yellow-900 mb-4">
           ✨ Highlight Collections
         </h2>
@@ -142,8 +183,28 @@ const Jewellery = () => {
         </div>
       </section>
 
-      {/* TRENDING PRODUCTS SECTION */}
-      {/* TRENDING PRODUCTS SECTION */}
+      {/* ⭐ BRIDAL COLLECTION SPOTLIGHT */}
+      <section className="mt-10 px-5">
+        <h2 className="text-xl font-bold text-yellow-900 mb-3">
+          👰 Bridal Collection Spotlight
+        </h2>
+
+        <div className="relative">
+          <img
+            src="/jewellery/collection5.jpeg"
+            className="w-full h-48 object-cover rounded-xl shadow-md border border-yellow-200"
+            alt="Bridal Collection"
+          />
+
+          <div className="absolute bottom-3 left-3 bg-white/80 px-3 py-1 rounded-lg shadow">
+            <p className="text-yellow-900 font-semibold text-sm">
+              Explore Royal Bridal Sets →
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* TRENDING PRODUCTS */}
       <section className="mt-10 px-4">
         <h2 className="text-xl font-bold text-yellow-900 mb-4">
           🎁 Trending Now
@@ -156,25 +217,18 @@ const Jewellery = () => {
               onClick={() => navigate(`/jewellery/product/${product.id}`)}
               className="relative bg-white rounded-xl shadow-lg border border-yellow-200 p-3 cursor-pointer transition transform hover:scale-[1.04] hover:shadow-xl"
             >
-              {/* ❗ PREMIUM GOLD RIBBON */}
+              {/* RIBBON */}
               <div className="absolute -top-2 -left-2 bg-gradient-to-r from-yellow-600 to-yellow-400 text-white text-[10px] font-bold px-2 py-[2px] rounded-tr-lg rounded-bl-lg shadow-md rotate-[-8deg]">
                 TRENDING
               </div>
 
-              {/* Product Image */}
-              <div className="relative">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-32 object-cover rounded-lg border border-yellow-100 shadow-sm"
-                />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-32 object-cover rounded-lg border border-yellow-100 shadow-sm"
+              />
 
-                {/* Light gold glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-yellow-50/10 rounded-lg pointer-events-none" />
-              </div>
-
-              {/* Product Info */}
-              <p className="text-sm font-semibold mt-2 text-yellow-900 line-clamp-1">
+              <p className="text-sm font-semibold mt-2 text-yellow-900">
                 {product.name}
               </p>
               <p className="text-xs text-gray-500">{product.category}</p>
@@ -187,8 +241,44 @@ const Jewellery = () => {
         </div>
       </section>
 
+      {/* ⭐ TESTIMONIALS */}
+      <section className="mt-10 px-5">
+        <h2 className="text-xl font-bold text-yellow-900 mb-3">
+          💬 What Our Customers Say
+        </h2>
+
+        <div className="space-y-4">
+          {[
+            {
+              name: "Anjali Sharma",
+              review:
+                "Absolutely beautiful jewellery! The finish and shine are premium.",
+            },
+            {
+              name: "Priya Verma",
+              review:
+                "Fast delivery and amazing packaging. Loved the earrings!",
+            },
+            {
+              name: "Sneha Das",
+              review: "Affordable yet luxurious. I felt like a queen!",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="bg-white p-4 rounded-xl shadow border border-yellow-100"
+            >
+              <p className="text-sm font-semibold text-yellow-900">
+                {item.name}
+              </p>
+              <p className="text-xs text-gray-600 mt-1">{item.review}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* View All Products Button */}
-      <div className="mt-8 text-center px-5">
+      <div className="mt-10 text-center px-5">
         <button
           onClick={() => navigate("/jewellery/all-product")}
           className="w-full bg-yellow-800 text-white py-3 rounded-full text-lg font-semibold shadow-md hover:bg-yellow-900 transition"
@@ -197,26 +287,23 @@ const Jewellery = () => {
         </button>
       </div>
 
-      {/* Contact & Social */}
+      {/* Footer */}
       <footer className="mt-10 text-center text-gray-700">
         <h3 className="font-bold text-lg text-yellow-800">Contact Us</h3>
         <p className="text-sm mt-1 font-medium">📞 +91 7679475306</p>
 
         <div className="flex justify-center gap-6 mt-4 text-yellow-800 text-2xl">
-          <a
-            href="https://instagram.com/antrabarman123"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://instagram.com/antrabarman123" target="_blank">
             <Instagram size={26} />
           </a>
-
-          <a
-            href="https://youtube.com//@SmilyPieAnuOfficial"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://youtube.com//@SmilyPieAnuOfficial" target="_blank">
             <Youtube size={26} />
+          </a>
+          <a
+            href="https://www.facebook.com/amelia.hazra?rdid=qiqkXixalIgCiCiC&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CvpnemF1v%2F#"
+            target="_blank"
+          >
+            <Facebook size={26} />
           </a>
         </div>
 
